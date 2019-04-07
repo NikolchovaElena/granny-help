@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap mt-4 mb-4">
+        <div class="container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="user : ${model}">
+                    <tr>
+                        <th scope="row" th:text="${userStat.count}"></th>
+                        <td th:text="${user.firstName+' '+user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="TODO_ROLE"></td>
+                        <td>
+                            <form method="get" th:action="">
+                                <button class="btn btn-warning btn-sm" th:text="View"></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="get" th:action="">
+                                <button class="btn btn-info btn-sm" th:text="Role"></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" th:action="">
+                                <button class="btn btn-danger btn-sm" th:text="Block"></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" th:action="">
+                                <button class="btn btn-danger btn-sm" th:text="Delete"></button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

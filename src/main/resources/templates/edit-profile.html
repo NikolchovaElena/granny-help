@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap mt-4 mb-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                </div>
+                <div class="col-4">
+                    <form th:action="@{/user/edit/profile}" th:method="post" th:object="${model}"
+                          enctype="multipart/form-data">
+                        <div class="block-38 text-center">
+                            <div class="block-38-img">
+                                <div class="block-38-header">
+                                    <label for="profile-picture">
+                                        <input type="file" name="imageUrl" th:field="*{imageUrl}" id="profile-picture" style="display:none;"/>
+                                        <img th:src="${#authentication.principal.imageUrl}"
+                                             alt="Profile Picture" class="mb-4">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-4">
+                            <label for="editFirstName" class="col-sm-4 col-form-label">First Name:</label>
+                            <div class="col-sm-8" th:classappend="${#fields.hasErrors('firstName')}?'has-danger'">
+                                <input type="text" class="form-control placeholder" name="firstName" id="editFirstName"
+                                       th:field="*{firstName}">
+                                <div th:each="error : ${#fields.errors('firstName')}">
+                                    <small th:text="${error}"></small>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-4">
+                            <label for="editLastName" class="col-sm-4 col-form-label">Last Name:</label>
+                            <div class="col-sm-8" th:classappend="${#fields.hasErrors('lastName')}?'has-danger'">
+                                <input type="text" class="form-control" name="lastName" id="editLastName"
+                                       th:field="*{lastName}">
+                                <div th:each="error : ${#fields.errors('lastName')}">
+                                    <small th:text="${error}"></small>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-4">
+                            <textarea class="form-control" id="editAboutArea" name="content" rows="5"
+                                      th:field="*{about}" >
+                            </textarea>
+                        </div>
+                        <div class="form-group row mt-4">
+                                <button type="submit" id="submitEditProfile" class="btn btn-primary btn-block">Edit Profile
+                                </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

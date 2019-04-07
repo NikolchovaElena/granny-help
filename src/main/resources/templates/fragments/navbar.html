@@ -1,0 +1,92 @@
+<th:block th:fragment="navbar" xmlns:th="http://www.thymeleaf.org">
+
+    <div class="site-navbar-top">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-6 col-md-6 text-left">
+                        <span><a th:href="@{/}"><img height="60" th:src="@{/images/granny_help.png}"></a>
+                        </span>
+                </div>
+
+                <div class="col-6 col-md-6 order-3 order-md-3 text-right">
+                    <div class="site-top-icons">
+                        <ul>
+                            <th:block sec:authorize="isAnonymous()">
+                                <li>
+                                    <a th:href="@{/user/login}">Login</a>/<a class="ml-2" th:href="@{/user/register}">Register</a>
+                                </li>
+                                <li class="d-inline-block d-md-none ml-md-0">
+                                    <a href="#" class="site-menu-toggle js-menu-toggle">
+                                        <span class="icon-menu"></span></a>
+                                </li>
+                            </th:block>
+
+                            <th:block sec:authorize="isAuthenticated()">
+                                <li>
+                                    <a th:href="@{/user/profile/{id}(id=${#authentication.principal.id})}"
+                                       th:text="${#authentication.principal.firstName+' '+#authentication.principal.lastName}"></a>
+                                </li>
+                                <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
+                                <li>
+                                    <a href="cart.html" class="site-cart">
+                                        <span class="icon icon-envelope"></span>
+                                        <span class="count">2</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="cart.html" class="site-cart">
+                                        <span class="icon icon-shopping_cart"></span>
+                                        <span class="count">2</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="site-logout" th:href="@{/user/logout}">Logout</a>
+                                </li>
+                                <li class="d-inline-block d-md-none ml-md-0">
+                                    <a href="#" class="site-menu-toggle js-menu-toggle">
+                                        <span class="icon-menu"></span></a></li>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="site-navigation text-right text-md-center" role="navigation">
+        <div class="container">
+            <ul class="site-menu js-clone-nav d-none d-md-block">
+                <li>
+                    <a th:href="@{/home}">Home</a>
+                </li>
+                <li>
+                    <a th:href="@{/about}">About</a>
+                </li>
+                <li>
+                    <a th:href="@{/about}">Find Cause</a>
+                </li>
+                <th:block sec:authorize="isAnonymous()">
+                    <li>
+                        <a th:href="@{/submit/cause}">Submit Cause</a>
+                    </li>
+                </th:block>
+                <li class="has-children">
+                    <a th:href="@{/about}">Users</a>
+                    <ul class="dropdown">
+                        <li><a href="#">Users</a></li>
+                        <li><a href="#">Admins</a></li>
+                        <li><a href="#">Moderators</a></li>
+                    </ul>
+                </li>
+                </li>
+                <li>
+                    <a href="#">Shop</a>
+                </li>
+                <li>
+                    <a href="#">Donate</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+</th:block>

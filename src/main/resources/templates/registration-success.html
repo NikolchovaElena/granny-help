@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/head :: head}"/>
+</head>
+<p th:text="'A verification email has been sent to: '+${email}"></p>
+</body>
+</html>

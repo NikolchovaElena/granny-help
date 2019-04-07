@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap">
+        <!--Paging-->
+        <div class="bg-light py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a> <span class="mx-2 mb-0">/</span> <strong
+                            class="text-black">About</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!--Content-->
+        <div class="site-section border-bottom" data-aos="fade">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-md-6">
+                        <div class="block-16">
+                            <img class="img-fluid rounded" th:src="@{/images/about_photo.jpg}" alt="Image placeholder">
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <div class="site-section-heading pt-3 mb-4">
+                            <h2 class="text-black">The idea behind Granny</h2>
+                        </div>
+                        <p> Granny is a platform that help connect the generations and make a positive difference in the
+                            community.
+                            Our goal is to help as many elderly people possible by presenting volunteers with many great
+                            opportunities to choose from.</p>
+                        <p> As a volunteer you can help by contributing your time or by making a donation.
+                            You can also contribute by staying vigilant and by registering new causes on our
+                            platform.</p>
+                        <p> Many elderly people have technological difficulties and need assistance registering a cause.
+                            For that reason our volunteer opportunities are mainly faded to us by volunteers.
+                        </p>
+                        <p> You don't need to have an account to register a cause with us. But we would love to have
+                            you in our family.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--The team Random volunteers-->
+        <th:block th:replace="~{fragments/blocks :: volunteers-block}"/>
+
+        <!--Contributor-->
+        <th:block th:replace="~{fragments/blocks :: contributors-block}"/>
+    </div>
+</div>
+</html>
