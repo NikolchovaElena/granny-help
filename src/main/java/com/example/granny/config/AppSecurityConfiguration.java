@@ -21,7 +21,7 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().disable()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/fonts/**", "/vendor/**", "/images/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/fonts/**", "/vendor/**", "/images/**", "/cause/details").permitAll()
                 .antMatchers(GlobalConstants.URL_ABOUT,
                         GlobalConstants.URL_INDEX,
                         GlobalConstants.URL_USER_HOME).permitAll()
@@ -35,8 +35,8 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginPage(GlobalConstants.URL_USER_LOGIN)
                 .usernameParameter("email")
                 .passwordParameter("password")
-                //     .successHandler(myAuthenticationSuccessHandler())
-                .defaultSuccessUrl("/home", true)
+                .successHandler(myAuthenticationSuccessHandler())
+                // .defaultSuccessUrl("/home", true)
                 .and()
                 .logout()
                 .logoutSuccessUrl(GlobalConstants.URL_INDEX);

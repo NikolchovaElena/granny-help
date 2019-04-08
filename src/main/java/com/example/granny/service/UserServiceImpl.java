@@ -44,11 +44,8 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           VerificationTokenService tokenService,
-                           RoleService roleService,
-                           ModelMapper modelMapper,
-                           BCryptPasswordEncoder bCryptPasswordEncoder,
+    public UserServiceImpl(UserRepository userRepository, VerificationTokenService tokenService,
+                           RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
                            UserValidationService userValidationService, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
@@ -122,7 +119,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserServiceModel> findAllUsers() {
-        return this.userRepository.findAll().stream().map(u -> this.modelMapper.map(u, UserServiceModel.class)).collect(Collectors.toList());
+        return this.userRepository.findAll()
+                .stream()
+                .filter(u -> !u.getEmail().equals(RootAdminData.ROOT_EMAIL))
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -167,8 +168,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserServiceModel> findFourRandomUsers() {
+        return userRepository.findFiveRandomUsers()
+                .stream()
+                .filter(u -> !u.getEmail().equals(RootAdminData.ROOT_EMAIL))
+                .limit(4)
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void delete(Integer id) {
         User user = userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+
+        tokenService.delete(user);
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void delete(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
 
         tokenService.delete(user);
@@ -190,16 +210,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void edit(String email, UserEditBindingModel model) throws IOException {
+    public UserServiceModel edit(String email, UserEditBindingModel model) throws IOException {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
-        String profilePicture = cloudinaryService.uploadImage((model.getImageUrl()));
+
+        if (!user.getImageUrl().equals(GlobalConstants.PROFILE_DEFAULT_IMG)) {
+            cloudinaryService.deleteImage(email);
+        }
+        MultipartFile file = model.getImageUrl();
+        String profilePicture = file.isEmpty() ? user.getImageUrl() :
+                cloudinaryService.uploadImage(model.getImageUrl(), email);
 
         user.setFirstName(model.getFirstName());
         user.setLastName(model.getLastName());
         user.setImageUrl(profilePicture);
         user.setAbout(model.getAbout());
 
-        this.userRepository.save(user);
+        return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
+
+
 }

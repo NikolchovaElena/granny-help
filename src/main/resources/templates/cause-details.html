@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap">
+        <!--Paging-->
+        <div class="bg-light py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a> <span class="mx-2 mb-0">/</span> <strong
+                            class="text-black">Causes</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!--Content-->
+        <div class="site-section border-bottom" data-aos="fade">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-md-5">
+                        <div class="block-16">
+                            <img class="img-fluid rounded" th:src="@{/images/about_photo.jpg}" alt="Image placeholder">
+                        </div>
+                        <div class="site-section-heading pt-3 mb-4">
+                            <h3 class="text-black">Title goes here</h3>
+                        </div>
+                        <p> Granny is a platform that help connect the generations and make a positive difference in the
+                            community.
+                            Our goal is to help as many elderly people possible by presenting volunteers with many great
+                            opportunities to choose from.</p>
+                        <p> As a volunteer you can help by contributing your time or by making a donation.
+                            You can also contribute by staying vigilant and by registering new causes on our
+                            platform.</p>
+                        <p> Many elderly people have technological difficulties and need assistance registering a cause.
+                            For that reason our volunteer opportunities are mainly faded to us by volunteers.
+                        </p>
+                        <p> You don't need to have an account to register a cause with us. But we would love to have
+                            you in our family.
+                        </p>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <!--Message Board-->
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col col-md-6">
+                                Published on:
+                                Location:
+                            </div>
+                            <div class="col col-md-6">
+                                Published by:
+                                <div class="block-38 text-center">
+                                    <div class="block-38-img">
+                                        <div class="block-38-header">
+                                            <img th:src="${model.imageUrl}" alt="Profile Picture" class="mb-4">
+                                            <h3 class="block-38-heading h4"
+                                                th:text="${model.firstName+' '+model.lastName}"></h3>
+                                            <i class="" th:text="${model.email}"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="site-section-heading pt-3 mb-4">
+                            <h5 class="text-black">Message Board</h5>
+                        </div>
+                        <div class="alert alert-warning">
+                            <div class="container">
+                                <div class="row">
+                                    <p> Message 1</p>
+                                    <p> From ...</p>
+                                    <p> Content</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <div class="container">
+                                <div class="row">
+                                    <p> Message 2</p>
+                                    <p> From ...</p>
+                                    <p> Content</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</html>

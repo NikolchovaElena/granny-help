@@ -6,12 +6,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserEditBindingModel {
 
+    private Integer id;
     private String firstName;
     private String lastName;
     private MultipartFile imageUrl;
     private String about;
 
     public UserEditBindingModel() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @ValidFirstName

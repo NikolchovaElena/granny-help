@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -97,7 +98,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Column(columnDefinition = "TEXT")
-    @Length(max = 400)
+    @Length(max = 300)
     public String getAbout() {
         return about;
     }

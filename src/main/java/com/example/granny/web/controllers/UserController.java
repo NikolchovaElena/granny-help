@@ -5,7 +5,8 @@ import com.example.granny.domain.models.binding.UserEditBindingModel;
 import com.example.granny.domain.models.binding.UserPasswordBindingModel;
 import com.example.granny.domain.models.binding.UserRegisterBindingModel;
 import com.example.granny.domain.models.service.UserServiceModel;
-import com.example.granny.domain.models.view.UserEditViewModel;
+import com.example.granny.domain.models.view.UserViewModel;
+import com.example.granny.domain.models.view.UserShowViewModel;
 import com.example.granny.service.api.EventService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -21,6 +22,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController extends BaseController {
@@ -51,7 +54,7 @@ public class UserController extends BaseController {
     @PreAuthorize(GlobalConstants.IS_ANONYMOUS)
     public ModelAndView register(ModelAndView modelAndView) {
         modelAndView.addObject(GlobalConstants.MODEL, new UserRegisterBindingModel());
-        return view("register",modelAndView);
+        return view("register", modelAndView);
     }
 
     @PostMapping(GlobalConstants.URL_USER_REGISTER)
@@ -116,23 +119,23 @@ public class UserController extends BaseController {
         return view("profile");
     }
 
-    @PostMapping("/user/delete/{id}")
+    @PostMapping("/user/delete")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    public ModelAndView deleteProfile(@PathVariable("id") Integer id,
+    public ModelAndView deleteProfile(Principal principal,
                                       HttpSession session) {
-        userService.delete(id);
+        userService.delete(principal.getName());
         session.invalidate();
-        return view("index");
+        return redirect("/");
     }
 
     @GetMapping("/user/profile/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView profile(@PathVariable("id") Integer id,
                                 ModelAndView modelAndView) {
-        UserServiceModel user = this.userService.findUserById(id);
-        modelAndView.addObject(GlobalConstants.MODEL, user);
+        UserServiceModel model = this.userService.findUserById(id);
+        modelAndView.addObject(GlobalConstants.MODEL, model);
 
-        return view("profile");
+        return view("profile", modelAndView);
     }
 
     @GetMapping("/user/edit/profile")
@@ -140,7 +143,7 @@ public class UserController extends BaseController {
     public ModelAndView editProfile(Principal principal,
                                     ModelAndView modelAndView) {
         UserServiceModel userServiceModel = userService.findUserByEmail(principal.getName());
-        UserEditViewModel model = this.modelMapper.map(userServiceModel, UserEditViewModel.class);
+        UserViewModel model = this.modelMapper.map(userServiceModel, UserViewModel.class);
         modelAndView.addObject(GlobalConstants.MODEL, model);
         return view("edit-profile", modelAndView);
     }
@@ -150,12 +153,37 @@ public class UserController extends BaseController {
     public ModelAndView editProfileConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL) UserEditBindingModel model,
                                            BindingResult bindingResult,
                                            Principal principal,
+                                           HttpSession session,
                                            ModelAndView modelAndView) throws IOException {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
             return view("edit-profile", modelAndView);
         }
-        userService.edit( principal.getName(),model);
-        return redirect("profile");
+        UserServiceModel userServiceModel = userService.edit(principal.getName(), model);
+        UserViewModel profile = this.modelMapper.map(userServiceModel, UserViewModel.class);
+        session.setAttribute(GlobalConstants.PROFILE, profile);
+        return redirect("/user/profile/" + model.getId());
     }
+
+    @GetMapping("/users/show")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView users(ModelAndView modelAndView) {
+        List<UserShowViewModel> model = this.userService.findAllUsers()
+                .stream()
+                .map(m -> this.modelMapper.map(m, UserShowViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject(GlobalConstants.MODEL, model);
+        return view("users", modelAndView);
+    }
+
+    @PostMapping("/user/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView deleteProfile(@PathVariable("id") Integer id,
+                                      HttpSession session) {
+        userService.delete(id);
+        return redirect("/users/show");
+    }
+
+
 }

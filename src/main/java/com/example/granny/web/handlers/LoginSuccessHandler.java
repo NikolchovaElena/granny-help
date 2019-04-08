@@ -2,11 +2,11 @@ package com.example.granny.web.handlers;
 
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.User;
+import com.example.granny.domain.models.view.UserViewModel;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,8 +19,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
 
         HttpSession session = httpServletRequest.getSession();
-       // User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      //  session.setAttribute(GlobalConstants.MODEL, user);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserViewModel profile = new UserViewModel(user.getFirstName(), user.getLastName(),
+                                                           user.getImageUrl(), user.getAbout());
+
+        session.setAttribute(GlobalConstants.PROFILE, profile);
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.sendRedirect(GlobalConstants.URL_USER_HOME);
     }

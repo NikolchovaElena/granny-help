@@ -14,9 +14,11 @@ public interface UserService extends UserDetailsService {
 
     UserServiceModel edit(String email, String newPassword, String oldPassword);
 
-    void edit(String email,UserEditBindingModel model) throws IOException;
+    UserServiceModel edit(String email, UserEditBindingModel model) throws IOException;
 
     void delete(Integer id);
+
+    void delete(String email);
 
     void enableUser(User user);
 
@@ -29,5 +31,7 @@ public interface UserService extends UserDetailsService {
     UserServiceModel findUserByEmail(String email);
 
     UserServiceModel findUserById(Integer id);
+
+    List<UserServiceModel>findFourRandomUsers();
 
 }

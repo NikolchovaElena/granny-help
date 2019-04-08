@@ -32,6 +32,7 @@ public final class GlobalConstants {
     public static final String IS_AUTHENTICATED = "isAuthenticated()";
 
     public static final String MODEL = "model";
+    public static final String PROFILE = "profile";
 
     /**
      * Exceptions

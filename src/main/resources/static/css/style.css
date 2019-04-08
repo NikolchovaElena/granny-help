@@ -83,7 +83,7 @@ a:hover {
 
 .btn.btn-sm {
     font-size: 14px !important;
-    padding: 10px 20px !important;
+    /*padding: 10px 20px !important;*/
 }
 
 .btn.btn-primary {
@@ -1066,7 +1066,7 @@ a:hover {
 
 .delete-as-link {
     align-items: normal;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     border-color: rgb(121, 113, 234);
     border-style: none;
     box-sizing: content-box;
@@ -1089,13 +1089,23 @@ a:hover {
 /* Mozilla uses a pseudo-element to show focus on buttons, */
 /* but anchors are highlighted via the focus pseudo-class. */
 
-@supports (-moz-appearance:none) { /* Mozilla-only */
+@supports (-moz-appearance:none) {
+    /* Mozilla-only */
     button::-moz-focus-inner { /* reset any predefined properties */
         border: none;
         padding: 0;
     }
+
     button:focus { /* add outline to focus pseudo-class */
         outline-style: dotted;
         outline-width: 1px;
     }
+}
+
+.bl-font {
+    color: #000000;
+}
+
+.bl-font {
+    background-color: #ffc107;
 }

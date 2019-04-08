@@ -5,9 +5,23 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-5 col-lg-3">
-                    <th:block th:replace="~{fragments/blocks :: profile-block}"/>
+                    <div class="block-38 text-center">
+                        <div class="block-38-img">
+                            <div class="block-38-header">
+                                <img th:src="${session.profile.imageUrl}"
+                                     alt="Profile Picture" class="mb-4">
+                                <h3 class="block-38-heading h4"
+                                    th:text="${session.profile.firstName+' '+session.profile.lastName}"></h3>
+                                <i class="" th:text="${#authentication.principal.email}"></i>
+                            </div>
+                            <div class="block-38-body mt-3">
+                                <p th:text="${session.profile.about}"></p>
+                            </div>
+                        </div>
+                    </div>
                     <a th:href="@{/submit/cause}" class="btn btn-primary btn-block">Submit Cause</a>
                 </div>
+            <!--Content-->
                 <div class="col-md-7 col-lg-9">
                     col
                 </div>
