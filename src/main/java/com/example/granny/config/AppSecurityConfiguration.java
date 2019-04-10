@@ -21,10 +21,12 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().disable()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/fonts/**", "/vendor/**", "/images/**", "/cause/details").permitAll()
+                .antMatchers("/css/**", "/js/**", "/fonts/**", "/vendor/**", "/images/**").permitAll()
                 .antMatchers(GlobalConstants.URL_ABOUT,
                         GlobalConstants.URL_INDEX,
-                        GlobalConstants.URL_USER_HOME).permitAll()
+                        GlobalConstants.URL_USER_HOME,
+                        "/cause/details/*",
+                        "/causes").permitAll()
                 .antMatchers(GlobalConstants.URL_USER_LOGIN,
                         GlobalConstants.URL_USER_REGISTER,
                         GlobalConstants.URL_CONFIRM_ACCOUNT,

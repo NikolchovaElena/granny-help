@@ -6,6 +6,7 @@ public class UserViewModel {
 
     private String firstName;
     private String lastName;
+    private String email;
     private String imageUrl;
     private String about;
 
@@ -17,6 +18,14 @@ public class UserViewModel {
         this.lastName = lastName;
         this.imageUrl = imageUrl;
         this.about = about;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {

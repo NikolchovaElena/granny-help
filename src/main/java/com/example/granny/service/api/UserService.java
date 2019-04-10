@@ -2,6 +2,7 @@ package com.example.granny.service.api;
 
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
+import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    boolean register(UserServiceModel userServiceModel);
+    boolean register(UserServiceModel model);
 
     UserServiceModel edit(String email, String newPassword, String oldPassword);
 
@@ -24,14 +25,18 @@ public interface UserService extends UserDetailsService {
 
     List<UserServiceModel> findAllUsers();
 
+    List<CauseServiceModel> findAllPinned(Integer id);
+
     void setUserRole(String id, String role);
 
     boolean emailExists(String email);
+
+    void followCause(UserServiceModel model, Integer id);
 
     UserServiceModel findUserByEmail(String email);
 
     UserServiceModel findUserById(Integer id);
 
-    List<UserServiceModel>findFourRandomUsers();
+    List<UserServiceModel> findFourRandomUsers();
 
 }

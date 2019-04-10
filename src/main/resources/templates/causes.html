@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap mt-4 mb-4">
+        <!--Paging-->
+        <div class="bg-light py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a>
+                        <span class="mx-2 mb-0">/</span>
+                        <strong class="text-black">Causes</strong></div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+
+            <div class="row mb-5">
+                <div class="col-md-12 order-2">
+
+                    <div class="row">
+                        <div class="col-md-12 mt-2 mb-3">
+                            <div class="d-flex">
+                                <div class="dropdown mr-1 ml-md-auto">
+                                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"
+                                            id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        ORDER BY
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset"
+                                         x-placement="bottom-start"
+                                         style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 43px, 0px);">
+                                        <a class="dropdown-item" href="#">Latest</a>
+                                        <a class="dropdown-item" href="#">Popular</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <!--Content-->
+                        <th:block th:each="cause : ${model}">
+                            <div class="col-sm-6 col-lg-4 mb-4 aos-init aos-animate" data-aos="fade-up">
+                                <div class="block-4 text-center border">
+                                    <figure class="block-4-image">
+                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}">
+                                            <img th:src="${cause.causeImgUrl}" alt="Image placeholder"
+                                                 class="img-fluid"></a>
+                                    </figure>
+                                    <div class="block-4-text p-4">
+                                        <h3><a th:href="@{/cause/details/{id}(id=${cause.id})}"
+                                               th:text="${cause.title}"></a></h3>
+                                        <div class="mt-4">
+                                            <p class="mb-0">Submitted by:
+                                                <strong class="text-black" th:text="${cause.author.firstName +' '+cause.author.lastName}">
+                                            </strong>
+                                            </p>
+                                            <p class="mb-0">Help needed in:
+                                                <strong class="text-black" th:text="${cause.location.name}"></strong>
+                                            </p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

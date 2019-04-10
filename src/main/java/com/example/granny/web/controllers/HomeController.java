@@ -1,8 +1,11 @@
 package com.example.granny.web.controllers;
 
 import com.example.granny.constants.GlobalConstants;
+import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
+import com.example.granny.domain.models.view.CauseViewModel;
 import com.example.granny.domain.models.view.UserViewModel;
+import com.example.granny.service.api.CauseService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,13 @@ import java.util.stream.Collectors;
 public class HomeController extends BaseController {
 
     private final UserService userService;
+    private final CauseService causeService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public HomeController(UserService userService, ModelMapper modelMapper) {
+    public HomeController(UserService userService, CauseService causeService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.causeService = causeService;
         this.modelMapper = modelMapper;
     }
 
@@ -38,6 +43,15 @@ public class HomeController extends BaseController {
         if (principal == null) {
             return view("index");
         }
+        UserServiceModel user = userService.findUserByEmail(principal.getName());
+
+        List<CauseServiceModel> approvedServiceModel = causeService.findAllApproved(user.getId());
+        List<CauseServiceModel> pendingServiceModel = causeService.findAllPending(user.getId());
+        List<CauseServiceModel> pinnedServiceModel = userService.findAllPinned(user.getId());
+
+        modelAndView.addObject("approved", fetchCauses(approvedServiceModel));
+        modelAndView.addObject("pending", fetchCauses(pendingServiceModel));
+        modelAndView.addObject("pinned", fetchCauses(pinnedServiceModel));
         return view("home", modelAndView);
     }
 
@@ -45,7 +59,7 @@ public class HomeController extends BaseController {
     public ModelAndView about(ModelAndView modelAndView) {
         List<UserViewModel> model = userService.findFourRandomUsers()
                 .stream()
-                .map(u->modelMapper.map(u,UserViewModel.class))
+                .map(u -> modelMapper.map(u, UserViewModel.class))
                 .collect(Collectors.toList());
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
@@ -58,11 +72,9 @@ public class HomeController extends BaseController {
         return view("error");
     }
 
-//    @GetMapping("/account")
-//    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-//    public ModelAndView account() {
-//        return view("account");
-//    }
-
-
+    private List<CauseViewModel> fetchCauses(List<CauseServiceModel> models) {
+        return models.stream()
+                .map(c -> modelMapper.map(c, CauseViewModel.class))
+                .collect(Collectors.toList());
+    }
 }

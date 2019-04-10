@@ -2,7 +2,8 @@
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
 <div layout:fragment="content">
     <div class="site-wrap mt-4 mb-4">
-        <div class="container">
+
+        <div class="container mt-4">
             <div class="row">
                 <div class="col-md-5 col-lg-3">
                     <div class="block-38 text-center">
@@ -19,11 +20,49 @@
                             </div>
                         </div>
                     </div>
-                    <a th:href="@{/submit/cause}" class="btn btn-primary btn-block">Submit Cause</a>
+                    <a th:href="@{/cause/submit}" class="btn btn-primary btn-block">Submit Cause</a>
                 </div>
-            <!--Content-->
+
+                <!--Content-->
                 <div class="col-md-7 col-lg-9">
-                    col
+                    <div class="row ml-5 mb-5">
+                        <h4 th:if="${not #lists.isEmpty(pinned)}" class="text-black">Pinned Causes:</h4>
+                        <th:block th:each="cause : ${pinned}">
+                            <div class="row mr-1">
+                                <div class="col-12">
+                                    <div class="alert alert-warning" role="alert">
+                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                           class="alert-link body-text"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+
+                    <div class="row ml-5">
+                        <div class="col-md-6">
+                            <h4 class="text-black">My Causes:</h4>
+                            <th:block th:each="cause : ${approved}">
+                                <div class="row mr-1">
+                                    <div class="alert alert-success" role="alert">
+                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                           class="alert-link body-text"></a>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-black">Pending Causes:</h4>
+                            <th:block th:each="cause : ${pending}">
+                                <div class="row ml-1">
+                                    <div class="alert alert-danger" role="alert">
+                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                           class="alert-link body-text"></a>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

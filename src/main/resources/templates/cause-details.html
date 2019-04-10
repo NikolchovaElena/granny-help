@@ -19,53 +19,88 @@
                 <div class="row mb-5">
                     <div class="col-md-5">
                         <div class="block-16">
-                            <img class="img-fluid rounded" th:src="@{/images/about_photo.jpg}" alt="Image placeholder">
+                            <img class="img-fluid rounded" th:src="${model.causeImgUrl}" alt="Image placeholder">
+
+                            <form th:method="post" th:action="@{/user/follow/{id}(id=${model.id})}">
+                                <button class="as-link" type="submit" name="followCause">
+                                    <span class="icon icon-heart">Follow cause</span>
+                                </button>
+                            </form>
+                            <a href="#">
+                                <span class="icon icon-edit">Edit cause</span>
+                            </a>
+                            <form th:method="post" th:action="@{/cause/delete/{id}(id=${model.id})}">
+                                <button class="as-link" type="submit" name="deleteCause">
+                                    <span class="icon icon-delete">Delete cause</span>
+                                </button>
+                            </form>
                         </div>
-                        <div class="site-section-heading pt-3 mb-4">
-                            <h3 class="text-black">Title goes here</h3>
+                        <div class="pt-3 mb-4 mt-2">
+                            <h3 class="text-black" th:text="${model.title}"></h3>
                         </div>
-                        <p> Granny is a platform that help connect the generations and make a positive difference in the
-                            community.
-                            Our goal is to help as many elderly people possible by presenting volunteers with many great
-                            opportunities to choose from.</p>
-                        <p> As a volunteer you can help by contributing your time or by making a donation.
-                            You can also contribute by staying vigilant and by registering new causes on our
-                            platform.</p>
-                        <p> Many elderly people have technological difficulties and need assistance registering a cause.
-                            For that reason our volunteer opportunities are mainly faded to us by volunteers.
-                        </p>
-                        <p> You don't need to have an account to register a cause with us. But we would love to have
-                            you in our family.
-                        </p>
+                        <div th:text="${model.description}"></div>
                     </div>
                     <div class="col-md-1"></div>
                     <!--Message Board-->
                     <div class="col-md-5">
                         <div class="row">
-                            <div class="col col-md-6">
-                                Published on:
-                                Location:
-                            </div>
-                            <div class="col col-md-6">
-                                Published by:
+
+                            <div class="col col-md-8">
                                 <div class="block-38 text-center">
-                                    <div class="block-38-img">
-                                        <div class="block-38-header">
-                                            <img th:src="${model.imageUrl}" alt="Profile Picture" class="mb-4">
-                                            <h3 class="block-38-heading h4"
-                                                th:text="${model.firstName+' '+model.lastName}"></h3>
-                                            <i class="" th:text="${model.email}"></i>
+                                    <div class="block-38-header">
+                                        <div class="row">
+                                            <div class="col col-md-6">
+                                                <i> Published on: </i>
+                                            </div>
+                                            <div class="col col-md-6">
+                                                <h3 class="block-38-heading h5" th:text="${model.publishingDate}"></h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col col-md-6">
+                                                <i> Location: </i>
+                                            </div>
+                                            <div class="col col-md-6 block-38-heading h5">
+                                                <h3 class="block-38-heading h5" th:text="${model.location.name}"></h3>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col col-md-6">
+                                                <i>Published by: </i>
+                                            </div>
+                                            <div class="col col-md-6">
+                                                <h3 class="block-38-heading h4"
+                                                    th:text="${model.author.firstName+' '+model.author.lastName}"></h3>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col col-md-6">
+                                                <i>Email: </i>
+                                            </div>
+                                            <div class="col col-md-6">
+                                                <h3 class="block-38-heading h5" th:text="${model.author.email}"></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-md-4">
+                                <div class="block-38 text-center">
+                                    <div class="block-38-header">
+                                        <div class="block-38-img">
+                                            <img th:src="${model.author.imageUrl}" alt="Profile Picture" class="mb-4">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-
-                        <div class="site-section-heading pt-3 mb-4">
+                        <hr>
+                        <div class="pt-3 mb-4 mt-4">
                             <h5 class="text-black">Message Board</h5>
                         </div>
-                        <div class="alert alert-warning">
+                        <div class="alert alert-primary">
                             <div class="container">
                                 <div class="row">
                                     <p> Message 1</p>
@@ -74,21 +109,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="alert alert-warning">
-                            <div class="container">
-                                <div class="row">
-                                    <p> Message 2</p>
-                                    <p> From ...</p>
-                                    <p> Content</p>
-                                </div>
-                            </div>
-                        </div>
+                        <form action="#" method="get">Enter your comment here:<br/>
+                            <textarea rows="2" cols="35"></textarea><br/>
+                            <input class="btn btn-primary btn-sm" type="submit" value="Submit"/>
+                        </form>
                     </div>
                 </div>
             </div>
+
+
         </div>
-
-
     </div>
-</div>
 </html>

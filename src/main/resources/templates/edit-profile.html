@@ -9,26 +9,11 @@
                 <div class="col-4">
                     <form th:action="@{/user/edit/profile}" th:method="post" th:object="${model}"
                           enctype="multipart/form-data">
-                        <input type="hidden" th:value="${#authentication.principal.id}" name="id" />
+                        <input type="hidden" th:value="${#authentication.principal.id}" name="id"/>
                         <div class="form-group">
-                            <label for="add-product-image" class="font-weight-bold">Choose profile picture<br>max size 1MB</label>
                             <input type="file" class="form-control-file" id="add-product-image" name="imageUrl">
+                            <label for="add-product-image">Choose profile picture with 1MB max size</label>
                         </div>
-                        <!--<div class="block-38 text-center">-->
-                            <!--<div class="block-38-img">-->
-                                <!--<div class="block-38-header">-->
-                                    <!--<div class="form-group">-->
-                                        <!--<label for="add-product-image" class="font-weight-bold">Image</label>-->
-                                        <!--<input type="file" class="form-control-file" id="add-product-image" name="imageUrl">-->
-                                    <!--</div>-->
-                                    <!--&lt;!&ndash;<label for="profile-picture">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<input type="file" name="imageUrl" th:field="*{imageUrl}" id="profile-picture" style="display:none;"/>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<img th:src="${#authentication.principal.imageUrl}"&ndash;&gt;-->
-                                             <!--&lt;!&ndash;alt="Profile Picture" class="mb-4">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</label>&ndash;&gt;-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
                         <div class="form-group row mt-4">
                             <label for="editFirstName" class="col-sm-4 col-form-label">First Name:</label>
                             <div class="col-sm-8" th:classappend="${#fields.hasErrors('firstName')}?'has-danger'">
@@ -53,14 +38,11 @@
                         </div>
                         <div class="form-group row mt-4">
                             <textarea class="form-control" id="editAboutArea" name="content" rows="5" maxlength="300"
-                                      th:field="*{about}" >
+                                      th:field="*{about}">
                             </textarea>
                         </div>
-                        <!--<div class="form-group row mt-4">-->
-                                <!--<button type="submit" id="submitEditProfile" class="btn btn-primary btn-block">Edit Profile</button>-->
-                        <!--</div>-->
                         <div class="button-holder d-flex justify-content-center">
-                            <button type="submit" class="btn btn-dark">Edit Profile</button>
+                            <button type="submit" class="btn btn-primary btn-block">Edit Profile</button>
                         </div>
                     </form>
                 </div>

@@ -2,16 +2,15 @@ package com.example.granny.service;
 
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.constants.RootAdminData;
+import com.example.granny.domain.entities.Cause;
 import com.example.granny.domain.entities.Role;
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
+import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.RoleServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.repository.UserRepository;
-import com.example.granny.service.api.CloudinaryService;
-import com.example.granny.service.api.RoleService;
-import com.example.granny.service.api.UserService;
-import com.example.granny.service.api.VerificationTokenService;
+import com.example.granny.service.api.*;
 import com.example.granny.validation.api.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final VerificationTokenService tokenService;
+    private final CauseService causeService;
     private final RoleService roleService;
     private final UserValidationService userValidation;
     private final CloudinaryService cloudinaryService;
@@ -45,10 +46,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, VerificationTokenService tokenService,
-                           RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
+                           CauseService causeService, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
                            UserValidationService userValidationService, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.causeService = causeService;
         this.roleService = roleService;
         this.cloudinaryService = cloudinaryService;
         this.userValidation = userValidationService;
@@ -154,6 +156,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void followCause(UserServiceModel model, Integer id) {
+        User user = modelMapper.map(model, User.class);
+        if (user.getPins().size() == 0) {
+            user.setPins(new ArrayList<>());
+        }
+
+        Cause cause = modelMapper.map(causeService.findById(id), Cause.class);
+        user.getPins().add(cause);
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<CauseServiceModel> findAllPinned(Integer id) {
+        User user = modelMapper.map(findUserById(id), User.class);
+
+        return  user.getPins().stream()
+                .map(c->modelMapper.map(c,CauseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public UserServiceModel findUserByEmail(String email) {
         User user = this.userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
@@ -182,8 +205,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
 
-        tokenService.delete(user);
-        userRepository.delete(user);
+        if (ifNotRoot(user)) {
+            tokenService.delete(user);
+            userRepository.delete(user);
+        }
     }
 
     @Override
@@ -191,8 +216,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
 
-        tokenService.delete(user);
-        userRepository.delete(user);
+        if (ifNotRoot(user)) {
+            tokenService.delete(user);
+            userRepository.delete(user);
+        }
     }
 
     @Override
@@ -229,5 +256,7 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
 
-
+    private boolean ifNotRoot(User user) {
+        return !user.getEmail().equals(RootAdminData.ROOT_EMAIL);
+    }
 }

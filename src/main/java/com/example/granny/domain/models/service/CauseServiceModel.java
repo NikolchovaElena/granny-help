@@ -1,37 +1,28 @@
-package com.example.granny.domain.entities;
+package com.example.granny.domain.models.service;
 
 import com.example.granny.constants.GlobalConstants;
+import com.example.granny.domain.entities.Comment;
+import com.example.granny.domain.entities.Location;
+import com.example.granny.domain.entities.User;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "causes")
-public class Cause extends BaseEntity {
-
+public class CauseServiceModel extends BaseServiceModel {
     private String title;
     private String causeImgUrl;
     private String description;
-    private Location location;
+    private LocationServiceModel location;
     private LocalDate publishingDate;
-    private User author;
+    private UserServiceModel author;
     private List<Comment> comments;
     private boolean isApproved;
 
-    public Cause() {
+    public CauseServiceModel() {
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (causeImgUrl == null) {
-            causeImgUrl = GlobalConstants.CAUSE_DEFAULT_IMG;
-        }
-        publishingDate = LocalDate.now();
-    }
-
-    @Column(nullable = false)
+    @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
     public String getTitle() {
         return title;
     }
@@ -40,7 +31,7 @@ public class Cause extends BaseEntity {
         this.title = title;
     }
 
-    @Column(nullable = false)
+    @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
     public String getCauseImgUrl() {
         return causeImgUrl;
     }
@@ -49,7 +40,7 @@ public class Cause extends BaseEntity {
         this.causeImgUrl = causeImgUrl;
     }
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
     public String getDescription() {
         return description;
     }
@@ -58,16 +49,15 @@ public class Cause extends BaseEntity {
         this.description = description;
     }
 
-    @OneToOne
-    public Location getLocation() {
+    @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
+    public LocationServiceModel getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(LocationServiceModel location) {
         this.location = location;
     }
 
-    @Column(nullable = false)
     public LocalDate getPublishingDate() {
         return publishingDate;
     }
@@ -76,30 +66,27 @@ public class Cause extends BaseEntity {
         this.publishingDate = publishingDate;
     }
 
-    @ManyToOne(targetEntity = User.class)
-    public User getAuthor() {
+    public UserServiceModel getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserServiceModel author) {
         this.author = author;
     }
 
-    @Column
-    public boolean isApproved() {
-        return isApproved;
-    }
-
-    public void setApproved(boolean approved) {
-        isApproved = approved;
-    }
-
-    @OneToMany
     public List<Comment> getComments() {
         return comments;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 }

@@ -185,5 +185,14 @@ public class UserController extends BaseController {
         return redirect("/users/show");
     }
 
+    @PostMapping("/user/follow/{id}")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    ModelAndView followCause(@PathVariable("id") Integer id,
+                             Principal principal) {
+        UserServiceModel user = userService.findUserByEmail(principal.getName());
+        userService.followCause(user, id);
 
+       // return view("cause-details", modelAndView);
+        return view("index");
+    }
 }

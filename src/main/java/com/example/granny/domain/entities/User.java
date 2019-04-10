@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,9 @@ public class User extends BaseEntity implements UserDetails {
     private String about;
     private boolean isEnabled;
     private Set<Role> authorities;
+//    private List<Cause> causes;
+    private List<Cause> pins;
+
 
     public User() {
         this.authorities = new HashSet<>();
@@ -33,10 +37,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @PrePersist
     public void prePersist() {
-        if(imageUrl == null) {
+        if (imageUrl == null) {
             imageUrl = GlobalConstants.PROFILE_DEFAULT_IMG;
         }
-        if(about == null) {
+        if (about == null) {
             about = GlobalConstants.ABOUT_DEFAULT_TEXT;
         }
     }
@@ -126,6 +130,35 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setAuthorities(Set<Role> authorities) {
         this.authorities = authorities;
+    }
+
+//    @OneToMany
+//    public List<Cause> getCauses() {
+//        return causes;
+//    }
+//
+//    public void setCauses(List<Cause> causes) {
+//        this.causes = causes;
+//    }
+
+    @ManyToMany(targetEntity = Cause.class)
+    @JoinTable(
+            name = "users_causes",
+            joinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "cause_id",
+                    referencedColumnName = "id"
+            )
+    )
+    public List<Cause> getPins() {
+        return pins;
+    }
+
+    public void setPins(List<Cause> pins) {
+        this.pins = pins;
     }
 
     @Override

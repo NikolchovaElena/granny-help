@@ -8,6 +8,7 @@ import com.example.granny.validation.annotations.ValidEmail;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
 
 public class UserServiceModel extends BaseServiceModel {
@@ -19,6 +20,7 @@ public class UserServiceModel extends BaseServiceModel {
     private String imageUrl;
     private String about;
     private Set<RoleServiceModel> authorities;
+    private List<CauseServiceModel> pins;
 
     public UserServiceModel() {
     }
@@ -83,4 +85,11 @@ public class UserServiceModel extends BaseServiceModel {
         this.authorities = authorities;
     }
 
+    public List<CauseServiceModel> getPins() {
+        return pins;
+    }
+
+    public void setPins(List<CauseServiceModel> pins) {
+        this.pins = pins;
+    }
 }

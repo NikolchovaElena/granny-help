@@ -1064,7 +1064,7 @@ a:hover {
     font-size: 35px;
 }
 
-.delete-as-link {
+.as-link {
     align-items: normal;
     background-color: rgba(0, 0, 0, 0);
     border-color: rgb(121, 113, 234);
@@ -1108,4 +1108,8 @@ a:hover {
 
 .bl-font {
     background-color: #ffc107;
+}
+
+.body-text {
+    font-weight: 300;
 }
