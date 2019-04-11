@@ -25,7 +25,6 @@ public class CauseServiceImpl implements CauseService {
     @Autowired
     public CauseServiceImpl(CauseRepository causeRepository, ModelMapper modelMapper) {
         this.causeRepository = causeRepository;
-
         this.modelMapper = modelMapper;
     }
 
@@ -68,8 +67,6 @@ public class CauseServiceImpl implements CauseService {
                 .map(c -> modelMapper.map(c, CauseServiceModel.class))
                 .collect(Collectors.toList());
     }
-
-
 
     @Override
     public CauseServiceModel findById(Integer id) {

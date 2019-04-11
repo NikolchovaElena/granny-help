@@ -5,8 +5,10 @@ import com.example.granny.domain.models.binding.CauseSubmitBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.CauseViewModel;
+import com.example.granny.domain.models.view.CommentViewModel;
 import com.example.granny.domain.models.view.LocationViewModel;
 import com.example.granny.service.api.CauseService;
+import com.example.granny.service.api.CommentService;
 import com.example.granny.service.api.LocationService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -30,29 +32,32 @@ public class CauseController extends BaseController {
 
     private final UserService userService;
     private final CauseService causeService;
+    private final CommentService commentService;
     private final LocationService locationService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public CauseController(UserService userService,
                            CauseService causeService,
-                           LocationService locationService,
+                           CommentService commentService, LocationService locationService,
                            ModelMapper modelMapper) {
         this.userService = userService;
         this.causeService = causeService;
+        this.commentService = commentService;
         this.locationService = locationService;
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/cause/submit")
+
+    @GetMapping("/causes/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCause(ModelAndView modelAndView) {
         modelAndView.addObject(GlobalConstants.MODEL, new CauseSubmitBindingModel());
         addLocations(modelAndView);
-        return view("submit-cause", modelAndView);
+        return view("causes-form", modelAndView);
     }
 
-    @PostMapping("/cause/submit")
+    @PostMapping("/causes/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCauseConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
                                             CauseSubmitBindingModel model,
@@ -62,53 +67,58 @@ public class CauseController extends BaseController {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
             addLocations(modelAndView);
-            return view("submit-cause", modelAndView);
+            return view("causes-form", modelAndView);
         }
         CauseServiceModel causeServiceModel = modelMapper.map(model, CauseServiceModel.class);
         UserServiceModel author = userService.findUserByEmail(principal.getName());
         causeServiceModel.setAuthor(author);
 
         causeService.submit(causeServiceModel);
-        return redirect("home");
+        return redirect("/home");
     }
 
-    @GetMapping("/cause/edit/{id}")
+
+
+    @GetMapping("/causes/form/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView editCause(@PathVariable("id") Integer id,
                            ModelAndView modelAndView) {
         CauseServiceModel model = causeService.findById(id);
         modelAndView.addObject(GlobalConstants.MODEL, model);
         addLocations(modelAndView);
-        return view("edit-cause", modelAndView);
+        return view("causes-form", modelAndView);
     }
 
-    @PostMapping("/cause/edit/{id}")
+    @PostMapping("/causes/form/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView editCauseConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
-                                            CauseSubmitBindingModel model,
-                                    BindingResult bindingResult,
-                                    Principal principal,
-                                    ModelAndView modelAndView) {
+                                          CauseSubmitBindingModel model,
+                                  BindingResult bindingResult,
+                                  Principal principal,
+                                  ModelAndView modelAndView) {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
             addLocations(modelAndView);
-            return view("submit-cause", modelAndView);
+            return view("causes-form", modelAndView);
         }
         CauseServiceModel causeServiceModel = modelMapper.map(model, CauseServiceModel.class);
         UserServiceModel author = userService.findUserByEmail(principal.getName());
         causeServiceModel.setAuthor(author);
 
         causeService.submit(causeServiceModel);
-        return redirect("home");
+        return redirect("/home");
     }
 
 
-    @GetMapping("/cause/details/{id}")
+    @GetMapping("/causes/{id}")
     ModelAndView causeDetails(@PathVariable("id") Integer id,
                               ModelAndView modelAndView) {
         CauseServiceModel causeServiceModel = causeService.findById(id);
         CauseViewModel model = modelMapper.map(causeServiceModel, CauseViewModel.class);
+        List<CommentViewModel> comments = commentService.findAll(id);
+
         modelAndView.addObject(GlobalConstants.MODEL, model);
+        modelAndView.addObject("comments", comments);
         return view("cause-details", modelAndView);
     }
 
@@ -124,7 +134,6 @@ public class CauseController extends BaseController {
         return view("causes", modelAndView);
     }
 
-
     private void addLocations(ModelAndView modelAndView) {
         modelAndView.addObject("locations", this.locationService
                 .findAll()
@@ -132,6 +141,4 @@ public class CauseController extends BaseController {
                 .map(c -> this.modelMapper.map(c, LocationViewModel.class))
                 .collect(Collectors.toList()));
     }
-
-
 }

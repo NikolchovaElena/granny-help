@@ -20,7 +20,7 @@
                             </div>
                         </div>
                     </div>
-                    <a th:href="@{/cause/submit}" class="btn btn-primary btn-block">Submit Cause</a>
+                    <a th:href="@{/causes/form}" class="btn btn-primary btn-block">Submit Cause</a>
                 </div>
 
                 <!--Content-->
@@ -31,7 +31,7 @@
                             <div class="row mr-1">
                                 <div class="col-12">
                                     <div class="alert alert-warning" role="alert">
-                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                        <a th:href="@{/causes/{id}(id=${cause.id})}" th:text="${cause.title}"
                                            class="alert-link body-text"></a>
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                             <th:block th:each="cause : ${approved}">
                                 <div class="row mr-1">
                                     <div class="alert alert-success" role="alert">
-                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                        <a th:href="@{/causes/{id}(id=${cause.id})}" th:text="${cause.title}"
                                            class="alert-link body-text"></a>
                                     </div>
                                 </div>
@@ -56,7 +56,7 @@
                             <th:block th:each="cause : ${pending}">
                                 <div class="row ml-1">
                                     <div class="alert alert-danger" role="alert">
-                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                        <a th:href="@{/causes/{id}(id=${cause.id})}" th:text="${cause.title}"
                                            class="alert-link body-text"></a>
                                     </div>
                                 </div>

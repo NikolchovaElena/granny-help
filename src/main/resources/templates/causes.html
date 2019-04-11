@@ -42,12 +42,12 @@
                             <div class="col-sm-6 col-lg-4 mb-4 aos-init aos-animate" data-aos="fade-up">
                                 <div class="block-4 text-center border">
                                     <figure class="block-4-image">
-                                        <a th:href="@{/cause/details/{id}(id=${cause.id})}">
+                                        <a th:href="@{/causes/{id}(id=${cause.id})}">
                                             <img th:src="${cause.causeImgUrl}" alt="Image placeholder"
                                                  class="img-fluid"></a>
                                     </figure>
                                     <div class="block-4-text p-4">
-                                        <h3><a th:href="@{/cause/details/{id}(id=${cause.id})}"
+                                        <h3><a th:href="@{/causes/{id}(id=${cause.id})}"
                                                th:text="${cause.title}"></a></h3>
                                         <div class="mt-4">
                                             <p class="mb-0">Submitted by:

@@ -18,6 +18,12 @@ public class Comment extends BaseEntity {
     public Comment() {
     }
 
+    public Comment(String comment, User author, Cause cause) {
+        this.comment = comment;
+        this.author = author;
+        this.cause = cause;
+    }
+
     @PrePersist
     public void prePersist() {
         publishingDate = LocalDateTime.now();

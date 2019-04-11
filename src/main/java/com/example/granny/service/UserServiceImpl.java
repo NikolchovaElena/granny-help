@@ -171,8 +171,8 @@ public class UserServiceImpl implements UserService {
     public List<CauseServiceModel> findAllPinned(Integer id) {
         User user = modelMapper.map(findUserById(id), User.class);
 
-        return  user.getPins().stream()
-                .map(c->modelMapper.map(c,CauseServiceModel.class))
+        return user.getPins().stream()
+                .map(c -> modelMapper.map(c, CauseServiceModel.class))
                 .collect(Collectors.toList());
     }
 

@@ -25,7 +25,7 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(GlobalConstants.URL_ABOUT,
                         GlobalConstants.URL_INDEX,
                         GlobalConstants.URL_USER_HOME,
-                        "/cause/details/*",
+                        "/causes/*",
                         "/causes").permitAll()
                 .antMatchers(GlobalConstants.URL_USER_LOGIN,
                         GlobalConstants.URL_USER_REGISTER,

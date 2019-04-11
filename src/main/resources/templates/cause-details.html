@@ -20,20 +20,23 @@
                     <div class="col-md-5">
                         <div class="block-16">
                             <img class="img-fluid rounded" th:src="${model.causeImgUrl}" alt="Image placeholder">
-
-                            <form th:method="post" th:action="@{/user/follow/{id}(id=${model.id})}">
-                                <button class="as-link" type="submit" name="followCause">
-                                    <span class="icon icon-heart">Follow cause</span>
-                                </button>
-                            </form>
-                            <a href="#">
-                                <span class="icon icon-edit">Edit cause</span>
-                            </a>
-                            <form th:method="post" th:action="@{/cause/delete/{id}(id=${model.id})}">
-                                <button class="as-link" type="submit" name="deleteCause">
-                                    <span class="icon icon-delete">Delete cause</span>
-                                </button>
-                            </form>
+                            <th:block sec:authorize="isAuthenticated()">
+                                <form th:method="post" th:action="@{/user/follow/{id}(id=${model.id})}">
+                                    <button class="as-link" type="submit" name="followCause">
+                                        <span class="icon icon-heart">Follow cause</span>
+                                    </button>
+                                </form>
+                                <th:block th:if="${#authentication.principal.email} == ${model.author.email}">
+                                    <a th:href="@{/causes/form/{id}(id=${model.id})}">
+                                        <span class="icon icon-edit">Edit cause</span>
+                                    </a>
+                                    <form th:method="post" th:action="@{/cause/delete/{id}(id=${model.id})}">
+                                        <button class="as-link" type="submit" name="deleteCause">
+                                            <span class="icon icon-delete">Delete cause</span>
+                                        </button>
+                                    </form>
+                                </th:block>
+                            </th:block>
                         </div>
                         <div class="pt-3 mb-4 mt-2">
                             <h3 class="text-black" th:text="${model.title}"></h3>
@@ -95,29 +98,31 @@
                                 </div>
                             </div>
                         </div>
-
                         <hr>
-                        <div class="pt-3 mb-4 mt-4">
+                        <div>
                             <h5 class="text-black">Message Board</h5>
-                        </div>
-                        <div class="alert alert-primary">
-                            <div class="container">
-                                <div class="row">
-                                    <p> Message 1</p>
-                                    <p> From ...</p>
-                                    <p> Content</p>
-                                </div>
+                            <div id="message-board" class="pt-3 mb-4 mt-4">
+                                <th:block th:each="comment:${comments}">
+                                    <div class="alert alert-primary">
+                                        <small th:text="${comment.publishingDate}+' '+${comment.authorName}+' said :'"></small>
+                                        <div>
+                                            <strong th:text="${comment.comment}"></strong>
+                                        </div>
+                                    </div>
+                                </th:block>
                             </div>
                         </div>
-                        <form action="#" method="get">Enter your comment here:<br/>
-                            <textarea rows="2" cols="35"></textarea><br/>
-                            <input class="btn btn-primary btn-sm" type="submit" value="Submit"/>
-                        </form>
+                        <th:block sec:authorize="isAuthenticated()">
+                            <form action="#" method="post">Enter your comment here:<br/>
+                                <textarea id="comment" rows="2" cols="35"></textarea><br/>
+                                <input id="cause-id" type="hidden" th:value="${model.id}">
+                                <input class="btn btn-primary btn-sm" type="submit" id="send-comment" value="Submit"/>
+                            </form>
+                        </th:block>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
+</div>
 </html>

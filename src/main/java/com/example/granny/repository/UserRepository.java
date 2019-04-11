@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, String> {
             "FROM User u " +
             "WHERE u.enabled = 1 "+
             "ORDER BY u.firstName, u.lastName ")
-    List<User> findAll();
+    List<User> findAllOrder();
 
     @Query(value = "SELECT * " +
             "FROM users u " +

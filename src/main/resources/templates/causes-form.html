@@ -2,7 +2,7 @@
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
 <div layout:fragment="content">
     <div class="container">
-        <form th:action="@{/cause/submit}" th:method="post" th:object="${model}" enctype="multipart/form-data">
+        <form th:action="@{/causes/form}" th:method="post" th:object="${model}" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -23,15 +23,20 @@
                     <div class="form-group row mt-4">
                         <label class="col-sm-2 col-form-label" for="location">Location:</label>
                         <div class="col-sm-6" th:classappend="${#fields.hasErrors('location')}? 'text-danger'">
-                            <select multiple class="form-control" id="location" th:field="*{location}">
-                                <option th:each="location: ${locations}" th:value="${location.id}"
-                                        th:text="${location.name}"></option>
+                            <select class="form-control" id="location" th:field="*{location}">
+                                <th:block th:each="location: ${locations}">
+                                    <option th:value="${location.id}"
+                                            th:text="${location.name}"></option>
+                                    <!--<option th:if="${model.location!=null} && ${model.location.id==location.id}?'selected':''"-->
+                                            <!--th:value="${location.id}"-->
+                                            <!--th:text="${location.name}"></option>-->
+                                </th:block>
                             </select>
                             <small th:each="error : ${#fields.errors('location')}" th:text="${error}"></small>
                         </div>
                     </div>
                     <div class="button-holder d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">Edit Cause</button>
+                        <button type="submit" class="btn btn-primary">Submit Cause</button>
                     </div>
                     <div class="text-center">
                         <small class="justify-content-center">All causes are reviewed by our team before they can be
