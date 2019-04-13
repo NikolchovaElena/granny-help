@@ -47,7 +47,7 @@ public class Comment extends BaseEntity {
         this.comment = comment;
     }
 
-    @ManyToOne(targetEntity = Cause.class)
+    @ManyToOne
     public Cause getCause() {
         return cause;
     }

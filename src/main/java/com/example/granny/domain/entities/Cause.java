@@ -93,7 +93,7 @@ public class Cause extends BaseEntity {
         isApproved = approved;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="cause", cascade = CascadeType.ALL)
     public List<Comment> getComments() {
         return comments;
     }
@@ -102,7 +102,18 @@ public class Cause extends BaseEntity {
         this.comments = comments;
     }
 
-    @ManyToMany(mappedBy="pins",  cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "causes_followers",
+            joinColumns = @JoinColumn(
+                    name = "cause_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id"
+            )
+    )
     public Set<User> getFollowers() {
         return followers;
     }

@@ -9,5 +9,8 @@ public interface CommentService {
 
     CommentViewModel create(String comment, String authorEmail, Integer causeId);
 
-    List<CommentViewModel> findAll(Integer id);
+    List<CommentViewModel> findAll(Integer causeId);
+
+    void deleteAll(Integer causeId);
+
 }

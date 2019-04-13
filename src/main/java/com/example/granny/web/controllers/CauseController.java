@@ -4,9 +4,11 @@ import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.binding.CauseFormBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
+import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.CauseViewModel;
 import com.example.granny.domain.models.view.CommentViewModel;
 import com.example.granny.domain.models.view.LocationViewModel;
+import com.example.granny.error.CauseNotFoundException;
 import com.example.granny.service.api.CauseService;
 import com.example.granny.service.api.CommentService;
 import com.example.granny.service.api.LocationService;
@@ -18,10 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -157,5 +156,31 @@ public class CauseController extends BaseController {
                 .stream()
                 .map(c -> this.modelMapper.map(c, LocationViewModel.class))
                 .collect(Collectors.toList()));
+    }
+
+    //TODO ajax change follow to unfollow
+    @PostMapping("/user/follow/causes/{id}")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    ModelAndView followCause(@PathVariable("id") Integer causeId,
+                             Principal principal) {
+        causeService.followCause(principal.getName(), causeId);
+
+        return redirect("/causes/" + causeId);
+    }
+
+    @PostMapping("/user/unfollow/causes/{id}")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    ModelAndView unfollowCause(@PathVariable("id") Integer causeId,
+                               Principal principal) {
+        causeService.unFollowCause(principal.getName(), causeId);
+
+        return redirect("/causes/" + causeId);
+    }
+
+    @ExceptionHandler(CauseNotFoundException.class)
+    public ModelAndView handleCauseNotFound(CauseNotFoundException e) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", e.getMessage());
+        return modelAndView;
     }
 }

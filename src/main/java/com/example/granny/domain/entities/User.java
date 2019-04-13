@@ -130,18 +130,7 @@ public class User extends BaseEntity implements UserDetails {
         this.authorities = authorities;
     }
 
-    @ManyToMany(targetEntity = Cause.class, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "users_causes",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "cause_id",
-                    referencedColumnName = "id"
-            )
-    )
+    @ManyToMany(mappedBy = "followers")
     public Set<Cause> getPins() {
         return pins;
     }

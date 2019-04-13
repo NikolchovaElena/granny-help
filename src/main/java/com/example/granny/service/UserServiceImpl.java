@@ -9,12 +9,12 @@ import com.example.granny.domain.models.binding.UserEditBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.RoleServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
+import com.example.granny.repository.CauseRepository;
 import com.example.granny.repository.UserRepository;
 import com.example.granny.service.api.*;
 import com.example.granny.validation.api.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final VerificationTokenService tokenService;
     private final CauseService causeService;
+    private final CauseRepository causeRepository;
     private final RoleService roleService;
     private final UserValidationService userValidation;
     private final CloudinaryService cloudinaryService;
@@ -45,11 +46,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, VerificationTokenService tokenService,
-                           CauseService causeService, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
+                           CauseService causeService, CauseRepository causeRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
                            UserValidationService userValidationService, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.causeService = causeService;
+        this.causeRepository = causeRepository;
         this.roleService = roleService;
         this.cloudinaryService = cloudinaryService;
         this.userValidation = userValidationService;
@@ -152,34 +154,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailExists(String email) {
         return userRepository.countByEmail(email) > 0;
-    }
-
-    @Override
-    public void followCause(UserServiceModel model, Integer id) {
-        User user = modelMapper.map(model, User.class);
-        if (user.getPins().size() == 0) {
-            user.setPins(new HashSet<>());
-        }
-
-        Cause cause = modelMapper.map(causeService.findById(id), Cause.class);
-        user.getPins().add(cause);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void unFollowCause(UserServiceModel model, Integer id) {
-        User user = modelMapper.map(model, User.class);
-        if (user.getPins().size() == 0) {
-            return;
-        }
-        Set<Cause> pins = user.getPins()
-                .stream()
-                .filter(p -> p.getId() != id)
-                .collect(Collectors.toSet());
-
-        user.getPins().clear();
-        user.getPins().addAll(pins);
-        userRepository.save(user);
     }
 
     @Override

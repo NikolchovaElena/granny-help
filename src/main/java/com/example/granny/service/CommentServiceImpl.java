@@ -32,20 +32,14 @@ public class CommentServiceImpl implements CommentService {
             new IllegalArgumentException("Cause could not be found");
 
     private final CommentRepository commentRepository;
-    private final UserService userService;
-    private final CauseService causeService;
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final CauseRepository causeRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, UserService userService, CauseService causeService, ModelMapper modelMapper, UserRepository userRepository, CauseRepository causeRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository, CauseRepository causeRepository) {
         this.commentRepository = commentRepository;
-        this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.causeRepository = causeRepository;
-        this.userService = userService;
-        this.causeService = causeService;
     }
 
     @Override
@@ -66,6 +60,12 @@ public class CommentServiceImpl implements CommentService {
                 .map(c -> {
                     return mapCommentModel(c);
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAll(Integer causeId) {
+        commentRepository.deleteAll(
+                commentRepository.findAll(causeId));
     }
 
     private CommentViewModel mapCommentModel(Comment comment) {

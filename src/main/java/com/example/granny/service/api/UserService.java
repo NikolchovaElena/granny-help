@@ -32,10 +32,6 @@ public interface UserService extends UserDetailsService {
 
     boolean emailExists(String email);
 
-    void followCause(UserServiceModel model, Integer id);
-
-    void unFollowCause(UserServiceModel model, Integer id);
-
     UserServiceModel findUserByEmail(String email);
 
     UserServiceModel findUserById(Integer id);
@@ -43,5 +39,4 @@ public interface UserService extends UserDetailsService {
     List<UserServiceModel> findFourRandomUsers();
 
     boolean isFollowing(String email, Integer id);
-
 }

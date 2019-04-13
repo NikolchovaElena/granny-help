@@ -15,4 +15,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "WHERE c.cause.id=:id " +
             "ORDER BY c.publishingDate DESC")
     List<Comment> findAll(@Param("id") Integer id);
+
 }

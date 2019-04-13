@@ -7,6 +7,7 @@ import com.example.granny.domain.models.binding.UserRegisterBindingModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.UserViewModel;
 import com.example.granny.domain.models.view.UserShowViewModel;
+import com.example.granny.error.CauseNotFoundException;
 import com.example.granny.service.api.EventService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -183,26 +184,5 @@ public class UserController extends BaseController {
                                       HttpSession session) {
         userService.delete(id);
         return redirect("/users/show");
-    }
-
-    //TODO ajax change follow to unfollow
-    @PostMapping("/user/follow/{id}")
-    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    ModelAndView followCause(@PathVariable("id") Integer id,
-                             Principal principal) {
-        UserServiceModel user = userService.findUserByEmail(principal.getName());
-        userService.followCause(user, id);
-
-        return redirect("/causes/" + id);
-    }
-
-    @PostMapping("/user/unfollow/{id}")
-    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    ModelAndView unfollowCause(@PathVariable("id") Integer id,
-                             Principal principal) {
-        UserServiceModel user = userService.findUserByEmail(principal.getName());
-        userService.unFollowCause(user, id);
-
-        return redirect("/causes/" + id);
     }
 }

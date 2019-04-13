@@ -25,7 +25,7 @@
 
                                     <form th:if="${isFollowing}!=true"
                                           th:method="post"
-                                          th:action="@{/user/follow/{id}(id=${model.id})}">
+                                          th:action="@{/user/follow/causes/{id}(id=${model.id})}">
                                         <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
                                                 type="submit" name="followCause">
                                                 <span class="icon icon-heart"><span
@@ -34,7 +34,7 @@
                                     </form>
                                     <form th:if="${isFollowing}==true"
                                           th:method="post"
-                                          th:action="@{/user/unfollow/{id}(id=${model.id})}">
+                                          th:action="@{/user/unfollow/causes/{id}(id=${model.id})}">
                                         <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
                                                 type="submit" name="unfollowCause">
                                                 <span class="icon icon-heart"><span
