@@ -23,7 +23,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-
     @Override
     public String uploadImage(MultipartFile multipartFile, String imgId) throws IOException {
         File file = File

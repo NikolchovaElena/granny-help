@@ -11,7 +11,7 @@ public class CauseViewModel {
 
     private Integer id;
     private String title;
-    private String causeImgUrl;
+    private String imageUrl;
     private String description;
     private LocationViewModel location;
     private LocalDate publishingDate;
@@ -36,12 +36,12 @@ public class CauseViewModel {
         this.title = title;
     }
 
-    public String getCauseImgUrl() {
-        return causeImgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCauseImgUrl(String causeImgUrl) {
-        this.causeImgUrl = causeImgUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getDescription() {

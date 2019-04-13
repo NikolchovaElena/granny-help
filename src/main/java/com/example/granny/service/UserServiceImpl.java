@@ -14,6 +14,7 @@ import com.example.granny.service.api.*;
 import com.example.granny.validation.api.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,9 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -159,12 +158,43 @@ public class UserServiceImpl implements UserService {
     public void followCause(UserServiceModel model, Integer id) {
         User user = modelMapper.map(model, User.class);
         if (user.getPins().size() == 0) {
-            user.setPins(new ArrayList<>());
+            user.setPins(new HashSet<>());
         }
 
         Cause cause = modelMapper.map(causeService.findById(id), Cause.class);
         user.getPins().add(cause);
         userRepository.save(user);
+    }
+
+    @Override
+    public void unFollowCause(UserServiceModel model, Integer id) {
+        User user = modelMapper.map(model, User.class);
+        if (user.getPins().size() == 0) {
+            return;
+        }
+        Set<Cause> pins = user.getPins()
+                .stream()
+                .filter(p -> p.getId() != id)
+                .collect(Collectors.toSet());
+
+        user.getPins().clear();
+        user.getPins().addAll(pins);
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean isFollowing(String email, Integer causeId) {
+        User user = this.userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+        boolean isMatch = false;
+
+        for (Cause c:user.getPins()) {
+            if (c.getId() == causeId) {
+                isMatch = true;
+               break;
+            }
+        }
+        return isMatch;
     }
 
     @Override
@@ -240,17 +270,18 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel edit(String email, UserEditBindingModel model) throws IOException {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+        MultipartFile file = model.getImageUrl();
 
         if (!user.getImageUrl().equals(GlobalConstants.PROFILE_DEFAULT_IMG)) {
             cloudinaryService.deleteImage(email);
         }
-        MultipartFile file = model.getImageUrl();
-        String profilePicture = file.isEmpty() ? user.getImageUrl() :
-                cloudinaryService.uploadImage(model.getImageUrl(), email);
+
+        String image = file.isEmpty() ? user.getImageUrl() :
+                cloudinaryService.uploadImage(file, email);
 
         user.setFirstName(model.getFirstName());
         user.setLastName(model.getLastName());
-        user.setImageUrl(profilePicture);
+        user.setImageUrl(image);
         user.setAbout(model.getAbout());
 
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
@@ -259,4 +290,5 @@ public class UserServiceImpl implements UserService {
     private boolean ifNotRoot(User user) {
         return !user.getEmail().equals(RootAdminData.ROOT_EMAIL);
     }
+
 }

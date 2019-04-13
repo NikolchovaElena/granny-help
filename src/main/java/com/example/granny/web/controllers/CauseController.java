@@ -1,9 +1,9 @@
 package com.example.granny.web.controllers;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.domain.models.binding.CauseSubmitBindingModel;
+import com.example.granny.domain.entities.User;
+import com.example.granny.domain.models.binding.CauseFormBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
-import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.CauseViewModel;
 import com.example.granny.domain.models.view.CommentViewModel;
 import com.example.granny.domain.models.view.LocationViewModel;
@@ -13,7 +13,9 @@ import com.example.granny.service.api.LocationService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,77 +52,80 @@ public class CauseController extends BaseController {
         this.modelMapper = modelMapper;
     }
 
-
     @GetMapping("/causes/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCause(ModelAndView modelAndView) {
-        modelAndView.addObject(GlobalConstants.MODEL, new CauseSubmitBindingModel());
+        modelAndView.addObject(GlobalConstants.MODEL, new CauseFormBindingModel());
         addLocations(modelAndView);
-        return view("causes-form", modelAndView);
+        return view("causes-submit", modelAndView);
     }
 
     @PostMapping("/causes/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCauseConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
-                                            CauseSubmitBindingModel model,
+                                            CauseFormBindingModel model,
                                     BindingResult bindingResult,
                                     Principal principal,
-                                    ModelAndView modelAndView) {
+                                    ModelAndView modelAndView) throws IOException {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
             addLocations(modelAndView);
-            return view("causes-form", modelAndView);
+            return view("causes-submit", modelAndView);
         }
-        CauseServiceModel causeServiceModel = modelMapper.map(model, CauseServiceModel.class);
-        UserServiceModel author = userService.findUserByEmail(principal.getName());
-        causeServiceModel.setAuthor(author);
-
-        causeService.submit(causeServiceModel);
+        causeService.submit(model, principal.getName());
         return redirect("/home");
     }
-
-
 
     @GetMapping("/causes/form/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView editCause(@PathVariable("id") Integer id,
-                           ModelAndView modelAndView) {
+                           ModelAndView modelAndView,
+                           Authentication authentication,
+                           Principal principal) {
         CauseServiceModel model = causeService.findById(id);
+
+        if (!principal.getName().equals(model.getAuthor().getEmail()) &&
+                !causeService.hasAuthority(authentication, GlobalConstants.ROLE_MODERATOR)) {
+            throw new AccessDeniedException("You are not authorized to access this page");
+        }
+
         modelAndView.addObject(GlobalConstants.MODEL, model);
         addLocations(modelAndView);
-        return view("causes-form", modelAndView);
+        return view("causes-edit", modelAndView);
     }
 
     @PostMapping("/causes/form/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    ModelAndView editCauseConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
-                                          CauseSubmitBindingModel model,
+    ModelAndView editCauseConfirm(@PathVariable("id") Integer id,
+                                  @Valid @ModelAttribute(name = GlobalConstants.MODEL)
+                                          CauseFormBindingModel model,
                                   BindingResult bindingResult,
                                   Principal principal,
-                                  ModelAndView modelAndView) {
+                                  ModelAndView modelAndView) throws IOException {
+
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
             addLocations(modelAndView);
-            return view("causes-form", modelAndView);
+            return view("causes-edit", modelAndView);
         }
-        CauseServiceModel causeServiceModel = modelMapper.map(model, CauseServiceModel.class);
-        UserServiceModel author = userService.findUserByEmail(principal.getName());
-        causeServiceModel.setAuthor(author);
-
-        causeService.submit(causeServiceModel);
+        causeService.edit(model, id);
         return redirect("/home");
     }
 
-
     @GetMapping("/causes/{id}")
     ModelAndView causeDetails(@PathVariable("id") Integer id,
-                              ModelAndView modelAndView) {
+                              ModelAndView modelAndView,
+                              Principal principal) {
         CauseServiceModel causeServiceModel = causeService.findById(id);
         CauseViewModel model = modelMapper.map(causeServiceModel, CauseViewModel.class);
         List<CommentViewModel> comments = commentService.findAll(id);
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
         modelAndView.addObject("comments", comments);
+        if (principal != null) {
+            boolean isFollowing = userService.isFollowing(principal.getName(), id);
+            modelAndView.addObject("isFollowing", isFollowing);
+        }
         return view("cause-details", modelAndView);
     }
 
@@ -132,6 +139,16 @@ public class CauseController extends BaseController {
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
         return view("causes", modelAndView);
+    }
+
+    @PostMapping("/causes/delete/{id}")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    public ModelAndView deleteCause(@PathVariable("id") Integer id,
+                                    Principal principal,
+                                    Authentication authentication) {
+
+        causeService.delete(id, principal.getName(), authentication);
+        return redirect("/causes");
     }
 
     private void addLocations(ModelAndView modelAndView) {

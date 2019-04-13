@@ -1,15 +1,18 @@
 package com.example.granny.service.api;
 
+import com.example.granny.domain.models.binding.CauseFormBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
+import org.springframework.security.core.Authentication;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CauseService {
-    CauseServiceModel submit(CauseServiceModel model);
+    CauseServiceModel submit(CauseFormBindingModel model, String email) throws IOException;
 
-    CauseServiceModel edit(CauseServiceModel model);
+    CauseServiceModel edit(CauseFormBindingModel model, Integer causeId) throws IOException;
 
-    void delete(CauseServiceModel model);
+    void delete(Integer causeId, String email, Authentication authentication);
 
     List<CauseServiceModel> findAll();
 
@@ -19,4 +22,5 @@ public interface CauseService {
 
     CauseServiceModel findById(Integer id);
 
+    boolean hasAuthority(Authentication authentication, String authority);
 }

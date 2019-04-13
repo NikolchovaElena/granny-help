@@ -6,28 +6,27 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "causes")
 public class Cause extends BaseEntity {
 
     private String title;
-    private String causeImgUrl;
+    private String imageUrl;
     private String description;
     private Location location;
     private LocalDate publishingDate;
     private User author;
     private List<Comment> comments;
     private boolean isApproved;
+    private Set<User> followers;
 
     public Cause() {
     }
 
     @PrePersist
     public void prePersist() {
-        if (causeImgUrl == null) {
-            causeImgUrl = GlobalConstants.CAUSE_DEFAULT_IMG;
-        }
         publishingDate = LocalDate.now();
     }
 
@@ -41,12 +40,12 @@ public class Cause extends BaseEntity {
     }
 
     @Column(nullable = false)
-    public String getCauseImgUrl() {
-        return causeImgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCauseImgUrl(String causeImgUrl) {
-        this.causeImgUrl = causeImgUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -101,5 +100,14 @@ public class Cause extends BaseEntity {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    @ManyToMany(mappedBy="pins",  cascade = CascadeType.ALL)
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<User> followers) {
+        this.followers = followers;
     }
 }

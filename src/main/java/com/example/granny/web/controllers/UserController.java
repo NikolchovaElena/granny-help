@@ -185,6 +185,7 @@ public class UserController extends BaseController {
         return redirect("/users/show");
     }
 
+    //TODO ajax change follow to unfollow
     @PostMapping("/user/follow/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView followCause(@PathVariable("id") Integer id,
@@ -192,7 +193,16 @@ public class UserController extends BaseController {
         UserServiceModel user = userService.findUserByEmail(principal.getName());
         userService.followCause(user, id);
 
-       // return view("cause-details", modelAndView);
-        return view("index");
+        return redirect("/causes/" + id);
+    }
+
+    @PostMapping("/user/unfollow/{id}")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    ModelAndView unfollowCause(@PathVariable("id") Integer id,
+                             Principal principal) {
+        UserServiceModel user = userService.findUserByEmail(principal.getName());
+        userService.unFollowCause(user, id);
+
+        return redirect("/causes/" + id);
     }
 }

@@ -19,19 +19,39 @@
                 <div class="row mb-5">
                     <div class="col-md-5">
                         <div class="block-16">
-                            <img class="img-fluid rounded" th:src="${model.causeImgUrl}" alt="Image placeholder">
+                            <img class="img-fluid rounded" th:src="${model.imageUrl}" alt="Image placeholder">
                             <th:block sec:authorize="isAuthenticated()">
-                                <form th:method="post" th:action="@{/user/follow/{id}(id=${model.id})}">
-                                    <button class="as-link" type="submit" name="followCause">
-                                        <span class="icon icon-heart">Follow cause</span>
-                                    </button>
-                                </form>
-                                <th:block th:if="${#authentication.principal.email} == ${model.author.email}">
-                                    <a th:href="@{/causes/form/{id}(id=${model.id})}">
+                                <th:block th:if="${#authentication.principal.email} != ${model.author.email}">
+
+                                    <form th:if="${isFollowing}!=true"
+                                          th:method="post"
+                                          th:action="@{/user/follow/{id}(id=${model.id})}">
+                                        <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
+                                                type="submit" name="followCause">
+                                                <span class="icon icon-heart"><span
+                                                        id="follow-clause">Follow cause</span></span>
+                                        </button>
+                                    </form>
+                                    <form th:if="${isFollowing}==true"
+                                          th:method="post"
+                                          th:action="@{/user/unfollow/{id}(id=${model.id})}">
+                                        <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
+                                                type="submit" name="unfollowCause">
+                                                <span class="icon icon-heart"><span
+                                                        id="unfollow-clause">Unfollow cause</span></span>
+                                        </button>
+                                    </form>
+
+                                </th:block>
+                                <th:block th:if="${#authentication.principal.email} == ${model.author.email} or
+                                                    ${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
+                                    <div><a th:href="@{/causes/form/{id}(id=${model.id})}">
                                         <span class="icon icon-edit">Edit cause</span>
-                                    </a>
-                                    <form th:method="post" th:action="@{/cause/delete/{id}(id=${model.id})}">
-                                        <button class="as-link" type="submit" name="deleteCause">
+                                    </a></div>
+
+                                    <form th:method="post" th:action="@{/causes/delete/{id}(id=${model.id})}">
+                                        <button class="as-link" type="submit" name="deleteCause"
+                                                onclick="return confirm('Are you sure you want to delete your account?');">
                                             <span class="icon icon-delete">Delete cause</span>
                                         </button>
                                     </form>

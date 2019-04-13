@@ -10,15 +10,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CauseSubmitBindingModel {
+public class CauseFormBindingModel {
 
     private String title;
-    private MultipartFile causeImgUrl;
+    private MultipartFile imageUrl;
     private String description;
     private Location location;
-    private User author;
 
-    public CauseSubmitBindingModel() {
+    public CauseFormBindingModel() {
     }
 
     @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
@@ -30,12 +29,12 @@ public class CauseSubmitBindingModel {
         this.title = title;
     }
 
-    public MultipartFile getCauseImgUrl() {
-        return causeImgUrl;
+    public MultipartFile getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCauseImgUrl(MultipartFile causeImgUrl) {
-        this.causeImgUrl = causeImgUrl;
+    public void setImageUrl(MultipartFile imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
@@ -54,13 +53,5 @@ public class CauseSubmitBindingModel {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
     }
 }

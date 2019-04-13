@@ -49,8 +49,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentViewModel create(String commentContent, String authorEmail, Integer causeId) {
-        User author = userRepository.findByEmail(authorEmail).orElseThrow(
+    public CommentViewModel create(String commentContent, String email, Integer causeId) {
+        User author = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
         Cause cause = causeRepository.findById(causeId).orElseThrow(
                 () -> new IllegalArgumentException(NO_CAUSE_WITH_THAT_EXCEPTION));
@@ -70,9 +70,8 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentViewModel mapCommentModel(Comment comment) {
         String name = comment.getAuthor().getFirstName() + ' ' + comment.getAuthor().getLastName();
-        String date = comment.getPublishingDate().format(DateTimeFormatter.ofPattern("dd.MMM.yyyy HH:mm", Locale.US));
+        String date = comment.getPublishingDate().format(DateTimeFormatter.ofPattern("dd.MMM.yyyy HH:mm"));
 
         return new CommentViewModel(date, comment.getComment(), name);
     }
 }
-

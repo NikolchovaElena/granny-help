@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="container">
+            <form th:action="@{/causes/form/{id}(id=${model.id})}" th:method="post" th:object="${model}" enctype="multipart/form-data">
+                <th:block th:replace="~{fragments/form :: form}"/>
+            </form>
+    </div>
+</div>
+</html>

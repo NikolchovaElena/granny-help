@@ -32,4 +32,10 @@ public interface CauseRepository extends JpaRepository<Cause, Integer> {
             "ORDER BY c.publishingDate")
     List<Cause> findAllPendingByAuthorId(@Param("id") Integer id);
 
+    @Query(value = "DELETE " +
+            "FROM users_causes " +
+            "WHERE cause_id=:id", nativeQuery = true)
+    void deleteRelation(@Param("id") Integer id);
+
+
 }

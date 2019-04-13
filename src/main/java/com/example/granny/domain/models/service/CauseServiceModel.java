@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CauseServiceModel extends BaseServiceModel {
     private String title;
-    private String causeImgUrl;
+    private String imageUrl;
     private String description;
     private LocationServiceModel location;
     private LocalDate publishingDate;
@@ -31,13 +31,12 @@ public class CauseServiceModel extends BaseServiceModel {
         this.title = title;
     }
 
-    @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)
-    public String getCauseImgUrl() {
-        return causeImgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCauseImgUrl(String causeImgUrl) {
-        this.causeImgUrl = causeImgUrl;
+    public void setImageUrl(String causeImgUrl) {
+        this.imageUrl = causeImgUrl;
     }
 
     @NotNull(message = GlobalConstants.FIELD_IS_REQUIRED)

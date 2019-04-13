@@ -1,6 +1,8 @@
 <th:block th:fragment="head" xmlns:th="http://www.thymeleaf.org">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Help a Granny</title>
 
     <!-- Custom fonts for this template-->
@@ -15,8 +17,7 @@
     <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
     <link rel="stylesheet" th:href="@{/css/owl.theme.default.min.css}">
 
-
     <link rel="stylesheet" th:href="@{/css/aos.css}">
-
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </th:block>

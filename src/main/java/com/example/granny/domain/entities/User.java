@@ -27,9 +27,7 @@ public class User extends BaseEntity implements UserDetails {
     private String about;
     private boolean isEnabled;
     private Set<Role> authorities;
-//    private List<Cause> causes;
-    private List<Cause> pins;
-
+    private Set<Cause> pins;
 
     public User() {
         this.authorities = new HashSet<>();
@@ -132,16 +130,7 @@ public class User extends BaseEntity implements UserDetails {
         this.authorities = authorities;
     }
 
-//    @OneToMany
-//    public List<Cause> getCauses() {
-//        return causes;
-//    }
-//
-//    public void setCauses(List<Cause> causes) {
-//        this.causes = causes;
-//    }
-
-    @ManyToMany(targetEntity = Cause.class)
+    @ManyToMany(targetEntity = Cause.class, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_causes",
             joinColumns = @JoinColumn(
@@ -153,11 +142,11 @@ public class User extends BaseEntity implements UserDetails {
                     referencedColumnName = "id"
             )
     )
-    public List<Cause> getPins() {
+    public Set<Cause> getPins() {
         return pins;
     }
 
-    public void setPins(List<Cause> pins) {
+    public void setPins(Set<Cause> pins) {
         this.pins = pins;
     }
 

@@ -20,7 +20,7 @@ public class UserServiceModel extends BaseServiceModel {
     private String imageUrl;
     private String about;
     private Set<RoleServiceModel> authorities;
-    private List<CauseServiceModel> pins;
+    private Set<CauseServiceModel> pins;
 
     public UserServiceModel() {
     }
@@ -85,11 +85,11 @@ public class UserServiceModel extends BaseServiceModel {
         this.authorities = authorities;
     }
 
-    public List<CauseServiceModel> getPins() {
+    public Set<CauseServiceModel> getPins() {
         return pins;
     }
 
-    public void setPins(List<CauseServiceModel> pins) {
+    public void setPins(Set<CauseServiceModel> pins) {
         this.pins = pins;
     }
 }

@@ -4,6 +4,7 @@ import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.io.IOException;
@@ -33,10 +34,14 @@ public interface UserService extends UserDetailsService {
 
     void followCause(UserServiceModel model, Integer id);
 
+    void unFollowCause(UserServiceModel model, Integer id);
+
     UserServiceModel findUserByEmail(String email);
 
     UserServiceModel findUserById(Integer id);
 
     List<UserServiceModel> findFourRandomUsers();
+
+    boolean isFollowing(String email, Integer id);
 
 }
