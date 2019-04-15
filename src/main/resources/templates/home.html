@@ -21,22 +21,31 @@
                         </div>
                     </div>
                     <a th:href="@{/causes/form}" class="btn btn-primary btn-block">Submit Cause</a>
+                    <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
+                        <a th:href="@{/product/form}" class="btn btn-primary btn-block">Submit new Product</a>
+                    </th:block>
                 </div>
 
                 <!--Content-->
                 <div class="col-md-7 col-lg-9">
-                    <div class="row ml-5 mb-5">
+                    <div class="row ml-5 mt-4">
                         <h4 th:if="${not #lists.isEmpty(pinned)}" class="text-black">Pinned Causes:</h4>
-                        <th:block th:each="cause : ${pinned}">
-                            <div class="row mr-1">
-                                <div class="col-12">
-                                    <div class="alert alert-warning" role="alert">
-                                        <a th:href="@{/causes/{id}(id=${cause.id})}" th:text="${cause.title}"
-                                           class="alert-link body-text"></a>
+                    </div>
+                    <div class="row ml-5 mb-5">
+                        <div class="row">
+                            <div class="col">
+                                <th:block th:each="cause : ${pinned}">
+                                    <div class="row mr-1">
+                                        <div class="col-12">
+                                            <div class="alert alert-warning" role="alert">
+                                                <a th:href="@{/causes/{id}(id=${cause.id})}" th:text="${cause.title}"
+                                                   class="alert-link body-text"></a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </th:block>
                             </div>
-                        </th:block>
+                        </div>
                     </div>
 
                     <div class="row ml-5">

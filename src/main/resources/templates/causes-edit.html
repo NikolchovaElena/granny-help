@@ -5,7 +5,7 @@
 <div layout:fragment="content">
     <div class="container">
             <form th:action="@{/causes/form/{id}(id=${model.id})}" th:method="post" th:object="${model}" enctype="multipart/form-data">
-                <th:block th:replace="~{fragments/form :: form}"/>
+                <th:block th:replace="~{fragments/cause-form :: cause-form}"/>
             </form>
     </div>
 </div>

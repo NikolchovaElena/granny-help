@@ -65,21 +65,13 @@
                 <li>
                     <a th:href="@{/causes}">Causes</a>
                 </li>
-                <!--<li class="has-children">-->
-                <!--<a th:href="@{/users/show}">Users</a>-->
-                <!--<ul class="dropdown">-->
-                <!--<li><a href="#">Users</a></li>-->
-                <!--<li><a href="#">Admins</a></li>-->
-                <!--<li><a href="#">Moderators</a></li>-->
-                <!--</ul>-->
-                <!--</li>-->
                 <th:block sec:authorize="hasRole('ROLE_ADMIN')">
                     <li>
                         <a th:href="@{/users/show}">Manage Users</a>
                     </li>
                 </th:block>
                 <li>
-                    <a href="#">Shop</a>
+                    <a th:href="@{/shop}">Shop</a>
                 </li>
                 <li>
                     <a href="#">Donate</a>

@@ -21,7 +21,8 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().disable()
-                .csrf().csrfTokenRepository(csrfTokenRepository())
+                .csrf()
+                .csrfTokenRepository(csrfTokenRepository())
                 .and()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/fonts/**", "/vendor/**", "/images/**").permitAll()
@@ -29,7 +30,8 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         GlobalConstants.URL_INDEX,
                         GlobalConstants.URL_USER_HOME,
                         "/causes/*",
-                        "/causes").permitAll()
+                        "/causes",
+                        "/shop").permitAll()
                 .antMatchers(GlobalConstants.URL_USER_LOGIN,
                         GlobalConstants.URL_USER_REGISTER,
                         GlobalConstants.URL_CONFIRM_ACCOUNT,

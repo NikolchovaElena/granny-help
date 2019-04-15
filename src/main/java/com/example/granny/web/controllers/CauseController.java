@@ -158,25 +158,6 @@ public class CauseController extends BaseController {
                 .collect(Collectors.toList()));
     }
 
-    //TODO ajax change follow to unfollow
-    @PostMapping("/user/follow/causes/{id}")
-    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    ModelAndView followCause(@PathVariable("id") Integer causeId,
-                             Principal principal) {
-        causeService.followCause(principal.getName(), causeId);
-
-        return redirect("/causes/" + causeId);
-    }
-
-    @PostMapping("/user/unfollow/causes/{id}")
-    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    ModelAndView unfollowCause(@PathVariable("id") Integer causeId,
-                               Principal principal) {
-        causeService.unFollowCause(principal.getName(), causeId);
-
-        return redirect("/causes/" + causeId);
-    }
-
     @ExceptionHandler(CauseNotFoundException.class)
     public ModelAndView handleCauseNotFound(CauseNotFoundException e) {
         ModelAndView modelAndView = new ModelAndView("error");

@@ -30,6 +30,9 @@ import static com.example.granny.service.UserServiceImpl.NO_USER_WITH_THAT_EXCEP
 public class CommentServiceImpl implements CommentService {
     static final IllegalArgumentException NO_CAUSE_WITH_THAT_EXCEPTION =
             new IllegalArgumentException("Cause could not be found");
+    static final IllegalArgumentException NO_COMMENT_WITH_THAT_EXCEPTION =
+            new IllegalArgumentException("Comment could not be found");
+
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -45,9 +48,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentViewModel create(String commentContent, String email, Integer causeId) {
         User author = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> NO_USER_WITH_THAT_EXCEPTION);
         Cause cause = causeRepository.findById(causeId).orElseThrow(
-                () -> new IllegalArgumentException(NO_CAUSE_WITH_THAT_EXCEPTION));
+                () -> NO_CAUSE_WITH_THAT_EXCEPTION);
         Comment comment = commentRepository.saveAndFlush(new Comment(commentContent, author, cause));
 
         return mapCommentModel(comment);
@@ -66,6 +69,13 @@ public class CommentServiceImpl implements CommentService {
     public void deleteAll(Integer causeId) {
         commentRepository.deleteAll(
                 commentRepository.findAll(causeId));
+    }
+
+    @Override
+    public void delete(Integer commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> NO_COMMENT_WITH_THAT_EXCEPTION);
+        commentRepository.delete(comment);
     }
 
     private CommentViewModel mapCommentModel(Comment comment) {

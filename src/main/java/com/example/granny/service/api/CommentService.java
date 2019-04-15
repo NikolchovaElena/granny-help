@@ -13,4 +13,5 @@ public interface CommentService {
 
     void deleteAll(Integer causeId);
 
+    void delete(Integer commentId);
 }

@@ -23,22 +23,12 @@
                             <th:block sec:authorize="isAuthenticated()">
                                 <th:block th:if="${#authentication.principal.email} != ${model.author.email}">
 
-                                    <form th:if="${isFollowing}!=true"
-                                          th:method="post"
-                                          th:action="@{/user/follow/causes/{id}(id=${model.id})}">
+                                    <form th:method="post" action="#">
                                         <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
-                                                type="submit" name="followCause">
-                                                <span class="icon icon-heart"><span
-                                                        id="follow-clause">Follow cause</span></span>
-                                        </button>
-                                    </form>
-                                    <form th:if="${isFollowing}==true"
-                                          th:method="post"
-                                          th:action="@{/user/unfollow/causes/{id}(id=${model.id})}">
-                                        <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
-                                                type="submit" name="unfollowCause">
-                                                <span class="icon icon-heart"><span
-                                                        id="unfollow-clause">Unfollow cause</span></span>
+                                                type="submit">
+                                    <span class="icon icon-heart"><span
+                                            id="follow-clause"
+                                            th:text="${isFollowing}!=true ? 'Follow cause' : 'Unfollow cause'"></span></span>
                                         </button>
                                     </form>
 
@@ -123,11 +113,19 @@
                             <h5 class="text-black">Message Board</h5>
                             <div id="message-board" class="pt-3 mb-4 mt-4">
                                 <th:block th:each="comment:${comments}">
-                                    <div class="alert alert-primary">
+                                    <div id="comment-area" class="alert alert-primary">
                                         <small th:text="${comment.publishingDate}+' '+${comment.authorName}+' said :'"></small>
                                         <div>
                                             <strong th:text="${comment.comment}"></strong>
                                         </div>
+                                        <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
+                                            <form th:method="post" action="#">
+                                                <input type="hidden" th:data-comment_id="${comment.id}">
+                                                <button class="as-link " type="submit" id="delete-comment">
+                                                    <small> Delete</small>
+                                                </button>
+                                            </form>
+                                        </th:block>
                                     </div>
                                 </th:block>
                             </div>

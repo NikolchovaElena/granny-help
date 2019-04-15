@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public class CommentViewModel {
 
+    private Integer id;
     private String publishingDate;
     private String comment;
     private String authorName;
@@ -18,6 +19,14 @@ public class CommentViewModel {
         this.publishingDate = publishingDate;
         this.comment = comment;
         this.authorName = authorName;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getPublishingDate() {
