@@ -15,7 +15,7 @@
                             <label for="add-product-image">Choose profile picture with 1MB max size</label>
                         </div>
                         <div class="form-group row mt-4">
-                            <label for="editFirstName" class="col-sm-4 col-form-label">First Name:</label>
+                            <label for="editFirstName" class="col-sm-4 col-form-label">First Name <span class="text-danger">*</span></label>
                             <div class="col-sm-8" th:classappend="${#fields.hasErrors('firstName')}?'has-danger'">
                                 <input type="text" class="form-control placeholder" name="firstName" id="editFirstName"
                                        th:field="*{firstName}">
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                         <div class="form-group row mt-4">
-                            <label for="editLastName" class="col-sm-4 col-form-label">Last Name:</label>
+                            <label for="editLastName" class="col-sm-4 col-form-label">Last Name <span class="text-danger">*</span></label>
                             <div class="col-sm-8" th:classappend="${#fields.hasErrors('lastName')}?'has-danger'">
                                 <input type="text" class="form-control" name="lastName" id="editLastName"
                                        th:field="*{lastName}">

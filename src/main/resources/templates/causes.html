@@ -1,41 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
 <div layout:fragment="content">
-    <div class="site-wrap mt-4 mb-4">
+    <div class="site-wrap">
         <!--Paging-->
         <div class="bg-light py-3">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a>
-                        <span class="mx-2 mb-0">/</span>
-                        <strong class="text-black">Causes</strong></div>
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a> <span class="mx-2 mb-0">/</span> <strong
+                            class="text-black">Causes</strong></div>
                 </div>
             </div>
         </div>
-        <div class="container">
 
+        <!--Content-->
+        <div class="container mt-4">
             <div class="row mb-5">
                 <div class="col-md-12 order-2">
-
-                    <div class="row">
-                        <div class="col-md-12 mt-2 mb-3">
-                            <div class="d-flex">
-                                <div class="dropdown mr-1 ml-md-auto">
-                                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle"
-                                            id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                        ORDER BY
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset"
-                                         x-placement="bottom-start"
-                                         style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 43px, 0px);">
-                                        <a class="dropdown-item" href="#">Latest</a>
-                                        <a class="dropdown-item" href="#">Popular</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row mb-5">
                         <!--Content-->
                         <th:block th:each="cause : ${model}">

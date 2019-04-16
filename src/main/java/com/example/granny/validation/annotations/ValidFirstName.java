@@ -1,7 +1,7 @@
 package com.example.granny.validation.annotations;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.validation.validators.FirstNameConstraintValidator;
+import com.example.granny.validation.FirstNameConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

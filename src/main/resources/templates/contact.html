@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap">
+        <!--Paging-->
+        <div class="bg-light py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a> <span class="mx-2 mb-0">/</span> <strong
+                            class="text-black">Contact</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!--Content-->
+        <div class="site-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h2 class="h3 mb-3 text-black">Get In Touch</h2>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-6">
+                        <form th:action="@{/contact/form}" th:method="post" th:object="${model}">
+
+                            <div class="p-3 p-lg-5 border">
+                                <div class="form-group row">
+                                    <div class="col-md-6" th:classappend="${#fields.hasErrors('firstName')}?'has-danger'">
+                                        <label for="c_fname" class="text-black">First Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="c_fname" th:field="*{firstName}" name="firstName">
+                                        <div th:each="error : ${#fields.errors('firstName')}">
+                                            <small th:text="${error}"></small>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" th:classappend="${#fields.hasErrors('lastName')}?'has-danger'">
+                                        <label for="c_lname" class="text-black">Last Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="c_lname" th:field="*{lastName}" name="lastName">
+                                        <div th:each="error : ${#fields.errors('lastName')}">
+                                            <small th:text="${error}"></small>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row" th:classappend="${#fields.hasErrors('email')}?'has-danger'">
+                                    <div class="col-md-12">
+                                        <label for="c_email" class="text-black">Email <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="c_email" th:field="*{email}" name="email" >
+                                        <div th:each="error : ${#fields.errors('email')}">
+                                            <small th:text="${error}"></small>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row" th:classappend="${#fields.hasErrors('phoneNumber')}?'has-danger'">
+                                    <div class="col-md-12">
+                                        <label for="c_telephone_number" class="text-black">Telephone Number </label>
+                                        <input type="text" class="form-control" id="c_telephone_number"
+                                               name="phoneNumber" th:field="*{phoneNumber}" placeholder="">
+                                        <div th:each="error : ${#fields.errors('phoneNumber')}">
+                                            <small th:text="${error}"></small>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row"  th:classappend="${#fields.hasErrors('subject')}?'has-danger'">
+                                    <div class="col-md-12">
+                                        <label for="c_subject" class="text-black">Subject </label>
+                                        <input type="text" class="form-control" th:field="*{subject}"
+                                               id="c_subject" name="subject">
+                                        <div th:each="error : ${#fields.errors('subject')}">
+                                            <small th:text="${error}"></small>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" th:classappend="${#fields.hasErrors('message')}?'has-danger'">
+                                    <div class="col-md-12">
+                                        <label for="c_message" class="text-black">Message <span
+                                                class="text-danger">*</span></label>
+                                        <textarea name="message" id="c_message" cols="30" rows="7"
+                                                  class="form-control" th:field="*{message}"></textarea>
+                                        <div th:each="error : ${#fields.errors('message')}">
+                                            <small th:text="${error}"></small>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <input type="submit" class="btn btn-primary btn-lg btn-block"
+                                               value="Send Message">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</html>

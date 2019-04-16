@@ -1,17 +1,19 @@
 package com.example.granny.service.api;
 
+import com.example.granny.domain.models.binding.ProductBindingModel;
+import com.example.granny.domain.models.service.ProductServiceModel;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
-//    ProductServiceModel createProduct(ProductServiceModel productServiceModel);
-//
-//    List<ProductServiceModel> findAllProducts();
-//
-//    ProductServiceModel findProductById(String id);
-//
-//    ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel);
-//
-//    void deleteProduct(String id);
-//
-//    List<ProductServiceModel> findAllByCategory(String category);
+    ProductServiceModel create(ProductBindingModel model) throws IOException;
+
+   List<ProductServiceModel> findAll();
+
+    ProductServiceModel findById(Integer id);
+
+    ProductServiceModel edit(Integer id, ProductBindingModel model) throws IOException;
+
+    void delete(Integer id);
 }

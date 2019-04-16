@@ -1,4 +1,4 @@
-package com.example.granny.validation.validators;
+package com.example.granny.validation;
 
 import com.example.granny.validation.annotations.ValidPassword;
 

@@ -5,7 +5,6 @@ import com.example.granny.domain.entities.Cause;
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.binding.CauseFormBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
-import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.error.CauseNotFoundException;
 import com.example.granny.error.UserNotFoundException;
 import com.example.granny.repository.CauseRepository;
@@ -54,9 +53,10 @@ public class CauseServiceImpl implements CauseService {
     public CauseServiceModel submit(CauseFormBindingModel model, String email) throws IOException {
         User author = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+
         Cause cause = modelMapper.map(model, Cause.class);
         cause.setAuthor(author);
-        String image = GlobalConstants.CAUSE_DEFAULT_IMG;
+        String image = GlobalConstants.DEFAULT_IMG;
 
         MultipartFile file = model.getImageUrl();
         if (!file.isEmpty()) {
@@ -72,7 +72,7 @@ public class CauseServiceImpl implements CauseService {
         MultipartFile file = model.getImageUrl();
 
         if (!file.isEmpty()) {
-            if (!cause.getImageUrl().equals(GlobalConstants.CAUSE_DEFAULT_IMG)) {
+            if (!cause.getImageUrl().equals(GlobalConstants.DEFAULT_IMG)) {
                 cloudinaryService.deleteImage(CAUSE_IMG_ID + cause.getAuthor().getEmail());
             }
             String image = cloudinaryService.uploadImage(file, CAUSE_IMG_ID + cause.getAuthor().getEmail());
@@ -84,6 +84,13 @@ public class CauseServiceImpl implements CauseService {
         cause.setLocation(model.getLocation());
 
         return modelMapper.map(causeRepository.saveAndFlush(cause), CauseServiceModel.class);
+    }
+
+    @Override
+    public void approve(Integer causeId) {
+        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> CAUSE_NOT_FOUND);
+        cause.setApproved(true);
+        causeRepository.saveAndFlush(cause);
     }
 
     @Override
@@ -101,6 +108,7 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public List<CauseServiceModel> findAll() {
+
         List<Cause> causes = causeRepository.findAll();
         return causes.stream()
                 .map(c -> modelMapper.map(c, CauseServiceModel.class))
@@ -116,8 +124,14 @@ public class CauseServiceImpl implements CauseService {
     }
 
     @Override
-    public List<CauseServiceModel> findAllPending(Integer id) {
-        List<Cause> causes = causeRepository.findAllPendingByAuthorId(id);
+    public List<CauseServiceModel> findAllPending(Integer id, Authentication authentication) {
+        List<Cause> causes;
+
+        if (hasAuthority(authentication, GlobalConstants.ROLE_MODERATOR)) {
+            causes = causeRepository.findAllPending();
+        } else {
+            causes = causeRepository.findAllPendingByAuthorId(id);
+        }
         return causes.stream()
                 .map(c -> modelMapper.map(c, CauseServiceModel.class))
                 .collect(Collectors.toList());

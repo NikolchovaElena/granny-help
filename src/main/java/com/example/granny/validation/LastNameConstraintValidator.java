@@ -1,15 +1,13 @@
-package com.example.granny.validation.validators;
+package com.example.granny.validation;
 
-import com.example.granny.validation.annotations.ValidFirstName;
+import com.example.granny.validation.annotations.ValidLastName;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class FirstNameConstraintValidator implements ConstraintValidator<ValidFirstName, String> {
-
-
+public class LastNameConstraintValidator implements ConstraintValidator<ValidLastName, String> {
     @Override
-    public void initialize(ValidFirstName constraintAnnotation) {
+    public void initialize(ValidLastName constraintAnnotation) {
     }
 
     @Override
@@ -20,7 +18,7 @@ public class FirstNameConstraintValidator implements ConstraintValidator<ValidFi
 
         if (name.length() < 1 || name.length() > 20) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ValidFirstName.FIRST_NAME_LENGTH_ERROR_MESSAGE)
+            context.buildConstraintViolationWithTemplate(ValidLastName.LAST_NAME_ERROR_MESSAGE)
                     .addConstraintViolation();
             return false;
         }
@@ -28,9 +26,9 @@ public class FirstNameConstraintValidator implements ConstraintValidator<ValidFi
         for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
 
-            if (!Character.isAlphabetic(c)) {
+            if (Character.isDigit(c)) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(ValidFirstName.FIRST_NAME_ONLY_LETTERS)
+                context.buildConstraintViolationWithTemplate(ValidLastName.LAST_NAME_ONLY_LETTERS)
                         .addConstraintViolation();
                 return false;
             }

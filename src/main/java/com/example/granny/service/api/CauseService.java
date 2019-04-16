@@ -13,13 +13,15 @@ public interface CauseService {
 
     CauseServiceModel edit(CauseFormBindingModel model, Integer causeId) throws IOException;
 
+    void approve(Integer causeId);
+
     void delete(Integer causeId, String email, Authentication authentication);
 
     List<CauseServiceModel> findAll();
 
     List<CauseServiceModel> findAllApproved(Integer id);
 
-    List<CauseServiceModel> findAllPending(Integer id);
+    List<CauseServiceModel> findAllPending(Integer id, Authentication authentication);
 
     CauseServiceModel findById(Integer id);
 

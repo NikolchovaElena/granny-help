@@ -1,48 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
 <div layout:fragment="content">
-    <div class="site-wrap mt-4 mb-4">
+    <div class="site-wrap">
         <!--Paging-->
         <div class="bg-light py-3">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a>
-                        <span class="mx-2 mb-0">/</span>
-                        <strong class="text-black">Shop</strong></div>
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a> <span class="mx-2 mb-0">/</span> <strong
+                            class="text-black">Shop</strong></div>
                 </div>
             </div>
         </div>
-        <div class="container">
 
-            <div class="row mb-5">
-                <div class="col-md-12 order-2">
-                        <!--Content-->
-                        <th:block th:each="cause : ${model}">
-                            <div class="col-sm-6 col-lg-4 mb-4 aos-init aos-animate" data-aos="fade-up">
-                                <div class="block-4 text-center border">
-                                    <figure class="block-4-image">
-                                        <a th:href="@{/causes/{id}(id=${cause.id})}">
-                                            <img th:src="${cause.imageUrl}" alt="Image placeholder"
-                                                 class="img-fluid"></a>
-                                    </figure>
-                                    <div class="block-4-text p-4">
-                                        <h3><a th:href="@{/causes/{id}(id=${cause.id})}"
-                                               th:text="${cause.title}"></a></h3>
-                                        <div class="mt-4">
-                                            <p class="mb-0">Submitted by:
-                                                <strong class="text-black" th:text="${cause.author.firstName +' '+cause.author.lastName}">
-                                                </strong>
-                                            </p>
-                                            <p class="mb-0">Help needed in:
-                                                <strong class="text-black" th:text="${cause.location.name}"></strong>
-                                            </p></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </th:block>
+        <!--Content-->
+        <div class="site-section border-bottom" data-aos="fade">
+            <div class="container mt-3" data-aos="fade">
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col">
+                        <div class="mb-4">
+                            <h2 class="text-black">Disclosure</h2>
+                        </div>
+                        <p>We have a range of products all hand-crafted by talented elderly people.<br>
+                            From knitwear to soaps, from cards to T-shirts,
+                            all made with love for you and your loved ones.</p>
+                        <p>The sale of our products not only help the elderly people who made them, but
+                            also help raise funds to support our organization.<br>
+                            We would not be able to continue our work without your help.</p>
+
+                        <a class="btn btn-primary" th:href="@{/products}">Continue to the shop.</a>
+                        <br>
+                        <p><h5>If you want your product featured in our shop
+                        please contact us <a th:href="@{/contact/form}">Here</a> .</h5>
+                        <p class="text-danger">Please know that only products made by elderly people will be
+                            accepted.</p></p>
                     </div>
                 </div>
             </div>
+            <!--Best selling products-->
+            <!--<th:block th:replace="~{fragments/blocks :: volunteers-block}"/>-->
         </div>
     </div>
 </div>
+</html>

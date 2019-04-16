@@ -21,7 +21,8 @@
                         <div class="block-16">
                             <img class="img-fluid rounded" th:src="${model.imageUrl}" alt="Image placeholder">
                             <th:block sec:authorize="isAuthenticated()">
-                                <th:block th:if="${#authentication.principal.email} != ${model.author.email}">
+                                <th:block th:if="${#authentication.principal.email} != ${model.author.email} and
+                                                   ${#authorization.expression('hasRole(''ROLE_MODERATOR'')')} and ${isApproved==true}">
 
                                     <form th:method="post" action="#">
                                         <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"
@@ -31,7 +32,14 @@
                                             th:text="${isFollowing}!=true ? 'Follow cause' : 'Unfollow cause'"></span></span>
                                         </button>
                                     </form>
+                                </th:block>
 
+                                <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')} and ${isApproved==false}">
+                                    <form th:method="post" th:action="@{/causes/approve/{id}(id=${model.id})}">
+                                        <button class="as-link" type="submit" name="approveCause">
+                                            <span class="icon icon-assignment_turned_in">Approve cause</span>
+                                        </button>
+                                    </form>
                                 </th:block>
                                 <th:block th:if="${#authentication.principal.email} == ${model.author.email} or
                                                     ${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
@@ -41,7 +49,7 @@
 
                                     <form th:method="post" th:action="@{/causes/delete/{id}(id=${model.id})}">
                                         <button class="as-link" type="submit" name="deleteCause"
-                                                onclick="return confirm('Are you sure you want to delete your account?');">
+                                                onclick="return confirm('Are you sure you want to delete this cause?');">
                                             <span class="icon icon-delete">Delete cause</span>
                                         </button>
                                     </form>
@@ -98,15 +106,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-md-4">
-                                <div class="block-38 text-center">
-                                    <div class="block-38-header">
-                                        <div class="block-38-img">
-                                            <img th:src="${model.author.imageUrl}" alt="Profile Picture" class="mb-4">
+                            <a th:href="@{/user/profile/{id}(id=${model.author.id})}">
+                                <div class="col col-md-4">
+                                    <div class="block-38 text-center">
+                                        <div class="block-38-header">
+                                            <div class="block-38-img">
+                                                <img th:src="${model.author.imageUrl}" alt="Profile Picture"
+                                                     class="mb-4">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                         <hr>
                         <div>
@@ -132,7 +143,7 @@
                         </div>
                         <th:block sec:authorize="isAuthenticated()">
                             <form action="#" method="post">Enter your comment here:<br/>
-                                <textarea id="comment" rows="2" cols="35"></textarea><br/>
+                                <textarea id="comment" maxlength="500" rows="2" cols="35"></textarea><br/>
                                 <input id="cause-id" type="hidden" th:value="${model.id}">
                                 <input class="btn btn-primary btn-sm" type="submit" id="send-comment" value="Submit"/>
                             </form>

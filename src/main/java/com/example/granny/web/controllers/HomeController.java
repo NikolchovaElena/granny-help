@@ -10,6 +10,7 @@ import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,7 +39,9 @@ public class HomeController extends BaseController {
     }
 
     @GetMapping(GlobalConstants.URL_USER_HOME)
-    public ModelAndView home(Principal principal, ModelAndView modelAndView) {
+    public ModelAndView home(Principal principal,
+                             Authentication authentication,
+                             ModelAndView modelAndView) {
 
         if (principal == null) {
             return view("index");
@@ -46,7 +49,7 @@ public class HomeController extends BaseController {
         UserServiceModel user = userService.findUserByEmail(principal.getName());
 
         List<CauseServiceModel> approvedServiceModel = causeService.findAllApproved(user.getId());
-        List<CauseServiceModel> pendingServiceModel = causeService.findAllPending(user.getId());
+        List<CauseServiceModel> pendingServiceModel = causeService.findAllPending(user.getId(), authentication);
         List<CauseServiceModel> pinnedServiceModel = userService.findAllPinned(user.getId());
 
         modelAndView.addObject("approved", fetchCauses(approvedServiceModel));
@@ -66,10 +69,9 @@ public class HomeController extends BaseController {
         return view("about", modelAndView);
     }
 
-    @GetMapping("/error")
-    @PreAuthorize("isAnonymous()")
-    public ModelAndView error() {
-        return view("error");
+    @GetMapping("/shop")
+    public ModelAndView shop() {
+        return view("shop");
     }
 
     private List<CauseViewModel> fetchCauses(List<CauseServiceModel> models) {

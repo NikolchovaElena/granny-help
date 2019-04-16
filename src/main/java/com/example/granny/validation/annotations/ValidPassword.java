@@ -1,7 +1,7 @@
 package com.example.granny.validation.annotations;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.validation.validators.PasswordConstraintValidator;
+import com.example.granny.validation.PasswordConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

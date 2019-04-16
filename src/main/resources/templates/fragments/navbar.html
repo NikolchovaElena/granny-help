@@ -28,12 +28,14 @@
                                        th:text="${session.profile.firstName+' '+session.profile.lastName}"></a>
                                 </li>
                                 <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
+                                <th:block sec:authorize="hasRole('ROLE_MODERATOR')">
                                 <li>
-                                    <a href="cart.html" class="site-cart">
+                                    <a th:href="@{/messages}" class="site-cart">
                                         <span class="icon icon-envelope"></span>
                                         <span class="count">2</span>
                                     </a>
                                 </li>
+                                </th:block>
                                 <li>
                                     <a href="cart.html" class="site-cart">
                                         <span class="icon icon-shopping_cart"></span>
@@ -74,7 +76,7 @@
                     <a th:href="@{/shop}">Shop</a>
                 </li>
                 <li>
-                    <a href="#">Donate</a>
+                    <a th:href="@{/contact/form}">Contact</a>
                 </li>
             </ul>
         </div>

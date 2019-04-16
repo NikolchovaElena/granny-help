@@ -1,7 +1,13 @@
 package com.example.granny.validation.api;
 
-public interface ProductValidationService {
-  //  boolean isValid(Product product);
+import com.example.granny.domain.entities.Product;
+import com.example.granny.domain.models.binding.ProductBindingModel;
+import com.example.granny.domain.models.service.ProductServiceModel;
 
-   // boolean isValid(ProductServiceModel product);
+public interface ProductValidationService {
+    boolean isValid(Product product);
+
+    boolean isValid(ProductBindingModel product);
+
+    boolean isValid(ProductServiceModel product);
 }

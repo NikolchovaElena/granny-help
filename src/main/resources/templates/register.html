@@ -16,7 +16,7 @@
                 <form th:method="post" th:action="@{/user/register}" th:object="${model}"
                       enctype="multipart/form-data">
                     <div class="form-group row ml-2 mt-4">
-                        <label for="inputFirstName" class="col-sm-4 col-form-label">First Name:</label>
+                        <label for="inputFirstName" class="col-sm-4 col-form-label">First Name <span class="text-danger">*</span></label>
                         <div class="col-sm-8" th:classappend="${#fields.hasErrors('firstName')}?'has-danger'">
                             <input type="text" class="form-control placeholder" name="firstName" id="inputFirstName"
                                    th:field="*{firstName}"
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div class="form-group row ml-2 mt-4">
-                        <label for="inputLastName" class="col-sm-4 col-form-label">Last Name:</label>
+                        <label for="inputLastName" class="col-sm-4 col-form-label">Last Name <span class="text-danger">*</span></label>
                         <div class="col-sm-8" th:classappend="${#fields.hasErrors('lastName')}?'has-danger'">
                             <input type="text" class="form-control" name="lastName" id="inputLastName"
                                    th:field="*{lastName}"
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="form-group row ml-2 mt-4">
-                        <label for="inputEmail" class="col-sm-4 col-form-label">Email:</label>
+                        <label for="inputEmail" class="col-sm-4 col-form-label">Email <span class="text-danger">*</span></label>
                         <div class="col-sm-8" th:classappend="${#fields.hasErrors('email')}?'has-danger'">
                             <input type="email" class="form-control" name="email" id="inputEmail"
                                    th:field="*{email}"
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div class="form-group row ml-2 mt-4">
-                        <label for="inputPassword" class="col-sm-4 col-form-label">Password:</label>
+                        <label for="inputPassword" class="col-sm-4 col-form-label">Password <span class="text-danger">*</span></label>
                         <div class="col-sm-8" th:classappend="${#fields.hasErrors('password')}?'has-danger'">
                             <input type="password" class="form-control" name="password" id="inputPassword"
                                    th:field="*{password}"
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="form-group row ml-2 mt-4">
-                        <label for="inputConfirmPassword" class="col-sm-4 col-form-label">Confirm Password:</label>
+                        <label for="inputConfirmPassword" class="col-sm-4 col-form-label">Confirm Password <span class="text-danger">*</span></label>
                         <div class="col-sm-8" th:classappend="${#fields.hasErrors()}?'has-danger'">
                             <input type="password" class="form-control" name="confirmPassword" id="inputConfirmPassword"
                                    th:field="*{confirmPassword}"

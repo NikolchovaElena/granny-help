@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap mt-4 mb-4">
+
+        <!--Content-->
+        <div class="container mt-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Received on</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="message : ${model}">
+                    <tr>
+                        <th scope="row" th:text="${messageStat.count}"></th>
+                        <td th:text="${message.date}"></td>
+                        <td th:text="${message.firstName+' '+message.lastName}"></td>
+                        <td th:text="${message.email}"></td>
+                        <td th:text="${message.subject}"></td>
+                        <td>
+                            <form th:method="get" th:action="@{/messages/{id}(id=${message.id})}">
+                                <button class="btn btn-info btn-sm">View</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form th:method="post" th:action="@{/messages/delete/{id}(id=${message.id})}">
+                                <button class="btn btn-danger btn-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

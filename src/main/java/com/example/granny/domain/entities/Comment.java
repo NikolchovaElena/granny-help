@@ -1,6 +1,7 @@
 package com.example.granny.domain.entities;
 
 import com.example.granny.constants.GlobalConstants;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class Comment extends BaseEntity {
     }
 
     @Column(nullable = false)
+    @Length(max = 250)
     public String getComment() {
         return comment;
     }

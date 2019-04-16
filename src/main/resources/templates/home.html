@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
 <div layout:fragment="content">
-    <div class="site-wrap mt-4 mb-4">
+    <hr>
+    <div class="site-wrap mb-4">
 
         <div class="container mt-4">
             <div class="row">
@@ -22,7 +23,7 @@
                     </div>
                     <a th:href="@{/causes/form}" class="btn btn-primary btn-block">Submit Cause</a>
                     <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
-                        <a th:href="@{/product/form}" class="btn btn-primary btn-block">Submit new Product</a>
+                        <a th:href="@{/products/form}" class="btn btn-primary btn-block">Add new Product</a>
                     </th:block>
                 </div>
 

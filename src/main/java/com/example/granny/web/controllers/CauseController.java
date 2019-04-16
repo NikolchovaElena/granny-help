@@ -121,10 +121,17 @@ public class CauseController extends BaseController {
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
         modelAndView.addObject("comments", comments);
-        if (principal != null) {
-            boolean isFollowing = userService.isFollowing(principal.getName(), id);
-            modelAndView.addObject("isFollowing", isFollowing);
+
+        if (!causeServiceModel.isApproved()) {
+            modelAndView.addObject("isApproved", false);
+        } else {
+            if (principal != null) {
+                boolean isFollowing = userService.isFollowing(principal.getName(), id);
+                modelAndView.addObject("isFollowing", isFollowing);
+                modelAndView.addObject("isApproved", true);
+            }
         }
+
         return view("cause-details", modelAndView);
     }
 
@@ -138,6 +145,14 @@ public class CauseController extends BaseController {
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
         return view("causes", modelAndView);
+    }
+
+    @PostMapping("/causes/approve/{id}")
+    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    public ModelAndView approveCause(@PathVariable("id") Integer id) {
+
+        causeService.approve(id);
+        return redirect("/home");
     }
 
     @PostMapping("/causes/delete/{id}")

@@ -2,8 +2,9 @@
 <html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
 <div layout:fragment="content">
     <div class="container">
-        <form th:action="@{/product/form}" th:method="post" th:object="${model}" enctype="multipart/form-data">
-            <th:block th:replace="~{fragments/product-form :: product-form}"/>
+        <form th:action="@{/products/form}" th:method="post" th:object="${model}"
+              enctype="multipart/form-data">
+            <th:block th:replace="~{fragments/product-form :: form}"/>
         </form>
     </div>
 </div>

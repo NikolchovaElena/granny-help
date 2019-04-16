@@ -2,8 +2,10 @@ package com.example.granny.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "products")
@@ -13,11 +15,17 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     private String description;
     private String imageUrl;
+    private LocalDate date;
 
     public Product() {
     }
 
-    @Column(nullable = false)
+    @PrePersist
+    public void prePersist() {
+        date = LocalDate.now();
+    }
+
+    @Column(nullable = false, unique = true)
     public String getName() {
         return name;
     }
@@ -35,7 +43,7 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     public String getDescription() {
         return description;
     }
@@ -51,5 +59,13 @@ public class Product extends BaseEntity {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

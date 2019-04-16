@@ -117,7 +117,7 @@ a:hover {
 
 @media (min-width: 768px) {
     .site-section {
-        padding: 5em 0;
+        padding: 2em 0;
     }
 }
 
@@ -1112,4 +1112,17 @@ a:hover {
 
 .body-text {
     font-weight: 300;
+}
+
+.bl-message {
+    padding: 2em 2em 2em 2em;
+}
+
+p.block-38-heading.h5 {
+    padding: 40px 25px;
+}
+
+.bl-price {
+    font-size: 20px;
+    color: #000000;
 }

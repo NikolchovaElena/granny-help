@@ -6,7 +6,7 @@ public final class GlobalConstants {
 
     public static final String PROFILE_DEFAULT_IMG = "https://res.cloudinary.com/logger/image/upload/v1554151912/blank-profile-picture-973460_960_720.png";
     public static final String ABOUT_DEFAULT_TEXT = "I want to make the world a better place";
-    public static final String CAUSE_DEFAULT_IMG = "https://res.cloudinary.com/logger/image/upload/v1554803553/nophotoavailable.png";
+    public static final String DEFAULT_IMG = "https://res.cloudinary.com/logger/image/upload/v1554803553/nophotoavailable.png";
 
     /**
      * Web constants

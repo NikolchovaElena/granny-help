@@ -25,14 +25,24 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrfTokenRepository(csrfTokenRepository())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/fonts/**", "/vendor/**", "/images/**").permitAll()
-                .antMatchers(GlobalConstants.URL_ABOUT,
+                .antMatchers(
+                        "/css/**",
+                        "/js/**",
+                        "/fonts/**",
+                        "/vendor/**",
+                        "/images/**").permitAll()
+                .antMatchers(
+                        GlobalConstants.URL_ABOUT,
                         GlobalConstants.URL_INDEX,
                         GlobalConstants.URL_USER_HOME,
                         "/causes/*",
                         "/causes",
-                        "/shop").permitAll()
-                .antMatchers(GlobalConstants.URL_USER_LOGIN,
+                        "/shop",
+                        "/products/*",
+                        "/products",
+                        "/contact/form").permitAll()
+                .antMatchers(
+                        GlobalConstants.URL_USER_LOGIN,
                         GlobalConstants.URL_USER_REGISTER,
                         GlobalConstants.URL_CONFIRM_ACCOUNT,
                         GlobalConstants.URL_ACCOUNT_VERIFIED).anonymous()

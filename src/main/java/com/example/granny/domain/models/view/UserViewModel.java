@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserViewModel {
 
+    private Integer id;
     private String firstName;
     private String lastName;
     private String email;
@@ -18,6 +19,14 @@ public class UserViewModel {
         this.lastName = lastName;
         this.imageUrl = imageUrl;
         this.about = about;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getEmail() {
