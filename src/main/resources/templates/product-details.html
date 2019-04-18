@@ -22,13 +22,13 @@
 
                         <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
                             <div><a th:href="@{/products/form/{id}(id=${model.id})}">
-                                <span class="icon icon-edit">Edit cause</span>
+                                <span class="icon icon-edit">Edit product</span>
                             </a></div>
 
                             <form th:method="post" th:action="@{/products/delete/{id}(id=${model.id})}">
                                 <button class="as-link" type="submit" name="deleteCause"
                                         onclick="return confirm('Are you sure you want to delete this product?');">
-                                    <span class="icon icon-delete">Delete cause</span>
+                                    <span class="icon icon-delete">Delete product</span>
                                 </button>
                             </form>
                         </th:block>
@@ -43,16 +43,73 @@
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-primary js-btn-minus" type="button">−</button>
                             </div>
-                            <input type="text" class="form-control text-center" value="1" placeholder=""
+                            <input type="text" class="form-control text-center"
+                                   id="product-quantity" value="1" placeholder="0"
                                    aria-label="Example text with button addon" aria-describedby="button-addon1">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-primary js-btn-plus" type="button">+</button>
                             </div>
                         </div>
 
-                        <p><a href="cart.html" class="buy-now btn btn-sm btn-primary">Add To Cart</a></p>
-
+                        <form id="cart-add-box" action="#" method="post">
+                            <input type="hidden" id="product-id" th:value="${model.id}">
+                            <div class="button-holder d-flex">
+                                <input class="btn btn-primary" type="submit" id="btn-add-to-cart" value="Add To Cart"/>
+                            </div>
+                        </form>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Disclosure-->
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col">
+                    <div class="mb-4">
+                        <h2 class="text-black">Disclosure</h2>
+                    </div>
+                    <p>We have a range of products all hand-crafted by talented elderly people.</p>
+                    <p>The sale of our products not only help the people who made them, but
+                        also help raise funds to support our organization.<br>
+                        We would not be able to continue our work without your help.</p>
+                    <p><h5>If you want your product featured in our shop
+                    please contact us <a th:href="@{/contact/form}">Here</a> .</h5>
+                    <p class="text-danger">Please know that only products made by elderly people will be
+                        accepted.</p></p>
+                </div>
+            </div>
+        </div>
+
+        <!--Featured Products-->
+        <div class="site-section block-3 site-blocks-2 bg-light">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-7 site-section-heading text-center pt-4">
+                        <h2>You may also like</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row mb-5">
+                            <th:block th:each="product : ${suggestedProducts}">
+                                <div class="col-sm-6 col-lg-3 mb-3 aos-init aos-animate" data-aos="fade-up">
+                                    <div class="block-4 text-center border">
+                                        <figure class="block-4-image">
+                                            <a th:href="@{/products/{id}(id=${product.id})}">
+                                                <img th:src="${product.imageUrl}"
+                                                     alt="Image placeholder" class="img-fluid"></a>
+                                        </figure>
+
+                                        <div class="block-4-text p-2">
+                                            <h3><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"></a></h3>
+
+                                            <p class="font-weight-bold bl-price mt-2" th:text="'$'+${product.price}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
                 </div>
             </div>
         </div>

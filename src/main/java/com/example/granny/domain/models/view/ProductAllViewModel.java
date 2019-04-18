@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class ProductAllViewModel {
 
-    private String id;
+    private Integer id;
     private String name;
     private BigDecimal price;
     private String imageUrl;
@@ -12,11 +12,11 @@ public class ProductAllViewModel {
     public ProductAllViewModel() {
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

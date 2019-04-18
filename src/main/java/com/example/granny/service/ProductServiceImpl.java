@@ -4,6 +4,8 @@ import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.Product;
 import com.example.granny.domain.models.binding.ProductBindingModel;
 import com.example.granny.domain.models.service.ProductServiceModel;
+import com.example.granny.domain.models.view.CartViewModel;
+import com.example.granny.domain.models.view.ProductAllViewModel;
 import com.example.granny.error.ProductAlreadyExistsException;
 import com.example.granny.error.ProductNotFoundException;
 import com.example.granny.repository.ProductRepository;
@@ -16,7 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +31,6 @@ public class ProductServiceImpl implements ProductService {
             new ProductNotFoundException("The cause you requested could not be found");
     static final ProductAlreadyExistsException PRODUCT_ALREADY_EXISTS =
             new ProductAlreadyExistsException("A product with the same name already exists");
-
-    static final String PRODUCT_IMG_ID = "PRODUCT";
 
     private final ProductRepository productRepository;
     private final ProductValidationService productValidation;
@@ -58,7 +62,9 @@ public class ProductServiceImpl implements ProductService {
         String image = GlobalConstants.DEFAULT_IMG;
         MultipartFile file = model.getImageUrl();
         if (!file.isEmpty()) {
-            image = cloudinaryService.uploadImage(file, PRODUCT_IMG_ID + model.getName());
+            String imageId = UUID.randomUUID().toString();
+            product.setImageId(imageId);
+            image = cloudinaryService.uploadImage(file, imageId);
         }
         product.setImageUrl(image);
         product = this.productRepository.save(product);
@@ -90,9 +96,9 @@ public class ProductServiceImpl implements ProductService {
 
         if (!file.isEmpty()) {
             if (!product.getImageUrl().equals(GlobalConstants.DEFAULT_IMG)) {
-                cloudinaryService.deleteImage(PRODUCT_IMG_ID + model.getName());
+                cloudinaryService.deleteImage(product.getImageId());
             }
-            String image = cloudinaryService.uploadImage(file, PRODUCT_IMG_ID + model.getName());
+            String image = cloudinaryService.uploadImage(file, product.getImageId());
             product.setImageUrl(image);
         }
 
@@ -111,4 +117,40 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository.delete(product);
     }
 
+    @Override
+    public List<ProductServiceModel> findFourRandomProducts(Integer id) {
+        List<ProductServiceModel> list = this.productRepository.findFiveRandomProducts()
+                .stream()
+                .filter(p -> p.getId() != id)
+                .limit(4)
+                .map(p -> this.modelMapper.map(p, ProductServiceModel.class))
+                .collect(Collectors.toList());
+
+        return list;
+    }
+
+    @Override
+    public List<CartViewModel> findAll(Map<Integer, Integer> products) {
+        List<CartViewModel> cart = new ArrayList<>();
+
+        products.entrySet().stream().forEach(i -> {
+            Product p = productRepository.findById(i.getKey())
+                    .orElseThrow(() -> PRODUCT_NOT_FOUND);
+            ProductAllViewModel product = modelMapper.map(p, ProductAllViewModel.class);
+            int quantity = i.getValue();
+            CartViewModel m = new CartViewModel(product, quantity);
+            cart.add(m);
+        });
+        return cart;
+    }
+
+    @Override
+    public BigDecimal findTotal(List<CartViewModel> products) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (CartViewModel i: products) {
+            total = total.add(i.getSum());
+        }
+        return total;
+    }
 }

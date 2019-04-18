@@ -40,7 +40,13 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/shop",
                         "/products/*",
                         "/products",
-                        "/contact/form").permitAll()
+                        "/contact/form",
+                        "/cart",
+                        "/cart/*",
+                        "/cart/delete/*",
+                        "/cart/update",
+                        "/cart/checkout",
+                        "/order/success").permitAll()
                 .antMatchers(
                         GlobalConstants.URL_USER_LOGIN,
                         GlobalConstants.URL_USER_REGISTER,
@@ -53,7 +59,6 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .successHandler(myAuthenticationSuccessHandler())
-                // .defaultSuccessUrl("/home", true)
                 .and()
                 .logout()
                 .logoutSuccessUrl(GlobalConstants.URL_INDEX);

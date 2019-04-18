@@ -16,6 +16,7 @@ public class Product extends BaseEntity {
     private String description;
     private String imageUrl;
     private LocalDate date;
+    private String imageId;
 
     public Product() {
     }
@@ -67,5 +68,13 @@ public class Product extends BaseEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 }

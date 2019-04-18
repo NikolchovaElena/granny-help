@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="container">
+        <form th:action="@{/user/address/form}" th:method="post" th:object="${address}">
+
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 mb-5 mb-md-0">
+                    <h2 class="h3 mt-3 mb-3 text-black text-center">Billing Details</h2>
+                    <div class="p-3">
+                        <th:block th:replace="~{fragments/address-form :: form}"/>
+
+                        <div class="button-holder d-flex justify-content-center mb-5">
+                            <button type="submit" class="btn btn-primary">Submit Billing Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</html>

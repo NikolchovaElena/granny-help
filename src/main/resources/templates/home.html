@@ -23,7 +23,7 @@
                     </div>
                     <a th:href="@{/causes/form}" class="btn btn-primary btn-block">Submit Cause</a>
                     <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
-                        <a th:href="@{/products/form}" class="btn btn-primary btn-block">Add new Product</a>
+                        <a th:href="@{/products/form}" class="btn btn-success btn-block">Add new Product</a>
                     </th:block>
                 </div>
 

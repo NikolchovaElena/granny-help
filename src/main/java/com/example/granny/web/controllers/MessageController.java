@@ -75,7 +75,7 @@ public class MessageController extends BaseController {
     ModelAndView showMessageDetails(@PathVariable(name = "id") Integer id,
                                     ModelAndView modelAndView) {
         MessageDetailsViewModel model =
-                modelMapper.map(messageService.findById(id), MessageDetailsViewModel.class);
+                modelMapper.map(messageService.getOpenedMessage(id), MessageDetailsViewModel.class);
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
         return view("message-details", modelAndView);

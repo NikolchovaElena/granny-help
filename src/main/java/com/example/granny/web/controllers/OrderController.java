@@ -1,7 +1,8 @@
 package com.example.granny.web.controllers;
 
+import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.models.service.ProductServiceModel;
-import com.example.granny.domain.models.view.OrderViewModel;
+import com.example.granny.domain.models.view.CartViewModel;
 import com.example.granny.domain.models.view.ProductDetailsViewModel;
 import com.example.granny.service.api.OrderService;
 import com.example.granny.service.api.ProductService;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -43,9 +46,9 @@ public class OrderController extends BaseController {
     @GetMapping("order/all")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView getAllOrders(ModelAndView modelAndView) {
-        List<OrderViewModel> viewModels = orderService.findAllOrders()
+        List<CartViewModel> viewModels = orderService.findAllOrders()
                 .stream()
-                .map(o -> mapper.map(o, OrderViewModel.class))
+                .map(o -> mapper.map(o, CartViewModel.class))
                 .collect(Collectors.toList());
         modelAndView.addObject("orders", viewModels);
         return view("order/list-orders", modelAndView);
@@ -55,9 +58,9 @@ public class OrderController extends BaseController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView getCustomerOrders(ModelAndView modelAndView, Principal principal) {
         String username = principal.getName();
-        List<OrderViewModel> viewModels = orderService.findOrdersByCustomer(username)
+        List<CartViewModel> viewModels = orderService.findOrdersByCustomer(username)
                 .stream()
-                .map(o -> mapper.map(o, OrderViewModel.class))
+                .map(o -> mapper.map(o, CartViewModel.class))
                 .collect(Collectors.toList());
         modelAndView.addObject("orders", viewModels);
 

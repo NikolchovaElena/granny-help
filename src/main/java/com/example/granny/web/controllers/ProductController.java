@@ -3,11 +3,11 @@ package com.example.granny.web.controllers;
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.models.binding.ProductBindingModel;
 import com.example.granny.domain.models.service.ProductServiceModel;
+import com.example.granny.domain.models.view.CartViewModel;
 import com.example.granny.domain.models.view.ProductAllViewModel;
 import com.example.granny.domain.models.view.ProductDetailsViewModel;
 import com.example.granny.error.ProductAlreadyExistsException;
 import com.example.granny.error.ProductNotFoundException;
-import com.example.granny.service.api.CloudinaryService;
 import com.example.granny.service.api.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -70,35 +73,45 @@ public class ProductController extends BaseController {
     public ModelAndView detailsProduct(@PathVariable Integer id, ModelAndView modelAndView) {
         ProductServiceModel model = productService.findById(id);
 
+        List<ProductAllViewModel> suggested = productService.findFourRandomProducts(id)
+                .stream().map(p -> modelMapper.map(p, ProductAllViewModel.class))
+                .collect(Collectors.toList());
+
         modelAndView.addObject(GlobalConstants.MODEL,
                 this.modelMapper.map(model, ProductDetailsViewModel.class));
-        return super.view("product-details", modelAndView);
+        modelAndView.addObject("suggestedProducts", suggested);
+
+        return view("product-details", modelAndView);
     }
 
     @GetMapping("/products/form/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    public ModelAndView editProduct(@PathVariable Integer id, ModelAndView modelAndView) {
-        ProductServiceModel productServiceModel = this.productService.findById(id);
-        ProductBindingModel model = this.modelMapper.map(productServiceModel, ProductBindingModel.class);
+    public ModelAndView editProduct(@PathVariable("id") Integer id,
+                                    ModelAndView modelAndView) {
+        ProductServiceModel model = productService.findById(id);
+        modelAndView.addObject(GlobalConstants.MODEL, model);
 
-        modelAndView.addObject("product", model);
-        modelAndView.addObject("productId", id);
-
-        return super.view("product-edit", modelAndView);
+        return view("product-edit", modelAndView);
     }
 
     @PostMapping("/products/form/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    public ModelAndView editProductConfirm(@PathVariable Integer id,
-                                           @ModelAttribute ProductBindingModel model) throws IOException {
-        this.productService.edit(id, this.modelMapper.map(model, ProductBindingModel.class));
-
-        return super.redirect("/products/details/" + id);
+    public ModelAndView editProductConfirm(@PathVariable("id") Integer id,
+                                           @Valid @ModelAttribute(name = GlobalConstants.MODEL)
+                                                   ProductBindingModel model,
+                                           BindingResult bindingResult,
+                                           ModelAndView modelAndView) throws IOException {
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject(GlobalConstants.MODEL, model);
+            return view("product-edit", modelAndView);
+        }
+        productService.edit(id, model);
+        return redirect("/products/" + id);
     }
 
     @PostMapping("/products/delete/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    public ModelAndView deleteProductConfirm(@PathVariable Integer id) {
+    public ModelAndView deleteProduct(@PathVariable("id") Integer id) {
         this.productService.delete(id);
 
         return super.redirect("/products");

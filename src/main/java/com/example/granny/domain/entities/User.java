@@ -28,6 +28,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean isEnabled;
     private Set<Role> authorities;
     private Set<Cause> pins;
+    private BillingDetails billingDetails;
 
     public User() {
         this.authorities = new HashSet<>();
@@ -139,6 +140,15 @@ public class User extends BaseEntity implements UserDetails {
         this.pins = pins;
     }
 
+    @OneToOne
+    public BillingDetails getBillingDetails() {
+        return billingDetails;
+    }
+
+    public void setBillingDetails(BillingDetails billingDetails) {
+        this.billingDetails = billingDetails;
+    }
+
     @Override
     @Transient
     public boolean isAccountNonExpired() {
@@ -165,4 +175,6 @@ public class User extends BaseEntity implements UserDetails {
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }
+
+
 }

@@ -1,13 +1,15 @@
 package com.example.granny.web.controllers;
 
 import com.example.granny.constants.GlobalConstants;
+import com.example.granny.domain.models.binding.AddressBindingModel;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
 import com.example.granny.domain.models.binding.UserPasswordBindingModel;
 import com.example.granny.domain.models.binding.UserRegisterBindingModel;
+import com.example.granny.domain.models.service.AddressServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.UserViewModel;
 import com.example.granny.domain.models.view.UserShowViewModel;
-import com.example.granny.error.CauseNotFoundException;
+import com.example.granny.service.api.AddressService;
 import com.example.granny.service.api.EventService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
@@ -35,13 +37,16 @@ public class UserController extends BaseController {
 
     private final UserService userService;
     private final EventService eventService;
+    private final AddressService addressService;
     private final ModelMapper modelMapper;
+
 
     @Autowired
     public UserController(UserService userService,
-                          EventService eventService, ModelMapper modelMapper) {
+                          EventService eventService, AddressService addressService, ModelMapper modelMapper) {
         this.userService = userService;
         this.eventService = eventService;
+        this.addressService = addressService;
         this.modelMapper = modelMapper;
     }
 
@@ -184,5 +189,36 @@ public class UserController extends BaseController {
                                       HttpSession session) {
         userService.delete(id);
         return redirect("/users/show");
+    }
+
+    @GetMapping("/user/address/form")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    public ModelAndView editAddress(Principal principal,
+                                    ModelAndView modelAndView) {
+        UserServiceModel userServiceModel = userService.findUserByEmail(principal.getName());
+
+        AddressServiceModel addressServiceModel = addressService.findBy(userServiceModel);
+
+        AddressBindingModel model = this.modelMapper.map(addressServiceModel, AddressBindingModel.class);
+        modelAndView.addObject("address", model);
+        return view("address-edit", modelAndView);
+    }
+
+    @PostMapping("/user/address/form")
+    @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
+    public ModelAndView editAddressConfirm(@Valid @ModelAttribute(name = "address")
+                                                       AddressBindingModel model,
+                                           BindingResult bindingResult,
+                                           Principal principal,
+                                           ModelAndView modelAndView) throws IOException {
+        UserServiceModel userServiceModel = this.userService.findUserByEmail(principal.getName());
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("address", model);
+            return view("address-edit", modelAndView);
+        }
+        userService.editAddress(principal.getName(), model);
+
+        return redirect("/user/profile/" + userServiceModel.getId());
     }
 }

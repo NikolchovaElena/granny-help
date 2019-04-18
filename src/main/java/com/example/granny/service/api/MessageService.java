@@ -14,4 +14,6 @@ public interface MessageService {
 
     List<MessageServiceModel> findAll();
 
+    MessageServiceModel getOpenedMessage(Integer id);
+
 }

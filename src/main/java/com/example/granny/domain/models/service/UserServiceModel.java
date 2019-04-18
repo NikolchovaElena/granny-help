@@ -1,6 +1,7 @@
 package com.example.granny.domain.models.service;
 
 import com.example.granny.constants.GlobalConstants;
+import com.example.granny.service.api.AddressService;
 import com.example.granny.validation.annotations.ValidFirstName;
 import com.example.granny.validation.annotations.ValidLastName;
 import com.example.granny.validation.annotations.ValidPassword;
@@ -21,6 +22,7 @@ public class UserServiceModel extends BaseServiceModel {
     private String about;
     private Set<RoleServiceModel> authorities;
     private Set<CauseServiceModel> pins;
+    private AddressServiceModel billingDetails;
 
     public UserServiceModel() {
     }
@@ -91,5 +93,13 @@ public class UserServiceModel extends BaseServiceModel {
 
     public void setPins(Set<CauseServiceModel> pins) {
         this.pins = pins;
+    }
+
+    public AddressServiceModel getBillingDetails() {
+        return billingDetails;
+    }
+
+    public void setBillingDetails(AddressServiceModel billingDetails) {
+        this.billingDetails = billingDetails;
     }
 }

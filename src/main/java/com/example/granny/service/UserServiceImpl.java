@@ -2,10 +2,13 @@ package com.example.granny.service;
 
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.constants.RootAdminData;
+import com.example.granny.domain.entities.BillingDetails;
 import com.example.granny.domain.entities.Cause;
 import com.example.granny.domain.entities.Role;
 import com.example.granny.domain.entities.User;
+import com.example.granny.domain.models.binding.AddressBindingModel;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
+import com.example.granny.domain.models.service.AddressServiceModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.RoleServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
@@ -40,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private final CauseRepository causeRepository;
     private final RoleService roleService;
     private final UserValidationService userValidation;
+    private final AddressService addressService;
     private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -47,12 +51,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository userRepository, VerificationTokenService tokenService,
                            CauseService causeService, CauseRepository causeRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
-                           UserValidationService userValidationService, CloudinaryService cloudinaryService) {
+                           UserValidationService userValidationService, AddressService addressService, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.causeService = causeService;
         this.causeRepository = causeRepository;
         this.roleService = roleService;
+        this.addressService = addressService;
         this.cloudinaryService = cloudinaryService;
         this.userValidation = userValidationService;
         this.modelMapper = modelMapper;
@@ -110,6 +115,7 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
+        user.setBillingDetails(this.addressService.addNew());
 
         return this.userRepository.save(user) != null;
     }
@@ -162,10 +168,10 @@ public class UserServiceImpl implements UserService {
                 () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
         boolean isMatch = false;
 
-        for (Cause c:user.getPins()) {
+        for (Cause c : user.getPins()) {
             if (c.getId() == causeId) {
                 isMatch = true;
-               break;
+                break;
             }
         }
         return isMatch;
@@ -259,6 +265,15 @@ public class UserServiceImpl implements UserService {
         user.setAbout(model.getAbout());
 
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
+    }
+
+
+    @Override
+    public void editAddress(String email, AddressBindingModel model) {
+        User user = this.userRepository.findByEmail(email).orElseThrow(() -> NO_USER_WITH_THAT_EXCEPTION);
+        BillingDetails address = user.getBillingDetails();
+
+        this.addressService.edit(address, model);
     }
 
     private boolean ifNotRoot(User user) {

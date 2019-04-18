@@ -28,7 +28,6 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void create(MessageServiceModel model) {
-
         Message message = modelMapper.map(model, Message.class);
         messageRepository.saveAndFlush(message);
     }
@@ -53,5 +52,17 @@ public class MessageServiceImpl implements MessageService {
         return messages.stream()
                 .map(m -> modelMapper.map(m, MessageServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MessageServiceModel getOpenedMessage(Integer id) {
+        Message message = messageRepository.findById(id).orElseThrow(
+                () -> MESSAGE_NOT_FOUND);
+
+        if (!message.isOpen()) {
+            message.setOpen(true);
+            message = messageRepository.saveAndFlush(message);
+        }
+        return modelMapper.map(message, MessageServiceModel.class);
     }
 }

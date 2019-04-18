@@ -1,5 +1,6 @@
 package com.example.granny.repository;
 
+import com.example.granny.domain.entities.BillingDetails;
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.entities.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT u " +
             "FROM User u " +
-            "WHERE u.enabled = 1 "+
+            "WHERE u.enabled = 1 " +
             "ORDER BY u.firstName, u.lastName ")
     List<User> findAll();
 
@@ -29,5 +30,5 @@ public interface UserRepository extends JpaRepository<User, String> {
             "WHERE u.enabled = 1 " +
             "ORDER BY RAND() " +
             "LIMIT 5", nativeQuery = true)
-        List<User> findFiveRandomUsers();
+    List<User> findFiveRandomUsers();
 }

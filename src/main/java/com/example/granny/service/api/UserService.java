@@ -1,6 +1,7 @@
 package com.example.granny.service.api;
 
 import com.example.granny.domain.entities.User;
+import com.example.granny.domain.models.binding.AddressBindingModel;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
@@ -39,4 +40,6 @@ public interface UserService extends UserDetailsService {
     List<UserServiceModel> findFourRandomUsers();
 
     boolean isFollowing(String email, Integer id);
+
+    void editAddress(String email, AddressBindingModel model);
 }

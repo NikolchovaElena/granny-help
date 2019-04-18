@@ -16,10 +16,6 @@
                                 <li>
                                     <a th:href="@{/user/login}">Login</a>/<a class="ml-2" th:href="@{/user/register}">Register</a>
                                 </li>
-                                <li class="d-inline-block d-md-none ml-md-0">
-                                    <a href="#" class="site-menu-toggle js-menu-toggle">
-                                        <span class="icon-menu"></span></a>
-                                </li>
                             </th:block>
 
                             <th:block sec:authorize="isAuthenticated()">
@@ -27,28 +23,42 @@
                                     <a th:href="@{/user/profile/{id}(id=${#authentication.principal.id})}"
                                        th:text="${session.profile.firstName+' '+session.profile.lastName}"></a>
                                 </li>
-                                <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
-                                <th:block sec:authorize="hasRole('ROLE_MODERATOR')">
+                            </th:block>
+
+                            <th:block sec:authorize="hasRole('ROLE_MODERATOR')">
                                 <li>
                                     <a th:href="@{/messages}" class="site-cart">
                                         <span class="icon icon-envelope"></span>
-                                        <span class="count">2</span>
+                                        <span class="count"></span>
                                     </a>
                                 </li>
-                                </th:block>
-                                <li>
-                                    <a href="cart.html" class="site-cart">
-                                        <span class="icon icon-shopping_cart"></span>
-                                        <span class="count">2</span>
-                                    </a>
-                                </li>
+                            </th:block>
+
+                            <li>
+                                <a th:href="@{/cart}" class="site-cart">
+                                    <span class="icon icon-shopping_cart"></span>
+                                    <div id="nav-cart">
+                                    <th:block th:if="${#session==null}">
+                                       <span class="count">0</span>
+                                    </th:block>
+                                    <th:block th:if="${#session!=null}">
+                                      <span class="count"
+                                            th:text="${#session.getAttribute('cart-size')} ?: '0'"></span>
+                                    </th:block>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <th:block sec:authorize="isAuthenticated()">
                                 <li>
                                     <a class="site-logout" th:href="@{/user/logout}">Logout</a>
                                 </li>
-                                <li class="d-inline-block d-md-none ml-md-0">
-                                    <a href="#" class="site-menu-toggle js-menu-toggle">
-                                        <span class="icon-menu"></span></a></li>
                             </th:block>
+
+                            <li class="d-inline-block d-md-none ml-md-0">
+                                <a href="#" class="site-menu-toggle js-menu-toggle">
+                                    <span class="icon-menu"></span></a></li>
+
                         </ul>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                     </li>
                 </th:block>
                 <li>
-                    <a th:href="@{/shop}">Shop</a>
+                    <a th:href="@{/products}">Shop</a>
                 </li>
                 <li>
                     <a th:href="@{/contact/form}">Contact</a>

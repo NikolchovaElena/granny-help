@@ -8,10 +8,16 @@
                 </div>
                 <div class="col-4">
                     <th:block th:replace="~{fragments/blocks :: profile-block}"/>
+
                     <th:block th:if="${#authentication.principal.id} == ${model.id}">
+
                         <a th:href="@{/user/edit/profile}" class="btn btn-primary btn-block">Edit Profile</a>
-                        <a th:href="@{/user/edit/password}" class="btn btn-primary btn-block">Change Password</a>
-                        <form th:method="post" th:action="@{/user/delete}">
+
+                        <a th:href="@{/user/address/form}" class="btn btn-success btn-block">Edit Billing Address</a>
+
+                        <a th:href="@{/user/edit/password}" class="btn btn-warning btn-block">Change Password</a>
+
+                       <form th:method="post" th:action="@{/user/delete}">
                             <div class="text-center mt-2">
                                 <button class="as-link" type="submit" name="deleteUser"
                                         onclick="return confirm('Are you sure you want to delete your account?');">
@@ -19,7 +25,9 @@
                                 </button>
                             </div>
                         </form>
+
                     </th:block>
+
                 </div>
             </div>
         </div>

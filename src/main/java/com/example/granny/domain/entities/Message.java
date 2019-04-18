@@ -13,13 +13,14 @@ import java.time.LocalDate;
 @Table(name = "messages")
 public class Message extends BaseEntity {
 
-    String firstName;
-    String lastName;
-    String email;
-    String phoneNumber;
-    String subject;
-    String message;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
+    private String subject;
+    private String message;
     private LocalDate date;
+    private boolean isOpen;
 
     public Message() {
     }
@@ -94,5 +95,14 @@ public class Message extends BaseEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    @Column
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 }

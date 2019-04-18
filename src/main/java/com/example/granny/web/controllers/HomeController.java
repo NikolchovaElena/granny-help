@@ -69,11 +69,6 @@ public class HomeController extends BaseController {
         return view("about", modelAndView);
     }
 
-    @GetMapping("/shop")
-    public ModelAndView shop() {
-        return view("shop");
-    }
-
     private List<CauseViewModel> fetchCauses(List<CauseServiceModel> models) {
         return models.stream()
                 .map(c -> modelMapper.map(c, CauseViewModel.class))

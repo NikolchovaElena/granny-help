@@ -1,0 +1,75 @@
+<th:block th:fragment="form" xmlns:th="http://www.thymeleaf.org">
+    <div class="form-group row">
+        <div class="col-md-6" th:classappend="${#fields.hasErrors('firstName')}?'has-danger'">
+            <label for="c_fname" class="text-black">First Name <span
+                    class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="c_fname" name="firstName"
+                   th:field="*{firstName}">
+            <div th:each="error : ${#fields.errors('firstName')}">
+                <small th:text="${error}"></small>
+            </div>
+        </div>
+        <div class="col-md-6" th:classappend="${#fields.hasErrors('lastName')}?'has-danger'">
+            <label for="c_lname" class="text-black">Last Name <span
+                    class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="c_lname" name="lastName"
+                   th:field="*{lastName}">
+            <div th:each="error : ${#fields.errors('lastName')}">
+                <small th:text="${error}"></small>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-12" th:classappend="${#fields.hasErrors('address')}?'has-danger'">
+            <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="c_address" name="address"
+                   placeholder="Street address, apartment, suite, unit etc."
+                   th:field="*{address}">
+            <div th:each="error : ${#fields.errors('address')}">
+                <small th:text="${error}"></small>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6" th:classappend="${#fields.hasErrors('country')}?'has-danger'">
+            <label for="c_state_country" class="text-black">State / Country <span
+                    class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="c_state_country" name="country"
+                   th:field="*{country}">
+            <div th:each="error : ${#fields.errors('country')}">
+                <small th:text="${error}"></small>
+            </div>
+        </div>
+        <div class="col-md-6" th:classappend="${#fields.hasErrors('zip')}?'has-danger'">
+            <label for="c_postal_zip" class="text-black">Posta / Zip <span
+                    class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="c_postal_zip" name="zip"
+                   th:field="*{zip}">
+            <div th:each="error : ${#fields.errors('zip')}">
+                <small th:text="${error}"></small>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row mb-5">
+        <div class="col-md-6" th:classappend="${#fields.hasErrors('email')}?'has-danger'">
+            <label for="c_email_address" class="text-black">Email Address <span
+                    class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="c_email_address" name="email"
+                   th:field="*{email}">
+            <div th:each="error : ${#fields.errors('email')}">
+                <small th:text="${error}"></small>
+
+            </div>
+        </div>
+        <div class="col-md-6"
+             th:classappend="${#fields.hasErrors('phoneNumber')}?'has-danger'">
+            <label for="c_phone" class="text-black">Phone <span
+                    class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="c_phone" name="phoneNumber"
+                   placeholder="Phone Number" th:field="*{phoneNumber}">
+            <div th:each="error : ${#fields.errors('phoneNumber')}">
+                <small th:text="${error}"></small>
+            </div>
+        </div>
+    </div>
+</th:block>
