@@ -2,7 +2,7 @@
 
     <div class="site-navbar-top">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-orderedItems-center">
 
                 <div class="col-6 col-md-6 text-left">
                         <span><a th:href="@{/}"><img height="60" th:src="@{/images/granny_help.png}"></a>
@@ -12,12 +12,6 @@
                 <div class="col-6 col-md-6 order-3 order-md-3 text-right">
                     <div class="site-top-icons">
                         <ul>
-                            <th:block sec:authorize="isAnonymous()">
-                                <li>
-                                    <a th:href="@{/user/login}">Login</a>/<a class="ml-2" th:href="@{/user/register}">Register</a>
-                                </li>
-                            </th:block>
-
                             <th:block sec:authorize="isAuthenticated()">
                                 <li>
                                     <a th:href="@{/user/profile/{id}(id=${#authentication.principal.id})}"
@@ -29,7 +23,10 @@
                                 <li>
                                     <a th:href="@{/messages}" class="site-cart">
                                         <span class="icon icon-envelope"></span>
-                                        <span class="count"></span>
+                                        <th:block th:if="${#session!=null}">
+                                      <span class="count"
+                                            th:text="${#session.getAttribute('messages-size')} ?: '0'"></span>
+                                        </th:block>
                                     </a>
                                 </li>
                             </th:block>
@@ -38,16 +35,22 @@
                                 <a th:href="@{/cart}" class="site-cart">
                                     <span class="icon icon-shopping_cart"></span>
                                     <div id="nav-cart">
-                                    <th:block th:if="${#session==null}">
-                                       <span class="count">0</span>
-                                    </th:block>
-                                    <th:block th:if="${#session!=null}">
+                                        <th:block th:if="${#session==null}">
+                                            <span class="count">0</span>
+                                        </th:block>
+                                        <th:block th:if="${#session!=null}">
                                       <span class="count"
                                             th:text="${#session.getAttribute('cart-size')} ?: '0'"></span>
-                                    </th:block>
+                                        </th:block>
                                     </div>
                                 </a>
                             </li>
+                            <th:block sec:authorize="isAnonymous()">
+                                <li>
+                                    <a th:href="@{/user/login}">Login</a>/<a class="ml-2" th:href="@{/user/register}">Register</a>
+                                </li>
+                            </th:block>
+
 
                             <th:block sec:authorize="isAuthenticated()">
                                 <li>

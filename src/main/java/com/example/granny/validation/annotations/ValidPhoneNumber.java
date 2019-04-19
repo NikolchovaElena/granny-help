@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidPhoneNumber {
 
-    String INVALID_PHONE_NUMBER = "Subject text should be less than 80 characters";
+    String INVALID_PHONE_NUMBER = "Invalid telephone number";
 
     String message() default "";
 

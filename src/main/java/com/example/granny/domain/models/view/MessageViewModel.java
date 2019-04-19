@@ -9,6 +9,7 @@ public class MessageViewModel {
     private String email;
     private String subject;
     private LocalDate date;
+    private boolean isOpen;
 
     public MessageViewModel() {
     }
@@ -59,5 +60,13 @@ public class MessageViewModel {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 }

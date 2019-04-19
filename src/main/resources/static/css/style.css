@@ -200,8 +200,8 @@ a:hover {
 
 @media (min-width: 768px) {
     .site-navbar .site-navbar-top {
-        padding-top: 15px;
-        padding-bottom: 0px;
+        padding-top: 30px;
+        padding-bottom: 5px;
     }
 }
 

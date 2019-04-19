@@ -3,6 +3,7 @@ package com.example.granny.service.api;
 import com.example.granny.domain.models.binding.ProductBindingModel;
 import com.example.granny.domain.models.service.ProductServiceModel;
 import com.example.granny.domain.models.view.CartViewModel;
+import com.example.granny.domain.models.view.OrderedItemViewModel;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -24,5 +25,5 @@ public interface ProductService {
 
     List<CartViewModel> findAll(Map<Integer, Integer> products);
 
-    BigDecimal findTotal(List<CartViewModel> products);
+    BigDecimal findTotal(Map<Integer, OrderedItemViewModel> products);
 }

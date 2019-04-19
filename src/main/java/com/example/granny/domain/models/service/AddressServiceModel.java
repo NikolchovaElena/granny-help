@@ -84,4 +84,15 @@ public class AddressServiceModel extends BaseServiceModel {
         this.phoneNumber = phoneNumber;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Address: %s, %s %s%n" +
+                        "Customer name: %s %s%n, " +
+                        "Customer email: %s%n, " +
+                        "Customer telephone number: %s",
+                this.country, this.address, this.zip,
+                firstName, lastName,
+                email,
+                phoneNumber);
+    }
 }

@@ -1,13 +1,13 @@
 package com.example.granny.service.api;
-import com.example.granny.domain.models.service.OrderServiceModel;
 
-import java.util.List;
+import com.example.granny.domain.models.binding.AddressBindingModel;
+import com.example.granny.domain.models.view.OrderedItemViewModel;
+
+import java.util.Map;
 
 public interface OrderService {
 
-    void createOrder(Integer productId, String email) throws Exception;
+    void create(Map<Integer, OrderedItemViewModel> products,
+                AddressBindingModel shippingDetails, String email, String notes);
 
-    List<OrderServiceModel> findAllOrders();
-
-    List<OrderServiceModel> findOrdersByCustomer(String username);
 }

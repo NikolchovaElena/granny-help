@@ -1,8 +1,35 @@
+
+
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <th:block th:replace="~{fragments/head :: head}"/>
-</head>
-<p th:text="'A verification email has been sent to: '+${email}"></p>
-</body>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap">
+        <!--Paging-->
+        <div class="bg-light py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb-0"><a th:href="@{/home}">Home</a> <span class="mx-2 mb-0">/</span> <strong
+                            class="text-black">Register</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!--Content-->
+        <div class="site-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <span class="icon-envelope display-3 text-primary"></span>
+                        <h2 class="display-3 text-black">Almost There!</h2>
+                        <p class="lead mb-4"
+                           th:text="'A verification email has been sent to: '+${email}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 </html>
+
+

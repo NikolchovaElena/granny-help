@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <th:block th:replace="~{fragments/head :: head}"/>
-</head>
-<body>
-<div class="site-wrap">
-    <header class="site-navbar" role="banner">
-        <th:block th:replace="~{fragments/navbar :: navbar}"/>
-    </header>
-    <main class="mt-3">
-        <h1 class="text-center text-dark">Oops, Something Went Wrong</h1>
-        <hr class="hr-2 bg-dark ">
-        <div class="text-center mt-5 mb-5">
-            <h3 th:text="${error}" style="color: red;"></h3>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap">
+        <!--Content-->
+        <div class="site-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <span class="icon-minus-circle display-3 text-danger"></span>
+                        <h2 class="display-3 text-black">Oops</h2>
+                        <p class="lead text-black">Something went wrong.</p>
+                        <p class="lead mb-4 text-black"th:text="${error}"></p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </main>
+
+    </div>
 </div>
-<th:block th:replace="~{fragments/footer :: footer}"/>
-</body>
 </html>
+
+

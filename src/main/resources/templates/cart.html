@@ -51,7 +51,7 @@
                                                 </div>
                                                 <input th:value="${item.product.id}" type="hidden"/>
                                                 <input type="text" class="form-control text-center product-quantity"
-                                                       th:value="${item.quantity}" placeholder=""
+                                                       th:value="${item.quantity}" min="1" placeholder=""
                                                        aria-label="Example text with button addon"
                                                        aria-describedby="button-addon1">
                                                 <div class="input-group-append">

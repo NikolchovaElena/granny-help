@@ -34,7 +34,9 @@ public final class GlobalConstants {
 
     public static final String MODEL = "model";
     public static final String CART = "cart";
+    public static final String CART_SIZE = "cart-size";
     public static final String PROFILE = "profile";
+    public static final String UNREAD_MESSAGES_SIZE = "messages-size";
 
     /**
      * Exceptions

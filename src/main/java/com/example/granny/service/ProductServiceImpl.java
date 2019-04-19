@@ -5,6 +5,7 @@ import com.example.granny.domain.entities.Product;
 import com.example.granny.domain.models.binding.ProductBindingModel;
 import com.example.granny.domain.models.service.ProductServiceModel;
 import com.example.granny.domain.models.view.CartViewModel;
+import com.example.granny.domain.models.view.OrderedItemViewModel;
 import com.example.granny.domain.models.view.ProductAllViewModel;
 import com.example.granny.error.ProductAlreadyExistsException;
 import com.example.granny.error.ProductNotFoundException;
@@ -87,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("The product you requested could not be found."));
     }
 
+
     @Override
     public ProductServiceModel edit(Integer id, ProductBindingModel model) throws IOException {
         Product product = this.productRepository.findById(id)
@@ -145,12 +147,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public BigDecimal findTotal(List<CartViewModel> products) {
+    public BigDecimal findTotal(Map<Integer, OrderedItemViewModel> products) {
         BigDecimal total = BigDecimal.ZERO;
 
-        for (CartViewModel i: products) {
-            total = total.add(i.getSum());
+        for (Map.Entry<Integer, OrderedItemViewModel> entry : products.entrySet()) {
+            OrderedItemViewModel p = entry.getValue();
+            total = total.add(p.getSum());
         }
+
         return total;
     }
 }

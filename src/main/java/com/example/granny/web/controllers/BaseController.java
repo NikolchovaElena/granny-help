@@ -30,4 +30,5 @@ public abstract class BaseController {
     private void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
+
 }

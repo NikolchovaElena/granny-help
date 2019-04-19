@@ -15,6 +15,7 @@ public class MessageServiceModel extends BaseServiceModel {
     private String subject;
     private String message;
     private LocalDate date;
+    private boolean isOpen;
 
     public MessageServiceModel() {
     }
@@ -79,5 +80,13 @@ public class MessageServiceModel extends BaseServiceModel {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 }

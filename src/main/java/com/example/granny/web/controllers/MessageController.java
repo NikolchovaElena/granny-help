@@ -1,7 +1,6 @@
 package com.example.granny.web.controllers;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.domain.models.binding.CauseFormBindingModel;
 import com.example.granny.domain.models.binding.MessageBindingModel;
 import com.example.granny.domain.models.service.MessageServiceModel;
 import com.example.granny.domain.models.view.MessageDetailsViewModel;
@@ -10,7 +9,6 @@ import com.example.granny.service.api.MessageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +38,7 @@ public class MessageController extends BaseController {
     ModelAndView createMessage(ModelAndView modelAndView) {
 
         modelAndView.addObject(GlobalConstants.MODEL, new MessageBindingModel());
-        return view("contact",modelAndView);
+        return view("contact", modelAndView);
     }
 
     @PostMapping("/contact/form")
@@ -72,12 +70,16 @@ public class MessageController extends BaseController {
 
     @GetMapping("/messages/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    ModelAndView showMessageDetails(@PathVariable(name = "id") Integer id,
-                                    ModelAndView modelAndView) {
+    ModelAndView viewMessage(@PathVariable(name = "id") Integer id,
+                             ModelAndView modelAndView,
+                             HttpSession session) {
         MessageDetailsViewModel model =
-                modelMapper.map(messageService.getOpenedMessage(id), MessageDetailsViewModel.class);
-
+                modelMapper.map(messageService.viewMessage(id), MessageDetailsViewModel.class);
         modelAndView.addObject(GlobalConstants.MODEL, model);
+
+        int unreadMessagesSize = messageService.countUnreadMessages();
+        session.setAttribute(GlobalConstants.UNREAD_MESSAGES_SIZE, unreadMessagesSize);
+
         return view("message-details", modelAndView);
     }
 

@@ -1,9 +1,10 @@
 package com.example.granny.web.handlers;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.domain.entities.Item;
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.view.UserViewModel;
+import com.example.granny.service.api.MessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -12,10 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+
+   // private final MessageService messageService;
+
+//    @Autowired
+//    public LoginSuccessHandler(MessageService messageService) {
+//        this.messageService = messageService;
+//    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,

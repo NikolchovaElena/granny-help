@@ -48,14 +48,14 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageServiceModel> findAll() {
-        List<Message> messages = messageRepository.findAllByOrderByDateAsc();
+        List<Message> messages = messageRepository.findAllByOrderByOpenAscDateAsc();
         return messages.stream()
                 .map(m -> modelMapper.map(m, MessageServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MessageServiceModel getOpenedMessage(Integer id) {
+    public MessageServiceModel viewMessage(Integer id) {
         Message message = messageRepository.findById(id).orElseThrow(
                 () -> MESSAGE_NOT_FOUND);
 
@@ -65,4 +65,11 @@ public class MessageServiceImpl implements MessageService {
         }
         return modelMapper.map(message, MessageServiceModel.class);
     }
+
+    @Override
+    public int countUnreadMessages() {
+        return messageRepository.countAllByOpenFalse();
+    }
+
+
 }

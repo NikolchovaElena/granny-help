@@ -23,6 +23,7 @@ public class Message extends BaseEntity {
     private boolean isOpen;
 
     public Message() {
+        isOpen = false;
     }
 
     @PrePersist

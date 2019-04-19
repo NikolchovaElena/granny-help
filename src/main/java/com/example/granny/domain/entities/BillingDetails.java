@@ -7,7 +7,6 @@ import com.example.granny.validation.annotations.ValidPhoneNumber;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +25,7 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
+    @ValidFirstName
     public String getFirstName() {
         return firstName;
     }
@@ -35,6 +35,7 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
+    @ValidLastName
     public String getLastName() {
         return lastName;
     }
@@ -53,6 +54,7 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
+    @ValidEmail
     public String getEmail() {
         return email;
     }
@@ -80,6 +82,7 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
+    @ValidPhoneNumber
     public String getPhoneNumber() {
         return phoneNumber;
     }

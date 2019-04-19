@@ -6,15 +6,16 @@ import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.CauseViewModel;
 import com.example.granny.domain.models.view.UserViewModel;
 import com.example.granny.service.api.CauseService;
+import com.example.granny.service.api.MessageService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +25,14 @@ public class HomeController extends BaseController {
 
     private final UserService userService;
     private final CauseService causeService;
+    private final MessageService messageService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public HomeController(UserService userService, CauseService causeService, ModelMapper modelMapper) {
+    public HomeController(UserService userService, CauseService causeService, MessageService messageService, ModelMapper modelMapper) {
         this.userService = userService;
         this.causeService = causeService;
+        this.messageService = messageService;
         this.modelMapper = modelMapper;
     }
 
@@ -41,7 +44,8 @@ public class HomeController extends BaseController {
     @GetMapping(GlobalConstants.URL_USER_HOME)
     public ModelAndView home(Principal principal,
                              Authentication authentication,
-                             ModelAndView modelAndView) {
+                             ModelAndView modelAndView,
+                             HttpSession session) {
 
         if (principal == null) {
             return view("index");
@@ -55,6 +59,12 @@ public class HomeController extends BaseController {
         modelAndView.addObject("approved", fetchCauses(approvedServiceModel));
         modelAndView.addObject("pending", fetchCauses(pendingServiceModel));
         modelAndView.addObject("pinned", fetchCauses(pinnedServiceModel));
+
+        if (causeService.hasAuthority(authentication,GlobalConstants.ROLE_MODERATOR)) {
+            int unreadMessagesSize = messageService.countUnreadMessages();
+            session.setAttribute(GlobalConstants.UNREAD_MESSAGES_SIZE, unreadMessagesSize);
+        }
+
         return view("home", modelAndView);
     }
 

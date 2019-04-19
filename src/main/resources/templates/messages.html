@@ -17,9 +17,10 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-black">
                 <th:block th:each="message : ${model}">
-                    <tr>
+
+                    <tr th:class="${!message.open} ? 'font-weight-bold':''">
                         <th scope="row" th:text="${messageStat.count}"></th>
                         <td th:text="${message.date}"></td>
                         <td th:text="${message.firstName+' '+message.lastName}"></td>

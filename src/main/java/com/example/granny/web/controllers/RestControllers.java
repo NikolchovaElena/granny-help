@@ -1,26 +1,24 @@
 package com.example.granny.web.controllers;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.domain.entities.Item;
 import com.example.granny.domain.models.binding.CartUpdateBindingModel;
 import com.example.granny.domain.models.binding.CommentBindingModel;
-import com.example.granny.domain.models.service.ProductServiceModel;
-import com.example.granny.domain.models.view.CartViewModel;
+import com.example.granny.domain.models.binding.OrderedItemBindingModel;
+import com.example.granny.domain.models.service.OrderedItemServiceModel;
 import com.example.granny.domain.models.view.CommentViewModel;
+import com.example.granny.domain.models.view.OrderedItemViewModel;
+import com.example.granny.domain.models.view.ProductAllViewModel;
 import com.example.granny.service.api.CauseService;
 import com.example.granny.service.api.CommentService;
 import com.example.granny.service.api.ProductService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,12 +27,14 @@ public class RestControllers extends BaseController {
     private final CommentService commentService;
     private final CauseService causeService;
     private final ProductService productService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public RestControllers(CommentService commentService, CauseService causeService, ProductService productService) {
+    public RestControllers(CommentService commentService, CauseService causeService, ProductService productService, ModelMapper modelMapper) {
         this.commentService = commentService;
         this.causeService = causeService;
         this.productService = productService;
+        this.modelMapper = modelMapper;
     }
 
     @RequestMapping(value = "/causes/{id}/comments",
@@ -76,14 +76,15 @@ public class RestControllers extends BaseController {
     @RequestMapping(value = "/cart/add",
             method = RequestMethod.POST,
             produces = "application/json")
-    public int addToCart(@RequestBody() Item model,
+    public int addToCart(@RequestBody() OrderedItemBindingModel model,
                          HttpSession session) {
         if (session.getAttribute(GlobalConstants.CART) == null) {
-            session.setAttribute(GlobalConstants.CART, new LinkedHashMap<Integer, Integer>());
+            session.setAttribute(GlobalConstants.CART, new LinkedHashMap<Integer, OrderedItemViewModel>());
         }
-        Map<Integer, Integer> products = (Map<Integer, Integer>) session.getAttribute(GlobalConstants.CART);
+        Map<Integer, OrderedItemViewModel> products = (Map<Integer, OrderedItemViewModel>) session.getAttribute(GlobalConstants.CART);
 
-        products.put(model.getProductId(), model.getQuantity());
+        ProductAllViewModel p = modelMapper.map(productService.findById(model.getProductId()), ProductAllViewModel.class);
+        products.put(model.getProductId(), new OrderedItemViewModel(p, model.getQuantity()));
         int cartSize = products.size();
 
         session.setAttribute(GlobalConstants.CART, products);
@@ -96,12 +97,17 @@ public class RestControllers extends BaseController {
             method = RequestMethod.POST,
             produces = "application/json")
     public void update(@RequestBody() CartUpdateBindingModel model,
-                               HttpSession session) {
-        Map<Integer, Integer> products = new LinkedHashMap<>();
-        model.getProducts()
-                .forEach(p -> products.put(p.getId(), p.getQuantity()));
+                       HttpSession session) {
 
-        session.setAttribute(GlobalConstants.CART, products);
+        Map<Integer, OrderedItemViewModel> products = new LinkedHashMap<>();
+
+        model.getProducts()
+                .forEach(entry ->{
+                    ProductAllViewModel p = modelMapper.map(productService.findById(entry.getId()), ProductAllViewModel.class);
+                    products.put(entry.getId(), new OrderedItemViewModel(p, entry.getQuantity()));
+                });
+
+      session.setAttribute(GlobalConstants.CART, products);
     }
 
 }

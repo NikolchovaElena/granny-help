@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <th:block th:replace="~{fragments/head :: head}"/>
-</head>
-<body>
-<p>We are happy to welcome you to our family. </p>
-<p> Your account has been successfully activated.</p>
-<p>Let's get you started by logging in first <span>
-    <a class="btn btn-primary btn-lg active" th:href="@{/user/login}">Login</a></span></p>
-</body>
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="layouts/layout">
+<div layout:fragment="content">
+    <div class="site-wrap">
+
+        <!--Content-->
+        <div class="site-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <span class="icon-check_circle display-3 text-success"></span>
+                        <h2 class="display-3 text-black">Success!</h2>
+                        <p class="lead">We are happy to welcome you to our family. </p>
+                        <p class="lead mb-4">Your account has been successfully activated.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 </html>
+
+

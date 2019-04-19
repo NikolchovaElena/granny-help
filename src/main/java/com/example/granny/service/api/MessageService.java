@@ -14,6 +14,7 @@ public interface MessageService {
 
     List<MessageServiceModel> findAll();
 
-    MessageServiceModel getOpenedMessage(Integer id);
+    MessageServiceModel viewMessage(Integer id);
 
+    int countUnreadMessages();
 }

@@ -1,81 +1,65 @@
 package com.example.granny.service;
 
 import com.example.granny.domain.entities.Order;
-import com.example.granny.domain.entities.Product;
 import com.example.granny.domain.entities.User;
-import com.example.granny.domain.models.service.OrderServiceModel;
-import com.example.granny.domain.models.service.UserServiceModel;
+import com.example.granny.domain.models.binding.AddressBindingModel;
+import com.example.granny.domain.models.view.CartViewModel;
+import com.example.granny.domain.models.view.OrderedItemViewModel;
 import com.example.granny.repository.OrderRepository;
-import com.example.granny.repository.ProductRepository;
+import com.example.granny.repository.UserRepository;
 import com.example.granny.service.api.OrderService;
-import com.example.granny.service.api.UserService;
-import com.example.granny.validation.api.ProductValidationService;
-import com.example.granny.validation.api.UserValidationService;
-import org.modelmapper.ModelMapper;
-
+import com.example.granny.service.api.OrderedItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
     private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
-    private final UserService userService;
-    private final ModelMapper mapper;
-    private final UserValidationService userValidation;
-    private final ProductValidationService productValidation;
+    private final UserRepository userRepository;
+    private final OrderedItemService orderedItemService;
 
-    public OrderServiceImpl(
-            OrderRepository orderRepository,
-            ProductRepository productRepository,
-            UserService userService,
-            UserValidationService userValidation,
-            ProductValidationService productValidation,
-            ModelMapper mapper
-    ) {
+    @Autowired
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            UserRepository userRepository, OrderedItemService orderedItemService) {
         this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
-        this.userService = userService;
-        this.userValidation = userValidation;
-        this.productValidation = productValidation;
-        this.mapper = mapper;
+        this.userRepository = userRepository;
+        this.orderedItemService = orderedItemService;
     }
 
     @Override
-    public void createOrder(Integer productId, String email) throws Exception {
-        UserServiceModel userModel = userService.findUserByEmail(email);
-        if(!userValidation.isValid(userModel)) {
-            throw new Exception();
+    public void create(Map<Integer, OrderedItemViewModel> products,
+                       AddressBindingModel shippingDetails, String email, String notes) {
+        User user = null;
+
+        if (email != null) {
+            user = this.userRepository.findByEmail(email).orElse(null);
         }
+        List<OrderedItemViewModel> items = new ArrayList<>(products.values());
 
-        Product product = productRepository.findById(productId)
-                .filter(productValidation::isValid)
-                .orElseThrow(Exception::new);
-
-        User user = new User();
-        user.setId(userModel.getId());
         Order order = new Order();
-        order.setProduct(product);
-        order.setUser(user);
+        order.setCustomer(user);
+        order.setShippingDetails(shippingDetails.toString());
+        order.setPriceToPay(findTotal(items));
+        order.setNotes(notes);
 
-        orderRepository.save(order);
+        order = orderRepository.save(order);
+        orderedItemService.save(items, order);
     }
 
-    @Override
-    public List<OrderServiceModel> findAllOrders() {
-        return orderRepository.findAll()
-                .stream()
-                .map(o -> mapper.map(o, OrderServiceModel.class))
-                .collect(Collectors.toList());
+    private BigDecimal findTotal(List<OrderedItemViewModel> items) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (OrderedItemViewModel i : items) {
+            total = total.add(i.getSum());
+        }
+        return total;
     }
 
-    @Override
-    public List<OrderServiceModel> findOrdersByCustomer(String username) {
-        return orderRepository.findAllByUser_Email(username)
-                .stream()
-                .map(o -> mapper.map(o, OrderServiceModel.class))
-                .collect(Collectors.toList());
-    }
 }
+
