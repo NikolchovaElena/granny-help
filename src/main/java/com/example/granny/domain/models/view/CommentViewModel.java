@@ -15,7 +15,8 @@ public class CommentViewModel {
     public CommentViewModel() {
     }
 
-    public CommentViewModel(String publishingDate, String comment, String authorName) {
+    public CommentViewModel(Integer id, String publishingDate, String comment, String authorName) {
+        this.id = id;
         this.publishingDate = publishingDate;
         this.comment = comment;
         this.authorName = authorName;

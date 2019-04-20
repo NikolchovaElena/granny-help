@@ -34,7 +34,8 @@
                                     </form>
                                 </th:block>
 
-                                <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')} and ${isApproved==false}">
+                                <th:block
+                                        th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')} and ${isApproved==false}">
                                     <form th:method="post" th:action="@{/causes/approve/{id}(id=${model.id})}">
                                         <button class="as-link" type="submit" name="approveCause">
                                             <span class="icon icon-assignment_turned_in">Approve cause</span>
@@ -124,20 +125,23 @@
                             <h5 class="text-black">Message Board</h5>
                             <div id="message-board" class="pt-3 mb-4 mt-4">
                                 <th:block th:each="comment:${comments}">
-                                    <div id="comment-area" class="alert alert-primary">
+                                    <div class="alert alert-primary">
                                         <small th:text="${comment.publishingDate}+' '+${comment.authorName}+' said :'"></small>
                                         <div>
                                             <strong th:text="${comment.comment}"></strong>
                                         </div>
                                         <th:block th:if="${#authorization.expression('hasRole(''ROLE_MODERATOR'')')}">
-                                            <form th:method="post" action="#">
-                                                <input type="hidden" th:data-comment_id="${comment.id}">
-                                                <button class="as-link " type="submit" id="delete-comment">
-                                                    <small> Delete</small>
-                                                </button>
-                                            </form>
+                                            <div id="btn-delete-comment">
+                                                <form th:method="post" action="#">
+                                                    <button th:comment_id="${comment.id}" th:data-cause_id="${model.id}" class="as-link"
+                                                            type="submit">
+                                                        <small> Delete</small>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </th:block>
                                     </div>
+
                                 </th:block>
                             </div>
                         </div>

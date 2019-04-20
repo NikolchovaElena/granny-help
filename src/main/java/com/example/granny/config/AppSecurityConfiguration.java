@@ -46,7 +46,9 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/cart/delete/*",
                         "/cart/update",
                         "/cart/checkout",
-                        "/order/success").permitAll()
+                        "/order/success",
+                        "/delete/comment/",
+                        "/delete/comment/*").permitAll()
                 .antMatchers(
                         GlobalConstants.URL_USER_LOGIN,
                         GlobalConstants.URL_USER_REGISTER,

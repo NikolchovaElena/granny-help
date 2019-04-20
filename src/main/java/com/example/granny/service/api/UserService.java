@@ -29,7 +29,7 @@ public interface UserService extends UserDetailsService {
 
     List<CauseServiceModel> findAllPinned(Integer id);
 
-    void setUserRole(String id, String role);
+    void setUserRole(Integer id, String role);
 
     boolean emailExists(String email);
 

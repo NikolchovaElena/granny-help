@@ -13,8 +13,10 @@ import com.example.granny.service.api.CommentService;
 import com.example.granny.service.api.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -73,15 +75,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void delete(Integer commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> NO_COMMENT_WITH_THAT_EXCEPTION);
-        commentRepository.delete(comment);
+        commentRepository.delete(commentId);
     }
 
     private CommentViewModel mapCommentModel(Comment comment) {
         String name = comment.getAuthor().getFirstName() + ' ' + comment.getAuthor().getLastName();
         String date = comment.getPublishingDate().format(DateTimeFormatter.ofPattern("dd.MMM.yyyy HH:mm"));
 
-        return new CommentViewModel(date, comment.getComment(), name);
+        return new CommentViewModel(comment.getId(), date, comment.getComment(), name);
     }
 }

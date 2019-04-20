@@ -47,17 +47,16 @@ public class RestControllers extends BaseController {
 
         return commentService.create(model.getComment(), principal.getName(), id);
     }
-
-    //Fixme връща ли json или може и без
-    @RequestMapping(value = "/delete/comment/{id}"
-//            method = RequestMethod.POST,
-//            produces = "application/json"
+    
+    @RequestMapping(value = "/delete/comment/{id}",
+            method = RequestMethod.POST,
+            produces = "application/json"
     )
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public void deleteComment(@PathVariable("id") Integer commentId) {
+
         commentService.delete(commentId);
     }
-
 
     @PostMapping(value = "/user/follow/causes/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
@@ -96,7 +95,7 @@ public class RestControllers extends BaseController {
     @RequestMapping(value = "/cart/update",
             method = RequestMethod.POST,
             produces = "application/json")
-    public void update(@RequestBody() CartUpdateBindingModel model,
+    public void updateCart(@RequestBody() CartUpdateBindingModel model,
                        HttpSession session) {
 
         Map<Integer, OrderedItemViewModel> products = new LinkedHashMap<>();

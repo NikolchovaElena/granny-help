@@ -171,12 +171,20 @@ public class UserController extends BaseController {
         return redirect("/user/profile/" + model.getId());
     }
 
-    @GetMapping("/users/show")
+    @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView users(ModelAndView modelAndView) {
         List<UserShowViewModel> model = this.userService.findAllUsers()
                 .stream()
-                .map(m -> this.modelMapper.map(m, UserShowViewModel.class))
+                .map(u -> {
+                    UserShowViewModel user = this.modelMapper.map(u, UserShowViewModel.class);
+                    user.setAuthorities(u.getAuthorities()
+                            .stream()
+                            .map(a -> a.getAuthority().replace("ROLE_", ""))
+                            .collect(Collectors.toSet())
+                    );
+                    return user;
+                })
                 .collect(Collectors.toList());
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
@@ -188,7 +196,7 @@ public class UserController extends BaseController {
     public ModelAndView deleteProfile(@PathVariable("id") Integer id,
                                       HttpSession session) {
         userService.delete(id);
-        return redirect("/users/show");
+        return redirect("/users");
     }
 
     @GetMapping("/user/address/form")
@@ -207,7 +215,7 @@ public class UserController extends BaseController {
     @PostMapping("/user/address/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editAddressConfirm(@Valid @ModelAttribute(name = "address")
-                                                       AddressBindingModel model,
+                                                   AddressBindingModel model,
                                            BindingResult bindingResult,
                                            Principal principal,
                                            ModelAndView modelAndView) throws IOException {

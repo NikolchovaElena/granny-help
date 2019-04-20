@@ -136,25 +136,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setUserRole(String id, String role) {
+    public void setUserRole(Integer id, String role) {
         User user = this.userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Incorrect id!"));
+                .orElseThrow(() -> NO_USER_WITH_THAT_EXCEPTION);
 
-        UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
-        userServiceModel.getAuthorities().clear();
+        user.getAuthorities().clear();
 
         switch (role) {
             case "user":
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority("ROLE_USER"));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"),Role.class));
+                break;
+            case "moderator":
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"),Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_MODERATOR"),Role.class));
                 break;
             case "admin":
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority("ROLE_USER"));
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority("ROLE_MODERATOR"));
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority("ROLE_ADMIN"));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"),Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_MODERATOR"),Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_ADMIN"),Role.class));
                 break;
         }
-
-        this.userRepository.saveAndFlush(this.modelMapper.map(userServiceModel, User.class));
+        this.userRepository.saveAndFlush(user);
     }
 
     @Override

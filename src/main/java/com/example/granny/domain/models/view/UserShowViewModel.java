@@ -11,7 +11,7 @@ public class UserShowViewModel {
     private String firstName;
     private String lastName;
     private String email;
-    private List<RoleViewModel> authorities;
+    private Set<String> authorities;
 
     public UserShowViewModel() {
     }
@@ -24,11 +24,11 @@ public class UserShowViewModel {
         this.id = id;
     }
 
-    public List<RoleViewModel> getAuthorities() {
+    public Set<String> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<RoleViewModel> authorities) {
+    public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
 
