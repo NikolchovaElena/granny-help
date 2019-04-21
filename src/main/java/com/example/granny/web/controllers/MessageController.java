@@ -6,6 +6,7 @@ import com.example.granny.domain.models.service.MessageServiceModel;
 import com.example.granny.domain.models.view.MessageDetailsViewModel;
 import com.example.granny.domain.models.view.MessageViewModel;
 import com.example.granny.service.api.MessageService;
+import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +35,7 @@ public class MessageController extends BaseController {
         this.modelMapper = modelMapper;
     }
 
+    @PageTitle("contact")
     @GetMapping("/contact/form")
     ModelAndView createMessage(ModelAndView modelAndView) {
 
@@ -55,6 +57,7 @@ public class MessageController extends BaseController {
         return view("message-sent");
     }
 
+    @PageTitle("messages")
     @GetMapping("/messages")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     ModelAndView messagesAll(ModelAndView modelAndView) {
@@ -68,6 +71,7 @@ public class MessageController extends BaseController {
         return view("messages", modelAndView);
     }
 
+    @PageTitle("view message")
     @GetMapping("/messages/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     ModelAndView viewMessage(@PathVariable(name = "id") Integer id,

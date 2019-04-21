@@ -9,6 +9,7 @@ import com.example.granny.domain.models.view.ProductDetailsViewModel;
 import com.example.granny.error.ProductAlreadyExistsException;
 import com.example.granny.error.ProductNotFoundException;
 import com.example.granny.service.api.ProductService;
+import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +39,7 @@ public class ProductController extends BaseController {
         this.modelMapper = modelMapper;
     }
 
+    @PageTitle("add product")
     @GetMapping("/products/form")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView addProduct(ModelAndView modelAndView) {
@@ -59,6 +61,7 @@ public class ProductController extends BaseController {
         return super.redirect("/products");
     }
 
+    @PageTitle("products")
     @GetMapping("/products")
     public ModelAndView allProducts(ModelAndView modelAndView) {
         modelAndView.addObject(GlobalConstants.MODEL, this.productService.findAll()
@@ -69,6 +72,8 @@ public class ProductController extends BaseController {
         return super.view("products", modelAndView);
     }
 
+
+    @PageTitle("view product")
     @GetMapping("/products/{id}")
     public ModelAndView detailsProduct(@PathVariable Integer id, ModelAndView modelAndView) {
         ProductServiceModel model = productService.findById(id);
@@ -84,6 +89,7 @@ public class ProductController extends BaseController {
         return view("product-details", modelAndView);
     }
 
+    @PageTitle("edit product")
     @GetMapping("/products/form/{id}")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView editProduct(@PathVariable("id") Integer id,

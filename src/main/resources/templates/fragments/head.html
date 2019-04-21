@@ -3,7 +3,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Help a Granny</title>
+    <title th:text="${title}"></title>
+    <link rel="icon" th:href="${favicon}">
 
     <!-- Custom fonts for this template-->
     <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">

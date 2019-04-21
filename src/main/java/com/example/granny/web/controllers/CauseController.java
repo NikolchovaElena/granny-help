@@ -13,6 +13,7 @@ import com.example.granny.service.api.CauseService;
 import com.example.granny.service.api.CommentService;
 import com.example.granny.service.api.LocationService;
 import com.example.granny.service.api.UserService;
+import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -51,6 +52,7 @@ public class CauseController extends BaseController {
         this.modelMapper = modelMapper;
     }
 
+    @PageTitle("add cause")
     @GetMapping("/causes/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCause(ModelAndView modelAndView) {
@@ -75,6 +77,7 @@ public class CauseController extends BaseController {
         return redirect("/home");
     }
 
+    @PageTitle("edit cause")
     @GetMapping("/causes/form/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView editCause(@PathVariable("id") Integer id,
@@ -111,6 +114,7 @@ public class CauseController extends BaseController {
         return redirect("/home");
     }
 
+    @PageTitle("view cause")
     @GetMapping("/causes/{id}")
     ModelAndView causeDetails(@PathVariable("id") Integer id,
                               ModelAndView modelAndView,
@@ -135,6 +139,7 @@ public class CauseController extends BaseController {
         return view("cause-details", modelAndView);
     }
 
+    @PageTitle("causes")
     @GetMapping("/causes")
     ModelAndView causesAll(ModelAndView modelAndView) {
         List<CauseServiceModel> causes = causeService.findAll();

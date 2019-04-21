@@ -4,6 +4,7 @@ import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.VerificationToken;
 import com.example.granny.repository.VerificationTokenRepository;
 import com.example.granny.service.api.UserService;
+import com.example.granny.web.annotations.PageTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class EventController extends BaseController {
         this.tokenRepository = tokenRepository;
     }
 
+    @PageTitle("confirm")
     @GetMapping(GlobalConstants.URL_CONFIRM_ACCOUNT)
     public ModelAndView confirmUserAccount(@RequestParam("token") String verificationToken,
                                            ModelAndView modelAndView) {
@@ -51,6 +53,7 @@ public class EventController extends BaseController {
         return redirect(GlobalConstants.URL_ACCOUNT_VERIFIED);
     }
 
+    @PageTitle("verified")
     @GetMapping(GlobalConstants.URL_ACCOUNT_VERIFIED)
     public ModelAndView accountVerification() {
         return view("account-verified");

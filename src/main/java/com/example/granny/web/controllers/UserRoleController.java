@@ -11,9 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class UserRoleController extends BaseController {
 
-private final UserService userService;
+    private final UserService userService;
 
-@Autowired
+    @Autowired
     public UserRoleController(UserService userService) {
         this.userService = userService;
     }

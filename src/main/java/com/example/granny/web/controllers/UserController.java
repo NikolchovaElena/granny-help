@@ -12,6 +12,7 @@ import com.example.granny.domain.models.view.UserShowViewModel;
 import com.example.granny.service.api.AddressService;
 import com.example.granny.service.api.EventService;
 import com.example.granny.service.api.UserService;
+import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,12 +51,14 @@ public class UserController extends BaseController {
         this.modelMapper = modelMapper;
     }
 
+    @PageTitle("login")
     @GetMapping(GlobalConstants.URL_USER_LOGIN)
     @PreAuthorize(GlobalConstants.IS_ANONYMOUS)
     public ModelAndView login() {
         return view("login");
     }
 
+    @PageTitle("register")
     @GetMapping(GlobalConstants.URL_USER_REGISTER)
     @PreAuthorize(GlobalConstants.IS_ANONYMOUS)
     public ModelAndView register(ModelAndView modelAndView) {
@@ -91,6 +94,7 @@ public class UserController extends BaseController {
         return view("error");
     }
 
+    @PageTitle("logout")
     @GetMapping(GlobalConstants.URL_USER_LOGOUT)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView logout(HttpSession session) {
@@ -98,6 +102,7 @@ public class UserController extends BaseController {
         return redirect(GlobalConstants.URL_INDEX);
     }
 
+    @PageTitle("edit password")
     @GetMapping("/user/edit/password")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editPassword(@ModelAttribute(name = GlobalConstants.MODEL) UserPasswordBindingModel model,
@@ -134,6 +139,7 @@ public class UserController extends BaseController {
         return redirect("/");
     }
 
+    @PageTitle("view profile")
     @GetMapping("/user/profile/{id}")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView profile(@PathVariable("id") Integer id,
@@ -144,6 +150,7 @@ public class UserController extends BaseController {
         return view("profile", modelAndView);
     }
 
+    @PageTitle("edit profile")
     @GetMapping("/user/edit/profile")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editProfile(Principal principal,
@@ -171,6 +178,7 @@ public class UserController extends BaseController {
         return redirect("/user/profile/" + model.getId());
     }
 
+    @PageTitle("users")
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView users(ModelAndView modelAndView) {
@@ -198,7 +206,7 @@ public class UserController extends BaseController {
         userService.delete(id);
         return redirect("/users");
     }
-
+    @PageTitle("edit address")
     @GetMapping("/user/address/form")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editAddress(Principal principal,

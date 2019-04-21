@@ -9,6 +9,7 @@ import com.example.granny.service.api.AddressService;
 import com.example.granny.service.api.OrderService;
 import com.example.granny.service.api.ProductService;
 import com.example.granny.service.api.UserService;
+import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,7 @@ public class CartController extends BaseController {
         this.modelMapper = modelMapper;
     }
 
+    @PageTitle("cart")
     @GetMapping("/cart")
     public ModelAndView viewCart(HttpSession session,
                                  ModelAndView modelAndView) {
@@ -68,6 +70,7 @@ public class CartController extends BaseController {
         return redirect("/cart");
     }
 
+    @PageTitle("checkout")
     @GetMapping("/cart/checkout")
     public ModelAndView checkout(HttpSession session,
                                  Principal principal,

@@ -8,6 +8,7 @@ import com.example.granny.domain.models.view.UserViewModel;
 import com.example.granny.service.api.CauseService;
 import com.example.granny.service.api.MessageService;
 import com.example.granny.service.api.UserService;
+import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,12 +36,13 @@ public class HomeController extends BaseController {
         this.messageService = messageService;
         this.modelMapper = modelMapper;
     }
-
+    @PageTitle("index")
     @GetMapping(GlobalConstants.URL_INDEX)
     public ModelAndView index() {
         return view("index");
     }
 
+    @PageTitle("home")
     @GetMapping(GlobalConstants.URL_USER_HOME)
     public ModelAndView home(Principal principal,
                              Authentication authentication,
@@ -68,6 +70,7 @@ public class HomeController extends BaseController {
         return view("home", modelAndView);
     }
 
+    @PageTitle("about")
     @GetMapping(GlobalConstants.URL_ABOUT)
     public ModelAndView about(ModelAndView modelAndView) {
         List<UserViewModel> model = userService.findFourRandomUsers()
