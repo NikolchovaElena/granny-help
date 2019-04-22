@@ -1,40 +1,23 @@
 package com.example.granny.service;
 
+import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.Cause;
 import com.example.granny.domain.entities.Comment;
 import com.example.granny.domain.entities.User;
-import com.example.granny.domain.models.service.CommentServiceModel;
 import com.example.granny.domain.models.view.CommentViewModel;
 import com.example.granny.repository.CauseRepository;
 import com.example.granny.repository.CommentRepository;
 import com.example.granny.repository.UserRepository;
-import com.example.granny.service.api.CauseService;
 import com.example.granny.service.api.CommentService;
-import com.example.granny.service.api.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
-
-import static com.example.granny.service.UserServiceImpl.NO_USER_WITH_THAT_EXCEPTION;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    static final IllegalArgumentException NO_CAUSE_WITH_THAT_EXCEPTION =
-            new IllegalArgumentException("Cause could not be found");
-    static final IllegalArgumentException NO_COMMENT_WITH_THAT_EXCEPTION =
-            new IllegalArgumentException("Comment could not be found");
-
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -50,9 +33,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentViewModel create(String commentContent, String email, Integer causeId) {
         User author = userRepository.findByEmail(email).orElseThrow(
-                () -> NO_USER_WITH_THAT_EXCEPTION);
+                () -> GlobalConstants.NO_USER_WITH_THAT_EXCEPTION);
         Cause cause = causeRepository.findById(causeId).orElseThrow(
-                () -> NO_CAUSE_WITH_THAT_EXCEPTION);
+                () -> GlobalConstants.NO_CAUSE_WITH_THAT_EXCEPTION);
         Comment comment = commentRepository.saveAndFlush(new Comment(commentContent, author, cause));
 
         return mapCommentModel(comment);

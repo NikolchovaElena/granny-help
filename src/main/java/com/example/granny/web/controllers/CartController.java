@@ -5,7 +5,7 @@ import com.example.granny.domain.models.binding.AddressBindingModel;
 import com.example.granny.domain.models.service.AddressServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.OrderedItemViewModel;
-import com.example.granny.service.api.AddressService;
+import com.example.granny.service.api.AddressDetailsService;
 import com.example.granny.service.api.OrderService;
 import com.example.granny.service.api.ProductService;
 import com.example.granny.service.api.UserService;
@@ -27,22 +27,22 @@ import java.util.Map;
 public class CartController extends BaseController {
 
     private final ProductService productService;
-    private final AddressService addressService;
+    private final AddressDetailsService addressDetailsService;
     private final OrderService orderService;
     private final UserService userService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CartController(ProductService productService, AddressService addressService, OrderService orderService, UserService userService, ModelMapper modelMapper) {
+    public CartController(ProductService productService, AddressDetailsService addressDetailsService, OrderService orderService, UserService userService, ModelMapper modelMapper) {
         this.productService = productService;
-        this.addressService = addressService;
+        this.addressDetailsService = addressDetailsService;
         this.orderService = orderService;
         this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
     @PageTitle("cart")
-    @GetMapping("/cart")
+    @GetMapping(GlobalConstants.URL_VIEW_CART)
     public ModelAndView viewCart(HttpSession session,
                                  ModelAndView modelAndView) {
         Map<Integer, OrderedItemViewModel> products =
@@ -55,7 +55,7 @@ public class CartController extends BaseController {
         return view("cart", modelAndView);
     }
 
-    @GetMapping("/cart/delete/{id}")
+    @GetMapping(GlobalConstants.URL_DELETE_ITEM_FROM_CART)
     public ModelAndView deleteItem(@PathVariable Integer id,
                                    HttpSession session,
                                    ModelAndView modelAndView) {
@@ -63,15 +63,15 @@ public class CartController extends BaseController {
                 (Map<Integer, OrderedItemViewModel>) session.getAttribute(GlobalConstants.CART);
         products.remove(id);
         session.setAttribute(GlobalConstants.CART, products);
-        session.setAttribute("cart-size", products.size());
+        session.setAttribute(GlobalConstants.CART_SIZE, products.size());
 
         viewCart(products, modelAndView);
 
-        return redirect("/cart");
+        return redirect(GlobalConstants.URL_VIEW_CART);
     }
 
     @PageTitle("checkout")
-    @GetMapping("/cart/checkout")
+    @GetMapping(GlobalConstants.URL_CART_CHECKOUT)
     public ModelAndView checkout(HttpSession session,
                                  Principal principal,
                                  ModelAndView modelAndView) {
@@ -83,16 +83,16 @@ public class CartController extends BaseController {
 
         if (principal != null) {
             UserServiceModel userServiceModel = userService.findUserByEmail(principal.getName());
-            AddressServiceModel addressServiceModel = addressService.findBy(userServiceModel);
+            AddressServiceModel addressServiceModel = addressDetailsService.findBy(userServiceModel);
             model = this.modelMapper.map(addressServiceModel, AddressBindingModel.class);
         }
-        modelAndView.addObject("address", model);
+        modelAndView.addObject(GlobalConstants.ADDRESS, model);
 
         return view("checkout", modelAndView);
     }
 
-    @PostMapping("/cart/checkout")
-    public ModelAndView placeOrder(@Valid @ModelAttribute("address")
+    @PostMapping(GlobalConstants.URL_CART_CHECKOUT)
+    public ModelAndView placeOrder(@Valid @ModelAttribute(GlobalConstants.ADDRESS)
                                            AddressBindingModel model,
                                    BindingResult bindingResult,
                                    @ModelAttribute("notes")
@@ -105,14 +105,14 @@ public class CartController extends BaseController {
         viewCart(products, modelAndView);
 
         if (bindingResult.hasErrors()) {
-            modelAndView.addObject("address", model);
+            modelAndView.addObject(GlobalConstants.ADDRESS, model);
             return view("checkout", modelAndView);
         }
         String email = principal != null ? principal.getName() : null;
 
         orderService.create(products, model, email, notes);
         session.removeAttribute(GlobalConstants.CART);
-        session.removeAttribute("cart-size");
+        session.removeAttribute(GlobalConstants.CART_SIZE);
 
         return view("thank-you");
     }

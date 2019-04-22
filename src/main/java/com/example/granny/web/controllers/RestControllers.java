@@ -4,7 +4,6 @@ import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.models.binding.CartUpdateBindingModel;
 import com.example.granny.domain.models.binding.CommentBindingModel;
 import com.example.granny.domain.models.binding.OrderedItemBindingModel;
-import com.example.granny.domain.models.service.OrderedItemServiceModel;
 import com.example.granny.domain.models.view.CommentViewModel;
 import com.example.granny.domain.models.view.OrderedItemViewModel;
 import com.example.granny.domain.models.view.ProductAllViewModel;
@@ -37,8 +36,7 @@ public class RestControllers extends BaseController {
         this.modelMapper = modelMapper;
     }
 
-    @RequestMapping(value = "/causes/{id}/comments",
-            method = RequestMethod.POST,
+    @PostMapping(value = GlobalConstants.URL_SUBMIT_COMMENT,
             produces = "application/json")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public CommentViewModel submitComment(@PathVariable("id") Integer id,
@@ -47,33 +45,29 @@ public class RestControllers extends BaseController {
 
         return commentService.create(model.getComment(), principal.getName(), id);
     }
-    
-    @RequestMapping(value = "/delete/comment/{id}",
-            method = RequestMethod.POST,
-            produces = "application/json"
-    )
+
+    @PostMapping(value = GlobalConstants.URL_DELETE_COMMENT)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public void deleteComment(@PathVariable("id") Integer commentId) {
 
         commentService.delete(commentId);
     }
 
-    @PostMapping(value = "/user/follow/causes/{id}")
+    @PostMapping(value = GlobalConstants.URL_FOLLOW_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public void followCause(@PathVariable("id") Integer causeId,
                             Principal principal) {
         causeService.followCause(principal.getName(), causeId);
     }
 
-    @PostMapping("/user/unfollow/causes/{id}")
+    @PostMapping(GlobalConstants.URL_UNFOLLOW_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public void unfollowCause(@PathVariable("id") Integer causeId,
                               Principal principal) {
         causeService.unFollowCause(principal.getName(), causeId);
     }
 
-    @RequestMapping(value = "/cart/add",
-            method = RequestMethod.POST,
+    @PostMapping(value = GlobalConstants.URL_ADD_TO_CART,
             produces = "application/json")
     public int addToCart(@RequestBody() OrderedItemBindingModel model,
                          HttpSession session) {
@@ -87,26 +81,24 @@ public class RestControllers extends BaseController {
         int cartSize = products.size();
 
         session.setAttribute(GlobalConstants.CART, products);
-        session.setAttribute("cart-size", cartSize);
+        session.setAttribute(GlobalConstants.CART_SIZE, cartSize);
 
         return cartSize;
     }
 
-    @RequestMapping(value = "/cart/update",
-            method = RequestMethod.POST,
-            produces = "application/json")
+    @PostMapping(value = GlobalConstants.URL_UPDATE_CART)
     public void updateCart(@RequestBody() CartUpdateBindingModel model,
-                       HttpSession session) {
+                           HttpSession session) {
 
         Map<Integer, OrderedItemViewModel> products = new LinkedHashMap<>();
 
         model.getProducts()
-                .forEach(entry ->{
+                .forEach(entry -> {
                     ProductAllViewModel p = modelMapper.map(productService.findById(entry.getId()), ProductAllViewModel.class);
                     products.put(entry.getId(), new OrderedItemViewModel(p, entry.getQuantity()));
                 });
 
-      session.setAttribute(GlobalConstants.CART, products);
+        session.setAttribute(GlobalConstants.CART, products);
     }
 
 }

@@ -1,15 +1,11 @@
 package com.example.granny.domain.models.service;
 
 import com.example.granny.constants.GlobalConstants;
-import com.example.granny.service.api.AddressService;
 import com.example.granny.validation.annotations.ValidFirstName;
 import com.example.granny.validation.annotations.ValidLastName;
-import com.example.granny.validation.annotations.ValidPassword;
 import com.example.granny.validation.annotations.ValidEmail;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Set;
 
 public class UserServiceModel extends BaseServiceModel {

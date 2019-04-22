@@ -1,10 +1,8 @@
 package com.example.granny.config;
 
-import com.example.granny.constants.GlobalConstants;
 import com.example.granny.web.interceptors.FaviconInterceptor;
 import com.example.granny.web.interceptors.TitleInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

@@ -42,4 +42,6 @@ public interface UserService extends UserDetailsService {
     boolean isFollowing(String email, Integer id);
 
     void editAddress(String email, AddressBindingModel model);
+
+    void confirmAccount(String token);
 }

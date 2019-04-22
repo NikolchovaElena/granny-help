@@ -5,7 +5,6 @@ import com.example.granny.domain.entities.Cause;
 import com.example.granny.domain.entities.User;
 import com.example.granny.domain.models.binding.CauseFormBindingModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
-import com.example.granny.error.CauseNotFoundException;
 import com.example.granny.error.UserNotFoundException;
 import com.example.granny.repository.CauseRepository;
 import com.example.granny.repository.UserRepository;
@@ -25,13 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.granny.service.UserServiceImpl.NO_USER_WITH_THAT_EXCEPTION;
-
 @Service
 public class CauseServiceImpl implements CauseService {
-    static final CauseNotFoundException CAUSE_NOT_FOUND =
-            new CauseNotFoundException("The cause you requested could not be found");
-    static final String COULD_NOT_DELETE_CAUSE = "You are not authorized to delete this cause";
     static final String CAUSE_IMG_ID = "CAUSE";
 
     private final CauseRepository causeRepository;
@@ -52,7 +46,7 @@ public class CauseServiceImpl implements CauseService {
     @Override
     public CauseServiceModel submit(CauseFormBindingModel model, String email) throws IOException {
         User author = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
 
         Cause cause = modelMapper.map(model, Cause.class);
         cause.setAuthor(author);
@@ -68,7 +62,7 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public CauseServiceModel edit(CauseFormBindingModel model, Integer causeId) throws IOException {
-        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> CAUSE_NOT_FOUND);
+        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> GlobalConstants.CAUSE_NOT_FOUND);
         MultipartFile file = model.getImageUrl();
 
         if (!file.isEmpty()) {
@@ -88,18 +82,18 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public void approve(Integer causeId) {
-        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> CAUSE_NOT_FOUND);
+        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> GlobalConstants.CAUSE_NOT_FOUND);
         cause.setApproved(true);
         causeRepository.saveAndFlush(cause);
     }
 
     @Override
     public void delete(Integer id, String email, Authentication authentication) {
-        Cause cause = causeRepository.findById(id).orElseThrow(() -> CAUSE_NOT_FOUND);
+        Cause cause = causeRepository.findById(id).orElseThrow(() -> GlobalConstants.CAUSE_NOT_FOUND);
 
         if ((cause.getAuthor().getEmail().equals(email)) &&
                 (hasAuthority(authentication, GlobalConstants.ROLE_MODERATOR))) {
-            throw new AccessDeniedException(COULD_NOT_DELETE_CAUSE);
+            throw new AccessDeniedException(GlobalConstants.COULD_NOT_DELETE_CAUSE);
         }
         cause.getFollowers().clear();
         commentService.deleteAll(id);
@@ -139,13 +133,13 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public CauseServiceModel findById(Integer id) {
-        Cause cause = causeRepository.findById(id).orElseThrow(() -> CAUSE_NOT_FOUND);
+        Cause cause = causeRepository.findById(id).orElseThrow(() -> GlobalConstants.CAUSE_NOT_FOUND);
         return modelMapper.map(cause, CauseServiceModel.class);
     }
 
     @Override
     public void followCause(String email, Integer causeId) {
-        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> CAUSE_NOT_FOUND);
+        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> GlobalConstants.CAUSE_NOT_FOUND);
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException("User not found"));
 
@@ -158,7 +152,7 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public void unFollowCause(String email, Integer causeId) {
-        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> CAUSE_NOT_FOUND);
+        Cause cause = causeRepository.findById(causeId).orElseThrow(() -> GlobalConstants.CAUSE_NOT_FOUND);
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException("User not found"));
 

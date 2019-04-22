@@ -16,9 +16,7 @@ public class TitleInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         String title = "Granny";
 
-        if (modelAndView == null) {
-            modelAndView = new ModelAndView();
-        } else {
+        if (modelAndView != null) {
             if (handler instanceof HandlerMethod) {
                 PageTitle methodAnnotation = ((HandlerMethod) handler).getMethodAnnotation(PageTitle.class);
 
@@ -29,7 +27,6 @@ public class TitleInterceptor extends HandlerInterceptorAdapter {
             } else {
                 modelAndView
                         .addObject("title", title);
-
             }
         }
     }

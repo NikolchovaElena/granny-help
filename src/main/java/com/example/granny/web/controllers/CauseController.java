@@ -53,7 +53,7 @@ public class CauseController extends BaseController {
     }
 
     @PageTitle("add cause")
-    @GetMapping("/causes/form")
+    @GetMapping(GlobalConstants.URL_SUBMIT_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCause(ModelAndView modelAndView) {
         modelAndView.addObject(GlobalConstants.MODEL, new CauseFormBindingModel());
@@ -61,7 +61,7 @@ public class CauseController extends BaseController {
         return view("causes-submit", modelAndView);
     }
 
-    @PostMapping("/causes/form")
+    @PostMapping(GlobalConstants.URL_SUBMIT_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView submitCauseConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
                                             CauseFormBindingModel model,
@@ -74,11 +74,11 @@ public class CauseController extends BaseController {
             return view("causes-submit", modelAndView);
         }
         causeService.submit(model, principal.getName());
-        return redirect("/home");
+        return redirect(GlobalConstants.URL_USER_HOME);
     }
 
     @PageTitle("edit cause")
-    @GetMapping("/causes/form/{id}")
+    @GetMapping(GlobalConstants.URL_EDIT_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView editCause(@PathVariable("id") Integer id,
                            ModelAndView modelAndView,
@@ -88,7 +88,7 @@ public class CauseController extends BaseController {
 
         if (!principal.getName().equals(model.getAuthor().getEmail()) &&
                 !causeService.hasAuthority(authentication, GlobalConstants.ROLE_MODERATOR)) {
-            throw new AccessDeniedException("You are not authorized to access this page");
+            throw new AccessDeniedException(GlobalConstants.ACCESS_DENIED);
         }
 
         modelAndView.addObject(GlobalConstants.MODEL, model);
@@ -96,13 +96,12 @@ public class CauseController extends BaseController {
         return view("causes-edit", modelAndView);
     }
 
-    @PostMapping("/causes/form/{id}")
+    @PostMapping(GlobalConstants.URL_EDIT_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     ModelAndView editCauseConfirm(@PathVariable("id") Integer id,
                                   @Valid @ModelAttribute(name = GlobalConstants.MODEL)
                                           CauseFormBindingModel model,
                                   BindingResult bindingResult,
-                                  Principal principal,
                                   ModelAndView modelAndView) throws IOException {
 
         if (bindingResult.hasErrors()) {
@@ -111,11 +110,11 @@ public class CauseController extends BaseController {
             return view("causes-edit", modelAndView);
         }
         causeService.edit(model, id);
-        return redirect("/home");
+        return redirect(GlobalConstants.URL_USER_HOME);
     }
 
     @PageTitle("view cause")
-    @GetMapping("/causes/{id}")
+    @GetMapping(GlobalConstants.URL_VIEW_CAUSE_DETAILS)
     ModelAndView causeDetails(@PathVariable("id") Integer id,
                               ModelAndView modelAndView,
                               Principal principal) {
@@ -140,7 +139,7 @@ public class CauseController extends BaseController {
     }
 
     @PageTitle("causes")
-    @GetMapping("/causes")
+    @GetMapping(GlobalConstants.URL_VIEW_CAUSES)
     ModelAndView causesAll(ModelAndView modelAndView) {
         List<CauseServiceModel> causes = causeService.findAll();
 
@@ -152,22 +151,22 @@ public class CauseController extends BaseController {
         return view("causes", modelAndView);
     }
 
-    @PostMapping("/causes/approve/{id}")
+    @PostMapping(GlobalConstants.URL_APPROVE_CAUSE)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView approveCause(@PathVariable("id") Integer id) {
 
         causeService.approve(id);
-        return redirect("/home");
+        return redirect(GlobalConstants.URL_USER_HOME);
     }
 
-    @PostMapping("/causes/delete/{id}")
+    @PostMapping(GlobalConstants.URL_DELETE_CAUSE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView deleteCause(@PathVariable("id") Integer id,
                                     Principal principal,
                                     Authentication authentication) {
 
         causeService.delete(id, principal.getName(), authentication);
-        return redirect("/causes");
+        return redirect(GlobalConstants.URL_VIEW_CAUSES);
     }
 
     private void addLocations(ModelAndView modelAndView) {

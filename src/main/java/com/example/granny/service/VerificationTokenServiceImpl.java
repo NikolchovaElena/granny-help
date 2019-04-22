@@ -28,16 +28,16 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public VerificationToken getVerificationToken(String token) {
-        return tokenRepository.findByToken(token);
-    }
-
-    @Override
     public void delete(User user) {
         VerificationToken token = tokenRepository.findByUser(user);
 
         if (token != null) {
             tokenRepository.delete(token);
         }
+    }
+
+    @Override
+    public VerificationToken findBy(String token) {
+        return tokenRepository.findByToken(token);
     }
 }

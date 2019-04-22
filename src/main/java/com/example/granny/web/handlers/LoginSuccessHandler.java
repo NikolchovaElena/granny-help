@@ -16,13 +16,6 @@ import java.io.IOException;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-   // private final MessageService messageService;
-
-//    @Autowired
-//    public LoginSuccessHandler(MessageService messageService) {
-//        this.messageService = messageService;
-//    }
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,

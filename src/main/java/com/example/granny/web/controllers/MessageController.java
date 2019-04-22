@@ -5,6 +5,8 @@ import com.example.granny.domain.models.binding.MessageBindingModel;
 import com.example.granny.domain.models.service.MessageServiceModel;
 import com.example.granny.domain.models.view.MessageDetailsViewModel;
 import com.example.granny.domain.models.view.MessageViewModel;
+import com.example.granny.error.MessageNotFoundException;
+import com.example.granny.error.ProductNotFoundException;
 import com.example.granny.service.api.MessageService;
 import com.example.granny.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
@@ -12,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -36,14 +35,14 @@ public class MessageController extends BaseController {
     }
 
     @PageTitle("contact")
-    @GetMapping("/contact/form")
+    @GetMapping(GlobalConstants.URL_CONTACT_FORM)
     ModelAndView createMessage(ModelAndView modelAndView) {
 
         modelAndView.addObject(GlobalConstants.MODEL, new MessageBindingModel());
         return view("contact", modelAndView);
     }
 
-    @PostMapping("/contact/form")
+    @PostMapping(GlobalConstants.URL_CONTACT_FORM)
     ModelAndView createMessageConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
                                               MessageBindingModel model,
                                       BindingResult bindingResult,
@@ -58,7 +57,7 @@ public class MessageController extends BaseController {
     }
 
     @PageTitle("messages")
-    @GetMapping("/messages")
+    @GetMapping(GlobalConstants.URL_VIEW_MESSAGES)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     ModelAndView messagesAll(ModelAndView modelAndView) {
         List<MessageServiceModel> messages = messageService.findAll();
@@ -72,7 +71,7 @@ public class MessageController extends BaseController {
     }
 
     @PageTitle("view message")
-    @GetMapping("/messages/{id}")
+    @GetMapping(GlobalConstants.URL_VIEW_MESSAGE_DETAILS)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     ModelAndView viewMessage(@PathVariable(name = "id") Integer id,
                              ModelAndView modelAndView,
@@ -87,12 +86,21 @@ public class MessageController extends BaseController {
         return view("message-details", modelAndView);
     }
 
-    @PostMapping("/messages/delete/{id}")
+    @PostMapping(GlobalConstants.URL_DELETE_MESSAGE)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    public ModelAndView deleteCause(@PathVariable("id") Integer id) {
+    public ModelAndView deleteMessage(@PathVariable("id") Integer id) {
 
         messageService.delete(id);
         return redirect("/messages");
+    }
+
+    @ExceptionHandler(MessageNotFoundException.class)
+    public ModelAndView handleMessageNotFound(MessageNotFoundException e) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
+
+        return modelAndView;
     }
 
 }

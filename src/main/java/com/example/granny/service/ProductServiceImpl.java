@@ -28,35 +28,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    static final ProductNotFoundException PRODUCT_NOT_FOUND =
-            new ProductNotFoundException("The cause you requested could not be found");
-    static final ProductAlreadyExistsException PRODUCT_ALREADY_EXISTS =
-            new ProductAlreadyExistsException("A product with the same name already exists");
 
     private final ProductRepository productRepository;
-    private final ProductValidationService productValidation;
     private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public ProductServiceImpl(
-            ProductRepository productRepository, ProductValidationService productValidation, CloudinaryService cloudinaryService, ModelMapper modelMapper) {
+            ProductRepository productRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper) {
         this.productRepository = productRepository;
-        this.productValidation = productValidation;
         this.cloudinaryService = cloudinaryService;
         this.modelMapper = modelMapper;
     }
 
     public ProductServiceModel create(ProductBindingModel model) throws IOException {
-        if (!productValidation.isValid(model)) {
-            throw new IllegalArgumentException();
-        }
         Product product = this.productRepository
                 .findByName(model.getName())
                 .orElse(null);
 
         if (product != null) {
-            throw PRODUCT_ALREADY_EXISTS;
+            throw GlobalConstants.PRODUCT_ALREADY_EXISTS;
         }
         product = this.modelMapper.map(model, Product.class);
 
@@ -88,11 +79,10 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("The product you requested could not be found."));
     }
 
-
     @Override
     public ProductServiceModel edit(Integer id, ProductBindingModel model) throws IOException {
         Product product = this.productRepository.findById(id)
-                .orElseThrow(() -> PRODUCT_NOT_FOUND);
+                .orElseThrow(() -> GlobalConstants.PRODUCT_NOT_FOUND);
 
         MultipartFile file = model.getImageUrl();
 
@@ -114,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Integer id) {
         Product product = this.productRepository.findById(id).orElseThrow(() ->
-                new ProductNotFoundException("The product you requested could not be found."));
+                GlobalConstants.PRODUCT_NOT_FOUND);
 
         this.productRepository.delete(product);
     }
@@ -137,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
 
         products.entrySet().stream().forEach(i -> {
             Product p = productRepository.findById(i.getKey())
-                    .orElseThrow(() -> PRODUCT_NOT_FOUND);
+                    .orElseThrow(() -> GlobalConstants.PRODUCT_NOT_FOUND);
             ProductAllViewModel product = modelMapper.map(p, ProductAllViewModel.class);
             int quantity = i.getValue();
             CartViewModel m = new CartViewModel(product, quantity);

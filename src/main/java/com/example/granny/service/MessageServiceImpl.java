@@ -1,5 +1,6 @@
 package com.example.granny.service;
 
+import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.Message;
 import com.example.granny.domain.models.service.MessageServiceModel;
 import com.example.granny.error.MessageNotFoundException;
@@ -14,8 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class MessageServiceImpl implements MessageService {
-    static final MessageNotFoundException MESSAGE_NOT_FOUND =
-            new MessageNotFoundException("The message you requested could not be found");
 
     private final MessageRepository messageRepository;
     private final ModelMapper modelMapper;
@@ -35,14 +34,14 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void delete(Integer id) {
         Message message = messageRepository.findById(id).orElseThrow(
-                () -> MESSAGE_NOT_FOUND);
+                () -> GlobalConstants.MESSAGE_NOT_FOUND);
         messageRepository.delete(message);
     }
 
     @Override
     public MessageServiceModel findById(Integer id) {
         Message message = messageRepository.findById(id).orElseThrow(
-                () -> MESSAGE_NOT_FOUND);
+                () -> GlobalConstants.MESSAGE_NOT_FOUND);
         return modelMapper.map(message, MessageServiceModel.class);
     }
 
@@ -57,7 +56,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageServiceModel viewMessage(Integer id) {
         Message message = messageRepository.findById(id).orElseThrow(
-                () -> MESSAGE_NOT_FOUND);
+                () -> GlobalConstants.MESSAGE_NOT_FOUND);
 
         if (!message.isOpen()) {
             message.setOpen(true);
@@ -70,6 +69,5 @@ public class MessageServiceImpl implements MessageService {
     public int countUnreadMessages() {
         return messageRepository.countAllByOpenFalse();
     }
-
 
 }

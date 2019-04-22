@@ -2,20 +2,15 @@ package com.example.granny.service;
 
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.constants.RootAdminData;
-import com.example.granny.domain.entities.BillingDetails;
-import com.example.granny.domain.entities.Cause;
-import com.example.granny.domain.entities.Role;
-import com.example.granny.domain.entities.User;
+import com.example.granny.domain.entities.*;
 import com.example.granny.domain.models.binding.AddressBindingModel;
 import com.example.granny.domain.models.binding.UserEditBindingModel;
-import com.example.granny.domain.models.service.AddressServiceModel;
 import com.example.granny.domain.models.service.CauseServiceModel;
 import com.example.granny.domain.models.service.RoleServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
-import com.example.granny.repository.CauseRepository;
+import com.example.granny.error.LinkHasExpired;
 import com.example.granny.repository.UserRepository;
 import com.example.granny.service.api.*;
-import com.example.granny.validation.api.UserValidationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,36 +25,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    static final UsernameNotFoundException EMAIL_NOT_FOUND_EXCEPTION =
-            new UsernameNotFoundException("Email not found");
-    static final IllegalArgumentException NO_USER_WITH_THAT_EXCEPTION =
-            new IllegalArgumentException("User could not be found");
-    static final IllegalArgumentException INCORRECT_PASSWORD =
-            new IllegalArgumentException("Incorrect password");
 
     private final UserRepository userRepository;
     private final VerificationTokenService tokenService;
-    private final CauseService causeService;
-    private final CauseRepository causeRepository;
     private final RoleService roleService;
-    private final UserValidationService userValidation;
-    private final AddressService addressService;
+    private final AddressDetailsService addressDetailsService;
     private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, VerificationTokenService tokenService,
-                           CauseService causeService, CauseRepository causeRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
-                           UserValidationService userValidationService, AddressService addressService, CloudinaryService cloudinaryService) {
+    public UserServiceImpl(UserRepository userRepository, VerificationTokenService tokenService, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder,
+                           AddressDetailsService addressDetailsService, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
-        this.causeService = causeService;
-        this.causeRepository = causeRepository;
         this.roleService = roleService;
-        this.addressService = addressService;
+        this.addressDetailsService = addressDetailsService;
         this.cloudinaryService = cloudinaryService;
-        this.userValidation = userValidationService;
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.createRootAdmin();
@@ -99,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = this.userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> EMAIL_NOT_FOUND_EXCEPTION);
+                .orElseThrow(() -> GlobalConstants.EMAIL_NOT_FOUND_EXCEPTION);
         return user;
     }
 
@@ -107,15 +89,12 @@ public class UserServiceImpl implements UserService {
     public boolean register(UserServiceModel userServiceModel) {
         this.roleService.seedRolesInDb();
 
-//        if (!userValidation.isValid(userServiceModel)) {
-//            throw new IllegalArgumentException();
-//        }
         userServiceModel.setAuthorities(new LinkedHashSet<>());
         userServiceModel.getAuthorities().add(this.roleService.findByAuthority("ROLE_USER"));
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
-        user.setBillingDetails(this.addressService.addNew());
+        user.setBillingDetails(this.addressDetailsService.addNew());
 
         return this.userRepository.save(user) != null;
     }
@@ -138,22 +117,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setUserRole(Integer id, String role) {
         User user = this.userRepository.findById(id)
-                .orElseThrow(() -> NO_USER_WITH_THAT_EXCEPTION);
+                .orElseThrow(() -> GlobalConstants.NO_USER_WITH_THAT_EXCEPTION);
 
         user.getAuthorities().clear();
 
         switch (role) {
             case "user":
-                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"),Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"), Role.class));
                 break;
             case "moderator":
-                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"),Role.class));
-                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_MODERATOR"),Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"), Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_MODERATOR"), Role.class));
                 break;
             case "admin":
-                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"),Role.class));
-                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_MODERATOR"),Role.class));
-                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_ADMIN"),Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_USER"), Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_MODERATOR"), Role.class));
+                user.getAuthorities().add(modelMapper.map(roleService.findByAuthority("ROLE_ADMIN"), Role.class));
                 break;
         }
         this.userRepository.saveAndFlush(user);
@@ -167,7 +146,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isFollowing(String email, Integer causeId) {
         User user = this.userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
         boolean isMatch = false;
 
         for (Cause c : user.getPins()) {
@@ -191,14 +170,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel findUserByEmail(String email) {
         User user = this.userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
     public UserServiceModel findUserById(Integer id) {
         User user = this.userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
         return this.modelMapper.map(user, UserServiceModel.class);
     }
 
@@ -215,7 +194,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
 
         if (ifNotRoot(user)) {
             tokenService.delete(user);
@@ -226,7 +205,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
 
         if (ifNotRoot(user)) {
             tokenService.delete(user);
@@ -239,7 +218,7 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(findUserByEmail(email), User.class);
 
         if (!this.bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new IllegalArgumentException(INCORRECT_PASSWORD);
+            throw new IllegalArgumentException(GlobalConstants.INCORRECT_PASSWORD);
         }
         user.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
         enableUser(user);
@@ -251,7 +230,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel edit(String email, UserEditBindingModel model) throws IOException {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException(NO_USER_WITH_THAT_EXCEPTION));
+                () -> new IllegalArgumentException(GlobalConstants.NO_USER_WITH_THAT_EXCEPTION));
         MultipartFile file = model.getImageUrl();
 
         if (!user.getImageUrl().equals(GlobalConstants.PROFILE_DEFAULT_IMG)) {
@@ -269,17 +248,32 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
 
-
     @Override
     public void editAddress(String email, AddressBindingModel model) {
-        User user = this.userRepository.findByEmail(email).orElseThrow(() -> NO_USER_WITH_THAT_EXCEPTION);
-        BillingDetails address = user.getBillingDetails();
+        User user = this.userRepository.findByEmail(email).orElseThrow(() -> GlobalConstants.NO_USER_WITH_THAT_EXCEPTION);
+        AddressDetails address = user.getBillingDetails();
 
-        this.addressService.edit(address, model);
+        this.addressDetailsService.edit(address, model);
     }
 
     private boolean ifNotRoot(User user) {
         return !user.getEmail().equals(RootAdminData.ROOT_EMAIL);
     }
 
+    @Override
+    public void confirmAccount(String token) {
+        VerificationToken verificationToken = tokenService.findBy(token);
+
+        if (verificationToken == null) {
+            throw new LinkHasExpired("The link is invalid or broken!");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        if ((verificationToken.getExpiryDate().getTime() - calendar.getTime().getTime()) <= 0) {
+            throw new LinkHasExpired("The link has expired!");
+        }
+
+        enableUser(verificationToken.getUser());
+    }
 }

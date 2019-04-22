@@ -1,5 +1,6 @@
 package com.example.granny.web.controllers;
 
+import com.example.granny.constants.GlobalConstants;
 import com.example.granny.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,27 +19,27 @@ public class UserRoleController extends BaseController {
         this.userService = userService;
     }
 
-    @PostMapping("/users/set-user/{id}")
+    @PostMapping(GlobalConstants.URL_SET_ROLE_USER)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView setUser(@PathVariable Integer id) {
         this.userService.setUserRole(id, "user");
 
-        return super.redirect("/users");
+        return super.redirect(GlobalConstants.URL_VIEW_USERS);
     }
 
-    @PostMapping("/users/set-moderator/{id}")
+    @PostMapping(GlobalConstants.URL_ROLE_USER_MODERATOR)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView setModerator(@PathVariable Integer id) {
         this.userService.setUserRole(id, "moderator");
 
-        return super.redirect("/users");
+        return super.redirect(GlobalConstants.URL_VIEW_USERS);
     }
 
-    @PostMapping("/users/set-admin/{id}")
+    @PostMapping(GlobalConstants.URL_SET_ROLE_ADMIN)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView setAdmin(@PathVariable Integer id) {
         this.userService.setUserRole(id, "admin");
 
-        return super.redirect("/users");
+        return super.redirect(GlobalConstants.URL_VIEW_USERS);
     }
 }

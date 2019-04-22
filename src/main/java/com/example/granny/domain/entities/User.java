@@ -4,16 +4,12 @@ import com.example.granny.constants.GlobalConstants;
 import com.example.granny.validation.annotations.ValidEmail;
 import com.example.granny.validation.annotations.ValidFirstName;
 import com.example.granny.validation.annotations.ValidLastName;
-import com.example.granny.validation.annotations.ValidPassword;
 import org.hibernate.validator.constraints.Length;
-import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,7 +24,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean isEnabled;
     private Set<Role> authorities;
     private Set<Cause> pins;
-    private BillingDetails billingDetails;
+    private AddressDetails billingDetails;
 
     public User() {
         this.authorities = new HashSet<>();
@@ -141,11 +137,11 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @OneToOne
-    public BillingDetails getBillingDetails() {
+    public AddressDetails getBillingDetails() {
         return billingDetails;
     }
 
-    public void setBillingDetails(BillingDetails billingDetails) {
+    public void setBillingDetails(AddressDetails billingDetails) {
         this.billingDetails = billingDetails;
     }
 

@@ -35,6 +35,4 @@ public class EventServiceImpl implements EventService {
         eventPublisher.publishEvent(
                 new OnRegistrationSuccessEvent(user, locale, appUrl));
     }
-
-
 }

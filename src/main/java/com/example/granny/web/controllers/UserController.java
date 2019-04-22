@@ -9,7 +9,7 @@ import com.example.granny.domain.models.service.AddressServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.UserViewModel;
 import com.example.granny.domain.models.view.UserShowViewModel;
-import com.example.granny.service.api.AddressService;
+import com.example.granny.service.api.AddressDetailsService;
 import com.example.granny.service.api.EventService;
 import com.example.granny.service.api.UserService;
 import com.example.granny.web.annotations.PageTitle;
@@ -31,23 +31,18 @@ import java.util.stream.Collectors;
 
 @Controller
 public class UserController extends BaseController {
-    private static final String PASSWORDS_DONT_MATCH = "Passwords don't match";
-    private static final String EMAIL_ALREADY_EXISTS = "A user with that email already exists";
-    private static final String ERROR_CODE_EMAIL = "error.email";
-    private static final String ERROR_CODE_CONFIRM_PASSWORD = "error.confirmPassword";
 
     private final UserService userService;
     private final EventService eventService;
-    private final AddressService addressService;
+    private final AddressDetailsService addressDetailsService;
     private final ModelMapper modelMapper;
-
 
     @Autowired
     public UserController(UserService userService,
-                          EventService eventService, AddressService addressService, ModelMapper modelMapper) {
+                          EventService eventService, AddressDetailsService addressDetailsService, ModelMapper modelMapper) {
         this.userService = userService;
         this.eventService = eventService;
-        this.addressService = addressService;
+        this.addressDetailsService = addressDetailsService;
         this.modelMapper = modelMapper;
     }
 
@@ -66,6 +61,7 @@ public class UserController extends BaseController {
         return view("register", modelAndView);
     }
 
+    //FIXME refactor
     @PostMapping(GlobalConstants.URL_USER_REGISTER)
     @PreAuthorize(GlobalConstants.IS_ANONYMOUS)
     public ModelAndView registerConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
@@ -74,14 +70,14 @@ public class UserController extends BaseController {
                                         WebRequest request,
                                         ModelAndView modelAndView) {
         if (userService.emailExists(model.getEmail())) {
-            bindingResult.rejectValue("email", ERROR_CODE_EMAIL, EMAIL_ALREADY_EXISTS);
+            bindingResult.rejectValue("email", "error.email", GlobalConstants.EMAIL_ALREADY_EXISTS);
         }
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
             return view("register", modelAndView);
         }
         if (!model.getPassword().equals(model.getConfirmPassword())) {
-            bindingResult.rejectValue("confirmPassword", ERROR_CODE_CONFIRM_PASSWORD, PASSWORDS_DONT_MATCH);
+            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", GlobalConstants.PASSWORDS_DONT_MATCH);
             modelAndView.addObject(GlobalConstants.MODEL, model);
             return view("register", modelAndView);
         }
@@ -103,7 +99,7 @@ public class UserController extends BaseController {
     }
 
     @PageTitle("edit password")
-    @GetMapping("/user/edit/password")
+    @GetMapping(GlobalConstants.URL_USER_EDIT_PASSWORD)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editPassword(@ModelAttribute(name = GlobalConstants.MODEL) UserPasswordBindingModel model,
                                      ModelAndView modelAndView) {
@@ -111,7 +107,7 @@ public class UserController extends BaseController {
         return view("edit-password", modelAndView);
     }
 
-    @PostMapping("/user/edit/password")
+    @PostMapping(GlobalConstants.URL_USER_EDIT_PASSWORD)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editPasswordConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL) UserPasswordBindingModel model,
                                             BindingResult bindingResult,
@@ -122,7 +118,7 @@ public class UserController extends BaseController {
             return view("edit-password", modelAndView);
         }
         if (!model.getPassword().equals(model.getConfirmPassword())) {
-            bindingResult.rejectValue("confirmPassword", ERROR_CODE_CONFIRM_PASSWORD, PASSWORDS_DONT_MATCH);
+            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", GlobalConstants.PASSWORDS_DONT_MATCH);
             modelAndView.addObject(GlobalConstants.MODEL, model);
             return view("edit-password", modelAndView);
         }
@@ -130,19 +126,19 @@ public class UserController extends BaseController {
         return view("profile");
     }
 
-    @PostMapping("/user/delete")
+    @PostMapping(GlobalConstants.URL_USER_DELETE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView deleteProfile(Principal principal,
                                       HttpSession session) {
         userService.delete(principal.getName());
         session.invalidate();
-        return redirect("/");
+        return redirect(GlobalConstants.URL_INDEX);
     }
 
     @PageTitle("view profile")
-    @GetMapping("/user/profile/{id}")
+    @GetMapping(GlobalConstants.URL_USER_VIEW_PROFILE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    public ModelAndView profile(@PathVariable("id") Integer id,
+    public ModelAndView viewProfile(@PathVariable("id") Integer id,
                                 ModelAndView modelAndView) {
         UserServiceModel model = this.userService.findUserById(id);
         modelAndView.addObject(GlobalConstants.MODEL, model);
@@ -151,7 +147,7 @@ public class UserController extends BaseController {
     }
 
     @PageTitle("edit profile")
-    @GetMapping("/user/edit/profile")
+    @GetMapping(GlobalConstants.URL_USER_EDIT_PROFILE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editProfile(Principal principal,
                                     ModelAndView modelAndView) {
@@ -161,7 +157,7 @@ public class UserController extends BaseController {
         return view("edit-profile", modelAndView);
     }
 
-    @PostMapping("/user/edit/profile")
+    @PostMapping(GlobalConstants.URL_USER_EDIT_PROFILE)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editProfileConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL) UserEditBindingModel model,
                                            BindingResult bindingResult,
@@ -179,7 +175,7 @@ public class UserController extends BaseController {
     }
 
     @PageTitle("users")
-    @GetMapping("/users")
+    @GetMapping(GlobalConstants.URL_VIEW_USERS)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView users(ModelAndView modelAndView) {
         List<UserShowViewModel> model = this.userService.findAllUsers()
@@ -199,34 +195,34 @@ public class UserController extends BaseController {
         return view("users", modelAndView);
     }
 
-    @PostMapping("/user/delete/{id}")
+    @PostMapping(GlobalConstants.URL_USER_DELETE_PROFILE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView deleteProfile(@PathVariable("id") Integer id,
-                                      HttpSession session) {
+    public ModelAndView deleteProfile(@PathVariable("id") Integer id) {
         userService.delete(id);
-        return redirect("/users");
+        return redirect(GlobalConstants.URL_VIEW_USERS);
     }
+
     @PageTitle("edit address")
-    @GetMapping("/user/address/form")
+    @GetMapping(GlobalConstants.URL_USER_EDIT_ADDRESS)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editAddress(Principal principal,
                                     ModelAndView modelAndView) {
         UserServiceModel userServiceModel = userService.findUserByEmail(principal.getName());
 
-        AddressServiceModel addressServiceModel = addressService.findBy(userServiceModel);
+        AddressServiceModel addressServiceModel = addressDetailsService.findBy(userServiceModel);
 
         AddressBindingModel model = this.modelMapper.map(addressServiceModel, AddressBindingModel.class);
         modelAndView.addObject("address", model);
         return view("address-edit", modelAndView);
     }
 
-    @PostMapping("/user/address/form")
+    @PostMapping(GlobalConstants.URL_USER_EDIT_ADDRESS)
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
     public ModelAndView editAddressConfirm(@Valid @ModelAttribute(name = "address")
                                                    AddressBindingModel model,
                                            BindingResult bindingResult,
                                            Principal principal,
-                                           ModelAndView modelAndView) throws IOException {
+                                           ModelAndView modelAndView){
         UserServiceModel userServiceModel = this.userService.findUserByEmail(principal.getName());
 
         if (bindingResult.hasErrors()) {

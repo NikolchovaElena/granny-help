@@ -32,11 +32,12 @@ $(document).ready(function () {
                 var p = $('<div>');
                 p.attr('style', 'color: #730099');
                 p.text(`${quantity} items added to your cart`);
-                p.attr('id', 'add-to-cart-success');
+                var pId = 'add-to-cart-success-' + Date.now();
+                p.attr('id', pId);
                 $('#cart-add-box').append(p);
 
                 setTimeout(function () {
-                    $('#add-to-cart-success').hide()
+                    $('#' + pId).hide()
                 }, 2000);
             })
             .fail(function () {

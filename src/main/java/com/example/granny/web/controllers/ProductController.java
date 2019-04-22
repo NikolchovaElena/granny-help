@@ -40,14 +40,14 @@ public class ProductController extends BaseController {
     }
 
     @PageTitle("add product")
-    @GetMapping("/products/form")
+    @GetMapping(GlobalConstants.URL_ADD_PRODUCT)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView addProduct(ModelAndView modelAndView) {
         modelAndView.addObject(GlobalConstants.MODEL, new ProductBindingModel());
         return view("product-add", modelAndView);
     }
 
-    @PostMapping("/products/form")
+    @PostMapping(GlobalConstants.URL_ADD_PRODUCT)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView addProductConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
                                                   ProductBindingModel model,
@@ -58,23 +58,23 @@ public class ProductController extends BaseController {
             return view("product-add", modelAndView);
         }
         this.productService.create(model);
-        return super.redirect("/products");
+        return redirect(GlobalConstants.URL_VIEW_PRODUCTS);
     }
 
     @PageTitle("products")
-    @GetMapping("/products")
+    @GetMapping(GlobalConstants.URL_VIEW_PRODUCTS)
     public ModelAndView allProducts(ModelAndView modelAndView) {
         modelAndView.addObject(GlobalConstants.MODEL, this.productService.findAll()
                 .stream()
                 .map(p -> this.modelMapper.map(p, ProductAllViewModel.class))
                 .collect(Collectors.toList()));
 
-        return super.view("products", modelAndView);
+        return view(GlobalConstants.URL_VIEW_PRODUCTS, modelAndView);
     }
 
 
     @PageTitle("view product")
-    @GetMapping("/products/{id}")
+    @GetMapping(GlobalConstants.URL_VIEW_PRODUCT_DETAILS)
     public ModelAndView detailsProduct(@PathVariable Integer id, ModelAndView modelAndView) {
         ProductServiceModel model = productService.findById(id);
 
@@ -90,7 +90,7 @@ public class ProductController extends BaseController {
     }
 
     @PageTitle("edit product")
-    @GetMapping("/products/form/{id}")
+    @GetMapping(GlobalConstants.URL_EDIT_PRODUCT)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView editProduct(@PathVariable("id") Integer id,
                                     ModelAndView modelAndView) {
@@ -100,7 +100,7 @@ public class ProductController extends BaseController {
         return view("product-edit", modelAndView);
     }
 
-    @PostMapping("/products/form/{id}")
+    @PostMapping(GlobalConstants.URL_EDIT_PRODUCT)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView editProductConfirm(@PathVariable("id") Integer id,
                                            @Valid @ModelAttribute(name = GlobalConstants.MODEL)
@@ -115,12 +115,12 @@ public class ProductController extends BaseController {
         return redirect("/products/" + id);
     }
 
-    @PostMapping("/products/delete/{id}")
+    @PostMapping(GlobalConstants.URL_DELETE_PRODUCT)
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
     public ModelAndView deleteProduct(@PathVariable("id") Integer id) {
         this.productService.delete(id);
 
-        return super.redirect("/products");
+        return super.redirect(GlobalConstants.URL_VIEW_PRODUCTS);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)

@@ -10,8 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "billing_details")
-public class BillingDetails extends BaseEntity {
+@Table(name = "address_details")
+public class AddressDetails extends BaseEntity {
 
     private String firstName;
     private String lastName;
@@ -21,11 +21,10 @@ public class BillingDetails extends BaseEntity {
     private String email;
     private String phoneNumber;
 
-    public BillingDetails() {
+    public AddressDetails() {
     }
 
     @Column
-    @ValidFirstName
     public String getFirstName() {
         return firstName;
     }
@@ -35,7 +34,6 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
-    @ValidLastName
     public String getLastName() {
         return lastName;
     }
@@ -54,7 +52,6 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
-    @ValidEmail
     public String getEmail() {
         return email;
     }
@@ -82,7 +79,6 @@ public class BillingDetails extends BaseEntity {
     }
 
     @Column
-    @ValidPhoneNumber
     public String getPhoneNumber() {
         return phoneNumber;
     }

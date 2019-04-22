@@ -7,7 +7,7 @@ public interface VerificationTokenService {
 
     void createVerificationToken(User user, String token);
 
-    VerificationToken getVerificationToken(String token);
-
     void delete(User user);
+
+    VerificationToken findBy(String token);
 }

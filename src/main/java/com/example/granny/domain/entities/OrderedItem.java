@@ -15,8 +15,6 @@ public class OrderedItem extends BaseEntity {
     public OrderedItem() {
     }
 
-
-
     @OneToOne
     public Product getProduct() {
         return product;
