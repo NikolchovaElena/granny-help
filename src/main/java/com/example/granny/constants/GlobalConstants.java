@@ -5,7 +5,6 @@ import com.example.granny.error.MessageNotFoundException;
 import com.example.granny.error.ProductAlreadyExistsException;
 import com.example.granny.error.ProductNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
 
 public final class GlobalConstants {
     private GlobalConstants() {
@@ -36,7 +35,7 @@ public final class GlobalConstants {
     public static final String URL_CONFIRM_ACCOUNT = "/confirm-account";
     public static final String URL_ABOUT = "/about";
     public static final String URL_USER_EDIT_ADDRESS ="/user/address/form";
-    public static final String URL_SUBMIT_COMMENT ="/causes/{id}/comments";
+    public static final String URL_ADD_COMMENT ="/causes/{id}/comments";
     public static final String URL_DELETE_COMMENT ="/delete/comment/{id}";
     public static final String URL_FOLLOW_CAUSE ="/user/follow/causes/{id}";
     public static final String URL_UNFOLLOW_CAUSE ="/user/unfollow/causes/{id}";
@@ -73,6 +72,7 @@ public final class GlobalConstants {
     public static final String CART = "cart";
     public static final String CART_SIZE = "cart-size";
     public static final String PROFILE = "profile";
+    public static final String USER_ID = "user-id";
     public static final String ADDRESS = "address";
     public static final String UNREAD_MESSAGES_SIZE = "messages-size";
 
@@ -98,9 +98,10 @@ public final class GlobalConstants {
     public static final MessageNotFoundException MESSAGE_NOT_FOUND =
             new MessageNotFoundException("The message you requested could not be found");
     public static final ProductNotFoundException PRODUCT_NOT_FOUND =
-            new ProductNotFoundException("The cause you requested could not be found");
+            new ProductNotFoundException("The product you requested could not be found");
     public static final ProductAlreadyExistsException PRODUCT_ALREADY_EXISTS =
             new ProductAlreadyExistsException("A product with the same name already exists");
-
+    public static final IllegalArgumentException COMMENT_CANNOT_BE_EMPTY =
+            new IllegalArgumentException("Comment cannot be empty");
 
 }

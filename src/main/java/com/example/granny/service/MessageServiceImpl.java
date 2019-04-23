@@ -3,7 +3,6 @@ package com.example.granny.service;
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.Message;
 import com.example.granny.domain.models.service.MessageServiceModel;
-import com.example.granny.error.MessageNotFoundException;
 import com.example.granny.repository.MessageRepository;
 import com.example.granny.service.api.MessageService;
 import org.modelmapper.ModelMapper;

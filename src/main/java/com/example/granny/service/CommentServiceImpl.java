@@ -32,6 +32,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentViewModel create(String commentContent, String email, Integer causeId) {
+        if (commentContent.isEmpty()) {
+            throw GlobalConstants.COMMENT_CANNOT_BE_EMPTY;
+        }
         User author = userRepository.findByEmail(email).orElseThrow(
                 () -> GlobalConstants.NO_USER_WITH_THAT_EXCEPTION);
         Cause cause = causeRepository.findById(causeId).orElseThrow(

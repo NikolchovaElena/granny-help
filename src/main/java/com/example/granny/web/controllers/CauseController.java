@@ -181,6 +181,7 @@ public class CauseController extends BaseController {
     public ModelAndView handleCauseNotFound(CauseNotFoundException e) {
         ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
         return modelAndView;
     }
 }

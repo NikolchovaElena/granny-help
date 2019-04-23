@@ -21,6 +21,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
+        seedRolesInDb();
     }
 
     @Override

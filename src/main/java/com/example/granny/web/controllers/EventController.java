@@ -2,6 +2,7 @@ package com.example.granny.web.controllers;
 
 import com.example.granny.constants.GlobalConstants;
 import com.example.granny.domain.entities.VerificationToken;
+import com.example.granny.error.InvalidLink;
 import com.example.granny.error.LinkHasExpired;
 import com.example.granny.repository.VerificationTokenRepository;
 import com.example.granny.service.api.UserService;
@@ -38,6 +39,15 @@ public class EventController extends BaseController {
     @GetMapping(GlobalConstants.URL_ACCOUNT_VERIFIED)
     public ModelAndView accountVerification() {
         return view("account-verified");
+    }
+
+    @ExceptionHandler(InvalidLink.class)
+    public ModelAndView handleInvalidLink(InvalidLink e) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
+
+        return modelAndView;
     }
 
     @ExceptionHandler(LinkHasExpired.class)

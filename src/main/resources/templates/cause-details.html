@@ -22,7 +22,7 @@
                             <img class="img-fluid rounded" th:src="${model.imageUrl}" alt="Image placeholder">
                             <th:block sec:authorize="isAuthenticated()">
                                 <th:block th:if="${#authentication.principal.email} != ${model.author.email} and
-                                                   ${#authorization.expression('hasRole(''ROLE_MODERATOR'')')} and ${isApproved==true}">
+                                                   ${isApproved==true}">
 
                                     <form th:method="post" action="#">
                                         <button th:data-cause_id="${model.id}" id="follow-button" class="as-link"

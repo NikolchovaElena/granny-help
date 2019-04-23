@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
             root.setEmail(RootAdminData.ROOT_EMAIL);
             root.setPassword(this.bCryptPasswordEncoder.encode(RootAdminData.ROOT_ACCOUNT_PASSWORD));
             root.setEnabled(true);
+            root.setAddressDetails(addressDetailsService.addNew());
             assignRolesToUser(root);
 
             try {
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
-        user.setBillingDetails(this.addressDetailsService.addNew());
+        user.setAddressDetails(this.addressDetailsService.addNew());
 
         return this.userRepository.save(user) != null;
     }
@@ -220,8 +221,9 @@ public class UserServiceImpl implements UserService {
         if (!this.bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
             throw new IllegalArgumentException(GlobalConstants.INCORRECT_PASSWORD);
         }
+
         user.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
-        enableUser(user);
+       // enableUser(user);
         this.userRepository.save(user);
 
         return this.modelMapper.map(user, UserServiceModel.class);
@@ -251,7 +253,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editAddress(String email, AddressBindingModel model) {
         User user = this.userRepository.findByEmail(email).orElseThrow(() -> GlobalConstants.NO_USER_WITH_THAT_EXCEPTION);
-        AddressDetails address = user.getBillingDetails();
+        AddressDetails address = user.getAddressDetails();
 
         this.addressDetailsService.edit(address, model);
     }

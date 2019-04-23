@@ -27,7 +27,14 @@ public class GlobalExceptionHandler {
     public ModelAndView handleUserNotFoundException(UserNotFoundException e) {
         ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
         return modelAndView;
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ModelAndView handleIllegalArgumentException(IllegalArgumentException e) {
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("message", e.getMessage());
+        return modelAndView;
+    }
 }

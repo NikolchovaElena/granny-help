@@ -36,14 +36,14 @@ public class MessageController extends BaseController {
 
     @PageTitle("contact")
     @GetMapping(GlobalConstants.URL_CONTACT_FORM)
-    ModelAndView createMessage(ModelAndView modelAndView) {
+    ModelAndView sendMessage(ModelAndView modelAndView) {
 
         modelAndView.addObject(GlobalConstants.MODEL, new MessageBindingModel());
         return view("contact", modelAndView);
     }
 
     @PostMapping(GlobalConstants.URL_CONTACT_FORM)
-    ModelAndView createMessageConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
+    ModelAndView sendMessageConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
                                               MessageBindingModel model,
                                       BindingResult bindingResult,
                                       ModelAndView modelAndView) {

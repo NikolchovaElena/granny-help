@@ -10,8 +10,8 @@
                         <span class="icon-minus-circle display-3 text-danger"></span>
                         <h2 class="display-3 text-black">Oops</h2>
                         <p class="lead text-black">Something went wrong.</p>
-                        <p class="lead mb-4 text-black"th:text="${statusCode}"></p>
-                        <p class="lead mb-4 text-black"th:text="${error}"></p>
+                        <p class="lead mb-4 text-black" th:text="'Error '+${statusCode}"></p>
+                        <p class="lead mb-4 text-black" th:text="${message}"></p>
                     </div>
                 </div>
             </div>

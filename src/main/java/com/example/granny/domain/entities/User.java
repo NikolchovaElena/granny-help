@@ -24,7 +24,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean isEnabled;
     private Set<Role> authorities;
     private Set<Cause> pins;
-    private AddressDetails billingDetails;
+    private AddressDetails addressDetails;
 
     public User() {
         this.authorities = new HashSet<>();
@@ -137,12 +137,12 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @OneToOne
-    public AddressDetails getBillingDetails() {
-        return billingDetails;
+    public AddressDetails getAddressDetails() {
+        return addressDetails;
     }
 
-    public void setBillingDetails(AddressDetails billingDetails) {
-        this.billingDetails = billingDetails;
+    public void setAddressDetails(AddressDetails addressDetails) {
+        this.addressDetails = addressDetails;
     }
 
     @Override
@@ -171,6 +171,5 @@ public class User extends BaseEntity implements UserDetails {
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }
-
 
 }

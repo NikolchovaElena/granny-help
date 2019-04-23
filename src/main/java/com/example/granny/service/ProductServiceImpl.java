@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductServiceModel findById(Integer id) {
         return this.productRepository.findById(id)
                 .map(p -> this.modelMapper.map(p, ProductServiceModel.class))
-                .orElseThrow(() -> new ProductNotFoundException("The product you requested could not be found."));
+                .orElseThrow(() -> GlobalConstants.PRODUCT_NOT_FOUND);
     }
 
     @Override
