@@ -1,6 +1,6 @@
 src/main/resources/static/scss/* linguist-vendored
 src/main/resources/static/images/* linguist-vendored
 src/main/resources/static/fonts/* linguist-vendored
-src/main/resources/static/css linguist-vendored
+src/main/resources/static/css/* linguist-vendored
 
 src/main/resources/templates/* linguist-vendored
