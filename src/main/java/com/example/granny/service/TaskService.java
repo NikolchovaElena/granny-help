@@ -26,23 +26,22 @@ public class TaskService {
     @Autowired
     public TaskService(VerificationTokenRepository tokenRepository, UserRepository userRepository, AddressDetailsRepository addressRepository) {
         this.tokenRepository = tokenRepository;
-
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
     }
 
-    //Runs every 12 hours
+    //runs every 12 hours
     @Scheduled(fixedRate = 43200000)
-   // @Scheduled(fixedRate = 300000)
     public void purgeExpiredTokens() {
         Date now = Date.from(Instant.now());
         List<VerificationToken> tokens = tokenRepository.findAllByExpiryDateLessThan(now);
         List<User> users = tokens.stream().map(t -> t.getUser()).collect(Collectors.toList());
 
-        users.forEach(u -> addressRepository.delete(u.getBillingDetails()));
         tokenRepository.deleteAll(tokens);
-        userRepository.deleteAll(users);
 
-       // System.out.println("Yes");
+        users.stream().filter(u -> !u.isEnabled()).forEach(u -> {
+            addressRepository.delete(u.getAddressDetails());
+            userRepository.delete(u);
+        });
     }
 }

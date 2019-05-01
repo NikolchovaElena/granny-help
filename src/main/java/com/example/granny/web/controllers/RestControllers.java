@@ -36,10 +36,10 @@ public class RestControllers extends BaseController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping(value = GlobalConstants.URL_SUBMIT_COMMENT,
+    @PostMapping(value = GlobalConstants.URL_ADD_COMMENT,
             produces = "application/json")
     @PreAuthorize(GlobalConstants.IS_AUTHENTICATED)
-    public CommentViewModel submitComment(@PathVariable("id") Integer id,
+    public CommentViewModel addComment(@PathVariable("id") Integer id,
                                           @RequestBody() CommentBindingModel model,
                                           Principal principal) {
 

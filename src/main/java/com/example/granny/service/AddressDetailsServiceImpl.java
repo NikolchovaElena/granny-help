@@ -34,7 +34,7 @@ public class AddressDetailsServiceImpl implements AddressDetailsService {
 
     @Override
     public AddressServiceModel findBy(UserServiceModel model) {
-        return modelMapper.map(model.getBillingDetails(), AddressServiceModel.class);
+        return  model.getAddressDetails();
     }
 
     @Override

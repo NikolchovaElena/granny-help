@@ -18,7 +18,7 @@ public class UserServiceModel extends BaseServiceModel {
     private String about;
     private Set<RoleServiceModel> authorities;
     private Set<CauseServiceModel> pins;
-    private AddressServiceModel billingDetails;
+    private AddressServiceModel addressDetails;
 
     public UserServiceModel() {
     }
@@ -91,11 +91,11 @@ public class UserServiceModel extends BaseServiceModel {
         this.pins = pins;
     }
 
-    public AddressServiceModel getBillingDetails() {
-        return billingDetails;
+    public AddressServiceModel getAddressDetails() {
+        return addressDetails;
     }
 
-    public void setBillingDetails(AddressServiceModel billingDetails) {
-        this.billingDetails = billingDetails;
+    public void setAddressDetails(AddressServiceModel addressDetails) {
+        this.addressDetails = addressDetails;
     }
 }

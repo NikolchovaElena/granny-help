@@ -9,10 +9,13 @@ import com.example.granny.domain.models.service.AddressServiceModel;
 import com.example.granny.domain.models.service.UserServiceModel;
 import com.example.granny.domain.models.view.UserViewModel;
 import com.example.granny.domain.models.view.UserShowViewModel;
+import com.example.granny.error.CauseNotFoundException;
+import com.example.granny.error.UserNotFoundException;
 import com.example.granny.service.api.AddressDetailsService;
 import com.example.granny.service.api.EventService;
 import com.example.granny.service.api.UserService;
 import com.example.granny.web.annotations.PageTitle;
+import org.hibernate.Session;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,7 +64,6 @@ public class UserController extends BaseController {
         return view("register", modelAndView);
     }
 
-    //FIXME refactor
     @PostMapping(GlobalConstants.URL_USER_REGISTER)
     @PreAuthorize(GlobalConstants.IS_ANONYMOUS)
     public ModelAndView registerConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL)
@@ -112,6 +114,7 @@ public class UserController extends BaseController {
     public ModelAndView editPasswordConfirm(@Valid @ModelAttribute(name = GlobalConstants.MODEL) UserPasswordBindingModel model,
                                             BindingResult bindingResult,
                                             Principal principal,
+                                            HttpSession session,
                                             ModelAndView modelAndView) {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject(GlobalConstants.MODEL, model);
@@ -123,7 +126,7 @@ public class UserController extends BaseController {
             return view("edit-password", modelAndView);
         }
         this.userService.edit(principal.getName(), model.getPassword(), model.getOldPassword());
-        return view("profile");
+        return redirect("/user/profile/" + session.getAttribute(GlobalConstants.USER_ID));
     }
 
     @PostMapping(GlobalConstants.URL_USER_DELETE)
@@ -209,9 +212,7 @@ public class UserController extends BaseController {
                                     ModelAndView modelAndView) {
         UserServiceModel userServiceModel = userService.findUserByEmail(principal.getName());
 
-        AddressServiceModel addressServiceModel = addressDetailsService.findBy(userServiceModel);
-
-        AddressBindingModel model = this.modelMapper.map(addressServiceModel, AddressBindingModel.class);
+        AddressBindingModel model = this.modelMapper.map(addressDetailsService.findBy(userServiceModel), AddressBindingModel.class);
         modelAndView.addObject("address", model);
         return view("address-edit", modelAndView);
     }
@@ -233,4 +234,5 @@ public class UserController extends BaseController {
 
         return redirect("/user/profile/" + userServiceModel.getId());
     }
+
 }

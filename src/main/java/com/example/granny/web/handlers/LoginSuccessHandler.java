@@ -28,6 +28,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 user.getImageUrl(), user.getAbout());
 
         session.setAttribute(GlobalConstants.PROFILE, profile);
+        session.setAttribute(GlobalConstants.USER_ID, user.getId());
 
         httpServletResponse.setStatus(HttpServletResponse.SC_OK);
         httpServletResponse.sendRedirect(GlobalConstants.URL_USER_HOME);
