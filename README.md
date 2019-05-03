@@ -26,12 +26,11 @@ User can CRUD profile.
 ## Built With
 
 * Java 11.0.2
-* [Spring-MVC](https://spring.io/) 
-* Spring security
+* Spring-MVC
+* Maven
+* Thymeleaf
 * Javascript
-* [Maven](https://maven.apache.org/)
-* [Thymeleaf](https://www.thymeleaf.org/)
-* [MySQL](https://www.mysql.com/)
+* MySQL
 
 Other tools:
 * JavaMail
