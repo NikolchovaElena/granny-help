@@ -1,26 +1,26 @@
 # Granny-Help
 
-A simple Spring-MVC based project for programming course at SoftUni.
+A simple Spring-MVC based project for programming course at SoftUni.<br />
 Granny-Help is an application for volunteers who want to help the elderly
 
 ## Key Functionalities
 
 Two main sections:
-* Causes section
-Anonymous users can only view page.
-Registered users can submit, follow/unfollow and comment on causes.
+* Causes section<br />
+Anonymous users can only view page.<br />
+Registered users can submit, follow/unfollow and comment on causes.<br />
 Moderators can CRUD causes, comments.
 
-* Shop section
-Anyone can make an order.
-Anonymous users need to fill address form. 
+* Shop section<br />
+Anyone can make an order.<br />
+Anonymous users need to fill address form. <br /><br />
 Moderators can CRUD products. 
 
-Verification email is send after registration.
+Verification email is send after registration.<br />
 Expired tokens, !enabled users are scheduled to be deleted.
 
-Admin can delete, change user role.
-Moderators view, delete messages recieved by contact form.
+Admin can delete, change user role.<br />
+Moderators view, delete messages recieved by contact form.<br />
 User can CRUD profile.
 
 ## Built With
