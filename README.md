@@ -13,7 +13,7 @@ Moderators can CRUD causes, comments.
 
 * <b>Shop section</b><br />
 Anyone can make an order.<br />
-Anonymous users need to fill address form. <br /><br />
+Anonymous users need to fill address form. <br />
 Moderators can CRUD products. 
 
 Verification email is send after registration.<br />
