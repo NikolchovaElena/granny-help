@@ -6,12 +6,12 @@ Granny-Help is an application for volunteers who want to help the elderly
 ## Key Functionalities
 
 Two main sections:
-* Causes section<br />
+* <b>Causes section</b><br />
 Anonymous users can only view page.<br />
 Registered users can submit, follow/unfollow and comment on causes.<br />
 Moderators can CRUD causes, comments.
 
-* Shop section<br />
+* <b>Shop section</b><br />
 Anyone can make an order.<br />
 Anonymous users need to fill address form. <br /><br />
 Moderators can CRUD products. 
