@@ -37,6 +37,8 @@ Other tools:
 * ModelMapper
 * Cloudinary - cloud-based image and video management platform.
 * Lombok
+* Bootstrap
+* Jquery
 
 ## License
 
