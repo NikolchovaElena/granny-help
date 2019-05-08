@@ -31,7 +31,7 @@ User can CRUD profile.
 * Thymeleaf
 * Hibernate
 * MySQL
-* Javascript
+* JavaScript (jQuery)
 
 Other tools:
 * JavaMail
@@ -39,7 +39,6 @@ Other tools:
 * Cloudinary - cloud-based image and video management platform.
 * Lombok
 * Bootstrap
-* Jquery
 
 ## License
 
