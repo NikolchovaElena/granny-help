@@ -29,8 +29,9 @@ User can CRUD profile.
 * Spring-MVC
 * Maven
 * Thymeleaf
-* Javascript
+* Hibernate
 * MySQL
+* Javascript
 
 Other tools:
 * JavaMail
